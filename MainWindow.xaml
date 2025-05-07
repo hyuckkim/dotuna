@@ -1,0 +1,74 @@
+﻿<Window x:Class="DoTuna.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:DoTuna"
+    xmlns:control="clr-namespace:FilterDataGrid;assembly=FilterDataGrid"
+    mc:Ignorable="d"
+    Title="DoTuna" Height="450" Width="800"
+    MinWidth="450" MinHeight="450">
+    <Grid>
+        <TextBlock Text="Dotuna: 스레드 추출하기" 
+        HorizontalAlignment="Left" 
+        VerticalAlignment="Top" 
+        FontSize="24" 
+        Margin="0,10,10,0"
+        Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+    <Grid Margin="5,50,5,50" AllowDrop="True" Drop="OnFolderDrop">
+        <Button x:Name="GetFolderButton" Content="폴더 가져오기" 
+        HorizontalAlignment="Stretch" 
+        VerticalAlignment="Stretch"
+        Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
+        Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+        Click="OnGetFolderClick" />
+        <control:FilterDataGrid x:Name="ThreadListGrid"
+        HorizontalAlignment="Stretch" 
+        VerticalAlignment="Stretch" Visibility="Hidden"
+        AutoGenerateColumns ="False"
+        CanUserAddRows="False">
+        <control:FilterDataGrid.Columns>
+            <!-- 기존 열 -->
+            <control:DataGridTextColumn IsReadOnly="True" Header="스레드 이름" Binding="{Binding title}" Width="*" IsColumnFiltered="True" />
+            <control:DataGridTextColumn IsReadOnly="True" Header="유저 이름" Binding="{Binding username}" Width="*" IsColumnFiltered="True" />
+
+            <!-- 전체 선택 체크박스 -->
+            <control:DataGridTemplateColumn Width="30">
+                <control:DataGridTemplateColumn.HeaderTemplate>
+                    <DataTemplate>
+                        <CheckBox x:Name="SelectAllCheckBox"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"
+                                  Click="OnSelectAllCheckBoxClick" />
+                    </DataTemplate>
+                </control:DataGridTemplateColumn.HeaderTemplate>
+                <control:DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <CheckBox IsChecked="{Binding IsCheck}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"
+                                  Click="OnCheckBoxClick" />
+                    </DataTemplate>
+                </control:DataGridTemplateColumn.CellTemplate>
+            </control:DataGridTemplateColumn>
+        </control:FilterDataGrid.Columns>
+        </control:FilterDataGrid>
+    </Grid>
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5,0,5,5" x:Name="ReadyButtonPanel">
+        <Button x:Name="GetThreadSourceFileButton" Content="스레드 원본 파일 받기"
+            Margin="0,0,5,0" 
+            Padding="10" 
+            Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
+            Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+            Click="OnGetThreadSourceFileClick" />
+    </StackPanel>
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5,0,5,5" Visibility="Hidden" x:Name="RunningButtonPanel">
+        <Button x:Name="ExportFileButton" Content="내보내기"
+            Margin="0,0,5,0" 
+            Padding="10" 
+            Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
+            Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
+            Click="ExportButtonClick" />
+    </StackPanel>
+    </Grid>
+</Window>
