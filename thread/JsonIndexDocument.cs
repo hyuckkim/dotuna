@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace DoTuna.Thread
 {
-    public class JsonIndexDocument : INotifyPropertyChanged
+    public class JsonIndexDocument
     {
 #pragma warning disable IDE1006 // Naming Styles: Because the JSON properties are in snake_case, we need to disable this rule for the properties.
         public string version { get; set; } = "";
@@ -22,29 +22,6 @@ namespace DoTuna.Thread
             return string.Format("{0} /  Username: {1} {2}", title, username, threadId);
         }
 
-        private bool _isCheck = false; // for DataGrid
-        public bool IsCheck
-        {
-            get { return _isCheck; }
-            set
-            {
-                if (_isCheck != value)
-                {
-                    _isCheck = value;
-                    OnPropertyChanged("IsCheck");
-                }
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
-        {
-            var handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
+        public bool IsCheck { get; set; }
     }
 }

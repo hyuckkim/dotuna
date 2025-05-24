@@ -10,8 +10,7 @@ namespace DoTuna.Thread
 {
     public static class ThreadManager
     {
-        // nullable string은 4.8 C#7.x에서 지원 안 됨 (nullable context 미지원)
-        public static string FilePath { get; private set; }
+        public static string FilePath { get; set; } = String.Empty;
         public static bool SomethingSelected => Index.Any(x => x.IsCheck);
 
         public static ObservableCollection<JsonIndexDocument> Index { get; private set; } 

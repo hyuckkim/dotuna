@@ -13,7 +13,7 @@ namespace DoTuna.Export
     {
         public static readonly string ResultPath = Path.Combine(Directory.GetCurrentDirectory(), "Result");
 
-        public static async Task Build(IProgress<string> progress = null)
+        public static async Task Build(IProgress<string> progress)
         {
             string indexPath = Path.Combine(ResultPath, "index.html");
 

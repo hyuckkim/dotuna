@@ -106,7 +106,7 @@ namespace DoTuna
                 var cell = ThreadListGrid.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 if (cell is DataGridViewCheckBoxCell)
                 {
-                    item.IsCheck = !(item.IsCheck ?? false);
+                    item.IsCheck = !item.IsCheck;
                 }
             }
         }
