@@ -29,29 +29,22 @@ namespace DoTuna.Export
             progress?.Report("(index.html 생성됨)");
 
             int completed = 0;
-
-            // LINQ로 선택된 행 필터링
-            var selectedRows = ThreadManager.Index.AsEnumerable()
-                .Where(row => row.Field<bool>("IsCheck"))
-                .OrderBy(row => row.Field<int>("threadId"))
-                .ToList();
-
-            int total = selectedRows.Count;
+            int total = ThreadManager.Index.Count(x => x.IsCheck);
             progress?.Report($"({completed} of {total})");
 
-            foreach (var row in selectedRows)
+            foreach (var thread in ThreadManager.Index.Where(x => x.IsCheck).OrderBy(x => x.threadId))
             {
                 string threadPath = Path.Combine(ResultPath, $"{thread.threadId}.html");
 
                 var content = await ThreadManager.GetThreadAsync(thread.threadId);
                 string html = await GenerateThreadPage(thread.threadId);
 
+                // 동기 버전 쓰려면 Task.Run으로 감싸거나 그냥 File.WriteAllText 써도 됨
                 await Task.Run(() => File.WriteAllText(threadPath, html));
 
                 Interlocked.Increment(ref completed);
                 progress?.Report($"({completed} of {total})");
             }
-            progress?.Report("(생성 완료)");
         }
 
         static string GenerateIndexPage() 
@@ -74,13 +67,7 @@ namespace DoTuna.Export
         {
             var sb = new StringBuilder();
             sb.Append("const data = [");
-
-            // LINQ로 선택된 행 필터링
-            var selectedRows = ThreadManager.Index.AsEnumerable()
-                .Where(row => row.Field<bool>("IsCheck"))
-                .OrderBy(row => row.Field<int>("threadId"))
-                .ToList();
-            foreach (var index in selectedRows)
+            foreach (var index in ThreadManager.Index.Where(x => x.IsCheck).OrderBy(x => x.threadId))
             {
                 sb.Append("{ ");
                 sb.Append($"thread_id: \"{index.threadId}\", thread_title: \"{index.title}\", thread_username: \"{index.username}\"");

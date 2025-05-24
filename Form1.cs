@@ -72,10 +72,7 @@ namespace DoTuna
                 GetFolderButton.Visible = false;
 
                 ThreadListGrid.DataSource = null;
-                var bs = new BindingSource();
-                bs.DataSource = ThreadManager.Index;
-                ThreadListGrid.DataSource = bs;
-
+                ThreadListGrid.DataSource = ThreadManager.Index;
             }
             catch (DirectoryNotFoundException)
             {
