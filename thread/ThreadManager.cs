@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Data;
-using System.Data.DataSetExtensions;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -37,7 +36,7 @@ namespace DoTuna.Thread
                 Index.Columns.Add("username", typeof(string));
                 foreach (var item in deSerialized.OrderBy(x => x.threadId))
                 {
-                    Index.Rows.Add(false, item.threadId, item.title, item.username);
+                    ThreadTable.Rows.Add(false, item.threadId, item.title, item.username);
                 }
             }
             catch (JsonException e)
