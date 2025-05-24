@@ -13,8 +13,8 @@ namespace DoTuna.Thread
         public static string FilePath { get; set; } = String.Empty;
         public static bool SomethingSelected => Index.Any(x => x.IsCheck);
 
-        public static ObservableCollection<JsonIndexDocument> Index { get; private set; } 
-            = new ObservableCollection<JsonIndexDocument>();
+        public static BindingList<JsonIndexDocument> Index { get; private set; } 
+            = new BindingList<JsonIndexDocument>();
 
         public static void Open(string path)
         {
@@ -27,7 +27,7 @@ namespace DoTuna.Thread
             {
                 var jsonText = File.ReadAllText(Path.Combine(path, "index.json"));
                 var deSerialized = JsonSerializer.Deserialize<List<JsonIndexDocument>>(jsonText) ?? new List<JsonIndexDocument>();
-                Index = new ObservableCollection<JsonIndexDocument>(deSerialized.OrderBy(x => x.threadId));
+                Index = new BindingList<JsonIndexDocument>(deSerialized.OrderBy(x => x.threadId));
             }
             catch (JsonException e)
             {
