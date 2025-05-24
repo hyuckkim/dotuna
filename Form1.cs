@@ -71,8 +71,8 @@ namespace DoTuna
                 RunningButtonPanel.Visible = true;
                 GetFolderButton.Visible = false;
 
-                ThreadListGrid.SetObjects(null);
-                ThreadListGrid.SetObjects(ThreadManager.Index);
+                ThreadListGrid.DataSource = null;
+                ThreadListGrid.DataSource = ThreadManager.Index;
             }
             catch (DirectoryNotFoundException)
             {
@@ -94,14 +94,13 @@ namespace DoTuna
 
         private void OnCheckBoxClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0)
+            if (e.RowIndex >= 0 &&
+                ThreadListGrid.Rows[e.RowIndex].DataBoundItem is JsonIndexDocument item)
             {
-                var item = ThreadListGrid.GetModelObject(e.RowIndex) as JsonIndexDocument;
-                if (item != null)
+                var cell = ThreadListGrid.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                if (cell is DataGridViewCheckBoxCell)
                 {
-                    // Assuming the checkbox column is handled by ObjectListView's checkboxes
                     item.IsCheck = !item.IsCheck;
-                    ThreadListGrid.RefreshObject(item);
                 }
             }
         }
@@ -111,15 +110,15 @@ namespace DoTuna
             if (SelectAllCheckBox is CheckBox checkbox)
             {
                 bool isChecked = checkbox.Checked;
-                var items = ThreadListGrid.Objects as IEnumerable<JsonIndexDocument>;
-                if (items != null)
+
+                if (ThreadListGrid.DataSource is IEnumerable<JsonIndexDocument> items)
                 {
                     foreach (var obj in items)
                     {
                         obj.IsCheck = isChecked;
                     }
-                
-                    ThreadListGrid.RefreshObjects(items);
+
+                    ThreadListGrid.Refresh();
                 }
             }
         }
