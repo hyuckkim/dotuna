@@ -10,8 +10,16 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: microsoft/setup-msbuild@v1.3
-    - run: msbuild Dotuna.csproj /p:Configuration=Release
+  
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v1
+
+    - name: Restore NuGet packages
+      run: nuget restore Dotuna.csproj
+
+    - name: Build project
+      run: msbuild Dotuna.csproj /p:Configuration=Release
+
     - uses: actions/upload-artifact@v4
       with:
         name: Dotuna
