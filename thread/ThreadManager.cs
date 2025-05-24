@@ -11,10 +11,10 @@ namespace DoTuna.Thread
     public static class ThreadManager
     {
         public static string FilePath { get; set; } = String.Empty;
-        public static bool SomethingSelected => Index.Any(x => x.IsCheck);
+        public static bool SomethingSelected =>
+            Index.AsEnumerable().Any(row => row.Field<bool>("IsCheck")) ?? false;
 
-        public static ObservableCollection<JsonIndexDocument> Index { get; private set; } 
-            = new ObservableCollection<JsonIndexDocument>();
+        public static DataTable Index { get; private set; } = new DataTable();
 
         public static void Open(string path)
         {
@@ -27,7 +27,16 @@ namespace DoTuna.Thread
             {
                 var jsonText = File.ReadAllText(Path.Combine(path, "index.json"));
                 var deSerialized = JsonSerializer.Deserialize<List<JsonIndexDocument>>(jsonText) ?? new List<JsonIndexDocument>();
-                Index = new ObservableCollection<JsonIndexDocument>(deSerialized.OrderBy(x => x.threadId));
+
+                Index = new DataTable();
+                Index.Columns.Add("IsCheck", typeof(bool));
+                Index.Columns.Add("threadId", typeof(int));
+                Index.Columns.Add("title", typeof(string));
+                Index.Columns.Add("username", typeof(string));
+                foreach (var item in deSerialized.OrderBy(x => x.threadId))
+                {
+                    ThreadTable.Rows.Add(false, item.threadId, item.title, item.username);
+                }
             }
             catch (JsonException e)
             {
