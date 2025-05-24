@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Data;
-using System.Data.DataSetExtensions;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -25,18 +24,28 @@ namespace DoTuna.Export
             }
             progress?.Report("(index.html 생성 중)");
 
-            // .NET Framework 4.8에서 File.WriteAllTextAsync가 없으면 아래와 같이 Task.Run으로 감싸세요.
             await Task.Run(() => File.WriteAllText(indexPath, GenerateIndexPage()));
 
             progress?.Report("(index.html 생성됨)");
 
             int completed = 0;
-            int total = ThreadManager.Index.AsEnumerable().Count(row => row.Field<bool>("IsCheck"));
+            int total = 0;
+            foreach (DataRow row in ThreadManager.Index.Rows)
+            {
+                if (row.Field<bool>("IsCheck"))
+                    total++;
+            }
             progress?.Report($"({completed} of {total})");
 
-            foreach (var row in ThreadManager.Index.AsEnumerable()
-                         .Where(r => r.Field<bool>("IsCheck"))
-                         .OrderBy(r => r.Field<int>("threadId")))
+            var rows = new List<DataRow>();
+            foreach (DataRow row in ThreadManager.Index.Rows)
+            {
+                if (row.Field<bool>("IsCheck"))
+                    rows.Add(row);
+            }
+            rows = rows.OrderBy(r => r.Field<int>("threadId")).ToList();
+
+            foreach (var row in rows)
             {
                 int threadId = row.Field<int>("threadId");
                 string threadPath = Path.Combine(ResultPath, $"{threadId}.html");
@@ -70,13 +79,19 @@ namespace DoTuna.Export
         {
             var sb = new StringBuilder();
             sb.Append("const data = [");
-            foreach (var row in ThreadManager.Index.AsEnumerable()
-                 .Where(r => r.Field<bool>("IsCheck"))
-                 .OrderBy(r => r.Field<int>("threadId")))
+            var rows = new List<DataRow>();
+            foreach (DataRow row in ThreadManager.Index.Rows)
             {
-            sb.Append("{ ");
-            sb.Append($"thread_id: \"{row.Field<int>("threadId")}\", thread_title: \"{row.Field<string>("title")}\", thread_username: \"{row.Field<string>("username")}\"");
-            sb.Append(" },");
+                if (row.Field<bool>("IsCheck"))
+                    rows.Add(row);
+            }
+            rows = rows.OrderBy(r => r.Field<int>("threadId")).ToList();
+
+            foreach (var row in rows)
+            {
+                sb.Append("{ ");
+                sb.Append($"thread_id: \"{row.Field<int>("threadId")}\", thread_title: \"{row.Field<string>("title")}\", thread_username: \"{row.Field<string>("username")}\"");
+                sb.Append(" },");
             }
             sb.Append("];");
             return sb.ToString();
