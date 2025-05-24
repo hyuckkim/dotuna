@@ -7,7 +7,7 @@ namespace DoTuna
 {
     partial class Form1
     {
-        private ComponentModel.IContainer components = null;
+        private System.ComponentModel.IContainer components = null;
         private Label TitleLabel;
         private Button GetFolderButton;
         private AdvancedDataGridView ThreadListGrid;  // 변경
@@ -19,7 +19,7 @@ namespace DoTuna
 
         private void InitializeComponent()
         {
-            this.components = new ComponentModel.Container();
+            this.components = new System.ComponentModel.Container();
 
             this.TitleLabel = new Label();
             this.GetFolderButton = new Button();
