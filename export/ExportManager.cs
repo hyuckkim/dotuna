@@ -32,7 +32,7 @@ namespace DoTuna.Export
             int total = 0;
             foreach (DataRow row in ThreadManager.Index.Rows)
             {
-                if (row.Field<bool>("IsCheck"))
+                if ((bool)row["IsCheck"])
                     total++;
             }
             progress?.Report($"({completed} of {total})");
@@ -40,14 +40,14 @@ namespace DoTuna.Export
             var rows = new List<DataRow>();
             foreach (DataRow row in ThreadManager.Index.Rows)
             {
-                if (row.Field<bool>("IsCheck"))
+                if ((bool)row["IsCheck"])
                     rows.Add(row);
             }
-            rows = rows.OrderBy(r => r.Field<int>("threadId")).ToList();
+            rows = rows.OrderBy(r => (int)r["threadId"]).ToList();
 
             foreach (var row in rows)
             {
-                int threadId = row.Field<int>("threadId");
+                int threadId = (int)row["threadId"];
                 string threadPath = Path.Combine(ResultPath, $"{threadId}.html");
 
                 var content = await ThreadManager.GetThreadAsync(threadId);
@@ -82,15 +82,15 @@ namespace DoTuna.Export
             var rows = new List<DataRow>();
             foreach (DataRow row in ThreadManager.Index.Rows)
             {
-                if (row.Field<bool>("IsCheck"))
+                if ((bool)row["IsCheck"])
                     rows.Add(row);
             }
-            rows = rows.OrderBy(r => r.Field<int>("threadId")).ToList();
+            rows = rows.OrderBy(r => (int)r["threadId"]).ToList();
 
             foreach (var row in rows)
             {
                 sb.Append("{ ");
-                sb.Append($"thread_id: \"{row.Field<int>("threadId")}\", thread_title: \"{row.Field<string>("title")}\", thread_username: \"{row.Field<string>("username")}\"");
+                sb.Append($"thread_id: \"{(int)row["threadId"]}\", thread_title: \"{(string)row["title"]}\", thread_username: \"{(string)row["username"]}\"");
                 sb.Append(" },");
             }
             sb.Append("];");
