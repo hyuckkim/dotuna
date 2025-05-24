@@ -1,6 +1,8 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace DoTuna.thread
+namespace DoTuna.Thread
 {
     public class JsonIndexDocument: INotifyPropertyChanged
     {

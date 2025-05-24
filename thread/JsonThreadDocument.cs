@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace DoTuna.Thread
 {
     public class Response

@@ -1,6 +1,8 @@
+using System;
 using System.IO;
 using System.Text;
 using DoTuna.Thread;
+using System.Threading.Tasks;
 
 namespace DoTuna.Export 
 {
