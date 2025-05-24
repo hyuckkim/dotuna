@@ -11,7 +11,7 @@ namespace DoTuna
         private Label TitleLabel;
         private Button GetFolderButton;
         private AdvancedDataGridView ThreadListGrid;  // 변경
-        private CheckBox SelectAllCheckBox;
+        private Button SelectAllButton;
         private Button GetThreadSourceFileButton;
         private Button ExportFileButton;
         private Panel ReadyButtonPanel;

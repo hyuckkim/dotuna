@@ -108,11 +108,7 @@ namespace DoTuna
 
         private void OnSelectAllButtonClick(object sender, EventArgs e)
         {
-            foreach (var item in ThreadManager.Index)
-            {
-                item.IsCheck = false;
-            }
-            foreach (var row in ThreadListGrid.Rows)
+            foreach (DataGridViewRow row in ThreadListGrid.Rows)
             {
                 if (row.DataBoundItem is JsonIndexDocument item)
                 {
