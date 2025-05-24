@@ -54,8 +54,8 @@ namespace DoTuna.Thread
                     var row = Index.NewRow();
                     row["threadId"] = doc.threadId;
                     row["IsCheck"] = doc.IsCheck;
-                    row["title"] = doc.Title;
-                    row["CreatedAt"] = doc.CreatedAt;
+                    row["title"] = doc.title;
+                    row["CreatedAt"] = doc.createdAt;
                     row["username"] = doc.username;
                     // Set other properties as needed
                     Index.Rows.Add(row);
