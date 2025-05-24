@@ -2,7 +2,7 @@ using System.IO;
 using System.Text;
 using DoTuna.Thread;
 
-namespace Dotuna.Export 
+namespace DoTuna.Export 
 {
     public static class ExportManager
     {
