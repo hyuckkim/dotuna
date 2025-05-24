@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master, framework ]
   workflow_dispatch:
 
 jobs:
