@@ -15,13 +15,6 @@ namespace DoTuna
         {
             InitializeComponent();
 
-            // 이벤트 핸들러 바인딩 (디자이너가 생성하지 않는다면 수동 연결)
-            GetFolderButton.Click += OnGetFolderClick;
-            GetThreadSourceFileButton.Click += OnGetThreadSourceFileClick;
-            ExportFileButton.Click += ExportButtonClick;
-            SelectAllCheckBox.Click += OnSelectAllCheckBoxClick;
-            ThreadListGrid.CellContentClick += OnCheckBoxClick;
-
             AllowDrop = true;
             DragEnter += Form1_DragEnter;
             DragDrop += Form1_DragDrop;

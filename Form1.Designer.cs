@@ -100,6 +100,7 @@ namespace DoTuna
             // GetThreadSourceFileButton
             // 
             this.GetThreadSourceFileButton.Text = "스레드 원본 파일 받기";
+            this.GetThreadSourceFileButton.Width = 240;
             this.GetThreadSourceFileButton.Margin = new System.Windows.Forms.Padding(0, 0, 5, 0);
             this.GetThreadSourceFileButton.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
             this.GetThreadSourceFileButton.Click += new System.EventHandler(this.OnGetThreadSourceFileClick);
