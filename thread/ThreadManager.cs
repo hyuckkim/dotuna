@@ -44,6 +44,9 @@ namespace DoTuna.Thread
                 Index = new DataTable();
                 Index.Columns.Add("threadId", typeof(int));
                 Index.Columns.Add("IsCheck", typeof(bool));
+                Index.Columns.Add("Title", typeof(string));
+                Index.Columns.Add("CreatedAt", typeof(DateTime));
+                Index.Columns.Add("username", typeof(string));
                 // Add other columns as needed based on JsonIndexDocument properties
 
                 foreach (var doc in deSerialized.OrderBy(x => x.threadId))
@@ -51,6 +54,9 @@ namespace DoTuna.Thread
                     var row = Index.NewRow();
                     row["threadId"] = doc.threadId;
                     row["IsCheck"] = doc.IsCheck;
+                    row["title"] = doc.Title;
+                    row["CreatedAt"] = doc.CreatedAt;
+                    row["username"] = doc.username;
                     // Set other properties as needed
                     Index.Rows.Add(row);
                 }
