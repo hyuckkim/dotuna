@@ -30,7 +30,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Threading" />
     <Reference Include="System.Threading.Tasks" />
-    <Reference Include="System.ComponentModel" />
   </ItemGroup>
 
   <ItemGroup>
