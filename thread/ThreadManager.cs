@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Data;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -11,10 +12,21 @@ namespace DoTuna.Thread
     public static class ThreadManager
     {
         public static string FilePath { get; set; } = String.Empty;
-        public static bool SomethingSelected => Index.Any(x => x.IsCheck);
+        public static bool SomethingSelected
+        {
+            get
+            {
+                if (Index == null) return false;
+                foreach (DataRow row in Index.Rows)
+                {
+                    if (row.Table.Columns.Contains("IsCheck") && row["IsCheck"] is bool isCheck && isCheck)
+                        return true;
+                }
+                return false;
+            }
+        }
 
-        public static ObservableCollection<JsonIndexDocument> Index { get; private set; } 
-            = new ObservableCollection<JsonIndexDocument>();
+        public static DataTable Index { get; private set; } = new DataTable();
 
         public static void Open(string path)
         {
@@ -27,7 +39,21 @@ namespace DoTuna.Thread
             {
                 var jsonText = File.ReadAllText(Path.Combine(path, "index.json"));
                 var deSerialized = JsonSerializer.Deserialize<List<JsonIndexDocument>>(jsonText) ?? new List<JsonIndexDocument>();
-                Index = new ObservableCollection<JsonIndexDocument>(deSerialized.OrderBy(x => x.threadId));
+
+                // Create DataTable schema if not already created
+                Index = new DataTable();
+                Index.Columns.Add("threadId", typeof(int));
+                Index.Columns.Add("IsCheck", typeof(bool));
+                // Add other columns as needed based on JsonIndexDocument properties
+
+                foreach (var doc in deSerialized.OrderBy(x => x.threadId))
+                {
+                    var row = Index.NewRow();
+                    row["threadId"] = doc.threadId;
+                    row["IsCheck"] = doc.IsCheck;
+                    // Set other properties as needed
+                    Index.Rows.Add(row);
+                }
             }
             catch (JsonException e)
             {

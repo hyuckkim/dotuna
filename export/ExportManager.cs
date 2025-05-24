@@ -29,17 +29,19 @@ namespace DoTuna.Export
             progress?.Report("(index.html 생성됨)");
 
             int completed = 0;
-            int total = ThreadManager.Index.Count(x => x.IsCheck);
+            int total = ThreadManager.Index.AsEnumerable().Count(row => row.Field<bool>("IsCheck"));
             progress?.Report($"({completed} of {total})");
 
-            foreach (var thread in ThreadManager.Index.Where(x => x.IsCheck).OrderBy(x => x.threadId))
+            foreach (var row in ThreadManager.Index.AsEnumerable()
+                         .Where(r => r.Field<bool>("IsCheck"))
+                         .OrderBy(r => r.Field<int>("threadId")))
             {
-                string threadPath = Path.Combine(ResultPath, $"{thread.threadId}.html");
+                int threadId = row.Field<int>("threadId");
+                string threadPath = Path.Combine(ResultPath, $"{threadId}.html");
 
-                var content = await ThreadManager.GetThreadAsync(thread.threadId);
-                string html = await GenerateThreadPage(thread.threadId);
+                var content = await ThreadManager.GetThreadAsync(threadId);
+                string html = await GenerateThreadPage(threadId);
 
-                // 동기 버전 쓰려면 Task.Run으로 감싸거나 그냥 File.WriteAllText 써도 됨
                 await Task.Run(() => File.WriteAllText(threadPath, html));
 
                 Interlocked.Increment(ref completed);
@@ -62,16 +64,17 @@ namespace DoTuna.Export
             sb.Append("</body></html>");
             return sb.ToString();
         }
-
         static string MakeJsIndex()
         {
             var sb = new StringBuilder();
             sb.Append("const data = [");
-            foreach (var index in ThreadManager.Index.Where(x => x.IsCheck).OrderBy(x => x.threadId))
+            foreach (var row in ThreadManager.Index.AsEnumerable()
+                 .Where(r => r.Field<bool>("IsCheck"))
+                 .OrderBy(r => r.Field<int>("threadId")))
             {
-                sb.Append("{ ");
-                sb.Append($"thread_id: \"{index.threadId}\", thread_title: \"{index.title}\", thread_username: \"{index.username}\"");
-                sb.Append(" },");
+            sb.Append("{ ");
+            sb.Append($"thread_id: \"{row.Field<int>("threadId")}\", thread_title: \"{row.Field<string>("title")}\", thread_username: \"{row.Field<string>("username")}\"");
+            sb.Append(" },");
             }
             sb.Append("];");
             return sb.ToString();
