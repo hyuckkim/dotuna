@@ -118,13 +118,19 @@ namespace DoTuna
             this.ExportFileButton.Padding = new Padding(10, 0, 10, 0);
             this.ExportFileButton.Click += new EventHandler(this.ExportButtonClick);
 
-            // 
-            // SelectAllCheckBox
-            // 
-            this.SelectAllCheckBox.Text = "전체 선택";
-            this.SelectAllCheckBox.AutoSize = true;
-            this.SelectAllCheckBox.CheckedChanged += new EventHandler(this.OnSelectAllCheckBoxClick);
-            this.SelectAllCheckBox.Dock = DockStyle.Top;
+            // SelectAllButton
+            var SelectAllButton = new Button();
+            SelectAllButton.Name = "SelectAllButton";
+            SelectAllButton.Text = "전체 선택";
+            SelectAllButton.AutoSize = true;
+            SelectAllButton.Margin = new Padding(0, 0, 5, 0);
+            SelectAllButton.Padding = new Padding(10, 0, 10, 0);
+            SelectAllButton.Visible = false;
+            SelectAllButton.Click += new EventHandler(this.OnSelectAllButtonClick);
+
+            // ReadyButtonPanel에 추가하지 않고 RunningButtonPanel에 내보내기 오른쪽에 추가
+            this.RunningButtonPanel.Controls.Add(SelectAllButton);
+            this.RunningButtonPanel.Controls.SetChildIndex(SelectAllButton, 0); // 오른쪽에 오도록 순서 조정
 
             // 
             // Form1 (this)

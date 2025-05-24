@@ -70,6 +70,7 @@ namespace DoTuna
                 ReadyButtonPanel.Visible = false;
                 RunningButtonPanel.Visible = true;
                 GetFolderButton.Visible = false;
+                SelectAllButton.Visible = true;
 
                 ThreadListGrid.DataSource = null;
                 ThreadListGrid.DataSource = ThreadManager.Index;
@@ -105,20 +106,17 @@ namespace DoTuna
             }
         }
 
-        private void OnSelectAllCheckBoxClick(object sender, EventArgs e)
+        private void OnSelectAllButtonClick(object sender, EventArgs e)
         {
-            if (SelectAllCheckBox is CheckBox checkbox)
+            foreach (var item in ThreadManager.Index)
             {
-                bool isChecked = checkbox.Checked;
-
-                if (ThreadListGrid.DataSource is IEnumerable<JsonIndexDocument> items)
+                item.IsCheck = false;
+            }
+            foreach (var row in ThreadListGrid.Rows)
+            {
+                if (row.DataBoundItem is JsonIndexDocument item)
                 {
-                    foreach (var obj in items)
-                    {
-                        obj.IsCheck = isChecked;
-                    }
-
-                    ThreadListGrid.Refresh();
+                    item.IsCheck = true;
                 }
             }
         }
