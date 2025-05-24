@@ -28,7 +28,7 @@ namespace DoTuna.Thread
             {
                 var jsonText = File.ReadAllText(Path.Combine(path, "index.json"));
                 var deSerialized = JsonSerializer.Deserialize<List<JsonIndexDocument>>(jsonText) ?? new List<JsonIndexDocument>();
-                Index = new BindingList<JsonIndexDocument>(deSerialized.OrderBy(x => x.threadId).ToList());
+                Index = new BindingList<JsonIndexDocument>(deSerialized.OrderBy(x => x.threadId));
             }
             catch (JsonException e)
             {
