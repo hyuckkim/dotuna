@@ -56,8 +56,8 @@ namespace DoTuna
             this.ThreadListGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             this.ThreadListGrid.MultiSelect = false;
             this.ThreadListGrid.AutoGenerateColumns = false;
-            this.ThreadListGrid.FilterAndSortEnabled = true;  // 필터 정렬 기능 활성화
-
+            this.ThreadListGrid.FilterAndSortEnabled = true;
+            
             // Define columns
             var colThreadName = new DataGridViewTextBoxColumn()
             {
