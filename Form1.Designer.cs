@@ -7,7 +7,7 @@ namespace DoTuna
         private System.ComponentModel.IContainer components = null;
         private System.Windows.Forms.Label TitleLabel;
         private System.Windows.Forms.Button GetFolderButton;
-        private ADGV.AdvancedDataGridView ThreadListGrid;  // 변경
+        private AdvancedDataGridView ThreadListGrid;  // 변경
         private System.Windows.Forms.CheckBox SelectAllCheckBox;
         private System.Windows.Forms.Button GetThreadSourceFileButton;
         private System.Windows.Forms.Button ExportFileButton;
@@ -20,7 +20,7 @@ namespace DoTuna
 
             this.TitleLabel = new System.Windows.Forms.Label();
             this.GetFolderButton = new System.Windows.Forms.Button();
-            this.ThreadListGrid = new ADGV.AdvancedDataGridView();  // 변경
+            this.ThreadListGrid = new AdvancedDataGridView();  // 변경
             this.SelectAllCheckBox = new System.Windows.Forms.CheckBox();
             this.GetThreadSourceFileButton = new System.Windows.Forms.Button();
             this.ExportFileButton = new System.Windows.Forms.Button();
@@ -56,21 +56,21 @@ namespace DoTuna
             this.ThreadListGrid.FilterAndSortEnabled = true;  // 필터 정렬 기능 활성화
 
             // Define columns
-            var colThreadName = new ADGV.AdvancedDataGridViewTextBoxColumn()
+            var colThreadName = new AdvancedDataGridViewTextBoxColumn()
             {
                 HeaderText = "스레드 이름",
                 DataPropertyName = "title",
                 ReadOnly = true,
                 AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
             };
-            var colUserName = new ADGV.AdvancedDataGridViewTextBoxColumn()
+            var colUserName = new AdvancedDataGridViewTextBoxColumn()
             {
                 HeaderText = "유저 이름",
                 DataPropertyName = "username",
                 ReadOnly = true,
                 AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
             };
-            var colCheck = new ADGV.AdvancedDataGridViewCheckBoxColumn()
+            var colCheck = new AdvancedDataGridViewCheckBoxColumn()
             {
                 HeaderText = "",
                 Width = 30,
