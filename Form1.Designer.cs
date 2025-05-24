@@ -157,7 +157,7 @@ namespace DoTuna
 
             mainPanel.Controls.Add(this.GetFolderButton);
             mainPanel.Controls.Add(this.ThreadListGrid);
-            mainPanel.Controls.Add(this.SelectAllCheckBox);
+            mainPanel.Controls.Add(this.SelectAllButton);
 
             this.Controls.Add(mainPanel);
             this.Controls.Add(this.ReadyButtonPanel);
