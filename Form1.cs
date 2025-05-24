@@ -108,13 +108,11 @@ namespace DoTuna
 
         private void OnSelectAllButtonClick(object sender, EventArgs e)
         {
-            foreach (DataGridViewRow row in ThreadListGrid.Rows)
+            foreach (DataRow row in ThreadManager.Index.Rows)
             {
-                if (row.DataBoundItem is JsonIndexDocument item)
-                {
-                    item.IsCheck = true;
-                }
+                row["IsCheck"] = true;  // 또는 false로 해제
             }
+            ThreadListGrid.Refresh(); // 화면 갱신
         }
 
         private async void ExportButtonClick(object sender, EventArgs e)

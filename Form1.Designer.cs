@@ -99,6 +99,7 @@ namespace DoTuna
             this.RunningButtonPanel.Height = 40;
             this.RunningButtonPanel.Visible = false;
             this.RunningButtonPanel.Controls.Add(this.ExportFileButton);
+            this.RunningButtonPanel.Controls.Add(this.SelectAllButton);
 
             // 
             // GetThreadSourceFileButton
@@ -157,7 +158,6 @@ namespace DoTuna
 
             mainPanel.Controls.Add(this.GetFolderButton);
             mainPanel.Controls.Add(this.ThreadListGrid);
-            mainPanel.Controls.Add(this.SelectAllButton);
 
             this.Controls.Add(mainPanel);
             this.Controls.Add(this.ReadyButtonPanel);
