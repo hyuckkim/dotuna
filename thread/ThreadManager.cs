@@ -1,5 +1,8 @@
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -7,9 +10,13 @@ namespace DoTuna.Thread
 {
     public static class ThreadManager
     {
-        public static string? FilePath { get; private set; }
-        public static bool SomethingSelected { get => Index.Any(x => x.IsCheck);}
-        public static ObservableCollection<JsonIndexDocument> Index { get; private set; } = [];
+        // nullable string은 4.8 C#7.x에서 지원 안 됨 (nullable context 미지원)
+        public static string FilePath { get; private set; }
+        public static bool SomethingSelected => Index.Any(x => x.IsCheck);
+
+        public static ObservableCollection<JsonIndexDocument> Index { get; private set; } 
+            = new ObservableCollection<JsonIndexDocument>();
+
         public static void Open(string path)
         {
             if (!Directory.Exists(path))
@@ -17,8 +24,10 @@ namespace DoTuna.Thread
                 throw new DirectoryNotFoundException($"Directory not found: {path}");
             }
             FilePath = path;
-            try {
-                var deSerialized = JsonSerializer.Deserialize<List<JsonIndexDocument>>(File.ReadAllText(Path.Combine(path, "index.json"))) ?? [];
+            try
+            {
+                var jsonText = File.ReadAllText(Path.Combine(path, "index.json"));
+                var deSerialized = JsonSerializer.Deserialize<List<JsonIndexDocument>>(jsonText) ?? new List<JsonIndexDocument>();
                 Index = new ObservableCollection<JsonIndexDocument>(deSerialized.OrderBy(x => x.threadId));
             }
             catch (JsonException e)
@@ -26,29 +35,36 @@ namespace DoTuna.Thread
                 throw new JsonException($"Failed to parse JSON file: {e.Message}", e);
             }
         }
+
         public static JsonThreadDocument GetThread(int id)
         {
-            var threadPath = Path.Combine(FilePath!, $"{id}.json");
+            var threadPath = Path.Combine(FilePath, $"{id}.json");
             if (!File.Exists(threadPath))
             {
                 throw new FileNotFoundException($"Thread file not found: {threadPath}");
             }
-            return JsonSerializer.Deserialize<JsonThreadDocument>(File.ReadAllText(threadPath))
+            var jsonText = File.ReadAllText(threadPath);
+            return JsonSerializer.Deserialize<JsonThreadDocument>(jsonText)
                 ?? throw new JsonException($"Failed to parse thread JSON file: {threadPath}");
         }
 
         public static async Task<JsonThreadDocument> GetThreadAsync(int id)
         {
-            var threadPath = Path.Combine(FilePath!, $"{id}.json");
+            var threadPath = Path.Combine(FilePath, $"{id}.json");
             if (!File.Exists(threadPath))
             {
                 throw new FileNotFoundException($"Thread file not found: {threadPath}");
             }
 
-            // 비동기로 파일 읽기
-            using var stream = File.OpenRead(threadPath);
-            return await JsonSerializer.DeserializeAsync<JsonThreadDocument>(stream)
-                ?? throw new JsonException($"Failed to parse thread JSON file: {threadPath}");
+            using (var stream = File.OpenRead(threadPath))
+            {
+                var doc = await JsonSerializer.DeserializeAsync<JsonThreadDocument>(stream);
+                if (doc == null)
+                {
+                    throw new JsonException($"Failed to parse thread JSON file: {threadPath}");
+                }
+                return doc;
+            }
         }
     }
 }

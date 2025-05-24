@@ -1,40 +1,52 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
-using DoTuna.Thread;
+using System.Threading;
 using System.Threading.Tasks;
+using DoTuna.Thread;
 
 namespace DoTuna.Export 
 {
     public static class ExportManager
     {
-        public static readonly string ReusltPath = Path.Combine(Directory.GetCurrentDirectory(), "Result");
-        
-        public static async Task Build(IProgress<string>? progress = null)
-        {
-            string indexPath = Path.Combine(ReusltPath, "index.html");
+        public static readonly string ResultPath = Path.Combine(Directory.GetCurrentDirectory(), "Result");
 
-            if (!Directory.Exists(ReusltPath))
+        public static async Task Build(IProgress<string> progress = null)
+        {
+            string indexPath = Path.Combine(ResultPath, "index.html");
+
+            if (!Directory.Exists(ResultPath))
             {
-                Directory.CreateDirectory(ReusltPath);
+                Directory.CreateDirectory(ResultPath);
             }
             progress?.Report("(index.html 생성 중)");
-            await File.WriteAllTextAsync(indexPath, GenerateIndexPage());
+
+            // .NET Framework 4.8에서 File.WriteAllTextAsync가 없으면 아래와 같이 Task.Run으로 감싸세요.
+            await Task.Run(() => File.WriteAllText(indexPath, GenerateIndexPage()));
+
             progress?.Report("(index.html 생성됨)");
-            
-            var tasks = new List<Task>();
-            var completed = 0;
-            var total = ThreadManager.Index.Where(x => x.IsCheck).Count();
+
+            int completed = 0;
+            int total = ThreadManager.Index.Count(x => x.IsCheck);
             progress?.Report($"({completed} of {total})");
 
             foreach (var thread in ThreadManager.Index.Where(x => x.IsCheck).OrderBy(x => x.threadId))
             {
-                string threadPath = Path.Combine(ReusltPath, $"{thread.threadId}.html");
-                await File.WriteAllTextAsync(threadPath, await GenerateThreadPage(thread.threadId));
+                string threadPath = Path.Combine(ResultPath, $"{thread.threadId}.html");
+
+                var content = await ThreadManager.GetThreadAsync(thread.threadId);
+                string html = await GenerateThreadPage(thread.threadId);
+
+                // 동기 버전 쓰려면 Task.Run으로 감싸거나 그냥 File.WriteAllText 써도 됨
+                await Task.Run(() => File.WriteAllText(threadPath, html));
+
                 Interlocked.Increment(ref completed);
                 progress?.Report($"({completed} of {total})");
             }
         }
+
         static string GenerateIndexPage() 
         {
             var sb = new StringBuilder();
@@ -50,6 +62,7 @@ namespace DoTuna.Export
             sb.Append("</body></html>");
             return sb.ToString();
         }
+
         static string MakeJsIndex()
         {
             var sb = new StringBuilder();
@@ -63,6 +76,7 @@ namespace DoTuna.Export
             sb.Append("];");
             return sb.ToString();
         }
+
         static async Task<string> GenerateThreadPage(int id)
         {
             var data = await ThreadManager.GetThreadAsync(id);
@@ -80,12 +94,14 @@ namespace DoTuna.Export
             sb.Append("</ul></div></div></article></body></html>");
             return sb.ToString();
         }
+
         static string MakeHtmlResponse(Response res)
         {
             var sb = new StringBuilder();
             sb.Append($"<li class=\"response\" id=\"response_anchor_{res.threadId}_{res.sequence}\"><div class=\"response_header\"><p><b>{res.sequence}</b> {res.username} ({res.userId})</p><p>{res.createdAt.Tuna()}</p></div> <div class=\"response_body\">{res.content}</div></li>");
             return sb.ToString();
         }
+
         static string Tuna(this DateTime time)
         {
             return time.AddHours(9).ToString("yyyy-MM-dd '('ddd')' HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)
