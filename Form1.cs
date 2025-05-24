@@ -110,9 +110,9 @@ namespace DoTuna
         {
             foreach (DataRow row in ThreadManager.Index.Rows)
             {
-                row["IsCheck"] = true;  // 또는 false로 해제
+                row["IsCheck"] = true;
             }
-            ThreadListGrid.Refresh(); // 화면 갱신
+            ThreadListGrid.Refresh();
         }
 
         private async void ExportButtonClick(object sender, EventArgs e)
