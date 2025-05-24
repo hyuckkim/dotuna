@@ -19,9 +19,21 @@
     <Compile Include="export/ExportManager.cs" />
 
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- 필수 어셈블리 참조 -->
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System" />
+    <Reference Include="System.Threading" />
+    <Reference Include="System.Threading.Tasks" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- NuGet 패키지 참조 (System.Text.Json) -->
+    <PackageReference Include="System.Text.Json" Version="7.0.2" />
   </ItemGroup>
 
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
