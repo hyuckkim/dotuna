@@ -1,4 +1,4 @@
-using ADGV;  // 네임스페이스 추가 필요
+using Zuby.ADGV;
 
 namespace DoTuna
 {
