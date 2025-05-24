@@ -108,9 +108,12 @@ namespace DoTuna
 
         private void OnSelectAllButtonClick(object sender, EventArgs e)
         {
-            foreach (DataRow row in ThreadManager.Index.Rows)
+            foreach (DataGridViewRow row in ThreadListGrid.Rows)
             {
-                row["IsCheck"] = true;
+                if (row.DataBoundItem is DataRowView drv)
+                {
+                    drv["IsCheck"] = true;
+                }
             }
             ThreadListGrid.Refresh();
         }
