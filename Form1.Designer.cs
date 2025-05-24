@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Zuby.ADGV;
+using BrightIdeasSoftware;
 
 namespace DoTuna
 {
@@ -10,7 +10,7 @@ namespace DoTuna
         private System.ComponentModel.IContainer components = null;
         private Label TitleLabel;
         private Button GetFolderButton;
-        private AdvancedDataGridView ThreadListGrid;  // 변경
+        private ObjectListView ThreadListGrid;  // 변경: ObjectListView로 교체
         private CheckBox SelectAllCheckBox;
         private Button GetThreadSourceFileButton;
         private Button ExportFileButton;
@@ -23,7 +23,7 @@ namespace DoTuna
 
             this.TitleLabel = new Label();
             this.GetFolderButton = new Button();
-            this.ThreadListGrid = new AdvancedDataGridView();  // 변경
+            this.ThreadListGrid = new ObjectListView();  // 변경: ObjectListView로 교체
             this.SelectAllCheckBox = new CheckBox();
             this.GetThreadSourceFileButton = new Button();
             this.ExportFileButton = new Button();
@@ -47,39 +47,44 @@ namespace DoTuna
             this.GetFolderButton.Click += new EventHandler(this.OnGetFolderClick);
 
             // 
-            // ThreadListGrid (AdvancedDataGridView)
+            // ThreadListGrid (ObjectListView)
             // 
             this.ThreadListGrid.Name = "ThreadListGrid";
-            this.ThreadListGrid.AllowUserToAddRows = false;
-            this.ThreadListGrid.Visible = false;
-            this.ThreadListGrid.Dock = DockStyle.Fill;
-            this.ThreadListGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            this.ThreadListGrid.View = View.Details;
+            this.ThreadListGrid.FullRowSelect = true;
             this.ThreadListGrid.MultiSelect = false;
-            this.ThreadListGrid.AutoGenerateColumns = false;
-            this.ThreadListGrid.FilterAndSortEnabled = true;
-            
+            this.ThreadListGrid.HideSelection = false;
+            this.ThreadListGrid.UseCompatibleStateImageBehavior = false;
+            this.ThreadListGrid.Dock = DockStyle.Fill;
+            this.ThreadListGrid.Visible = false;
+            this.ThreadListGrid.CheckBoxes = true;
+            this.ThreadListGrid.CellEditUseWholeCell = false;
+
             // Define columns
-            var colThreadName = new DataGridViewTextBoxColumn()
+            var colThreadName = new OLVColumn("스레드 이름", "title")
             {
-                HeaderText = "스레드 이름",
-                DataPropertyName = "title",
-                ReadOnly = true,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                Width = 200,
+                FillsFreeSpace = true,
+                IsEditable = false
             };
-            var colUserName = new DataGridViewTextBoxColumn()
+            var colUserName = new OLVColumn("유저 이름", "username")
             {
-                HeaderText = "유저 이름",
-                DataPropertyName = "username",
-                ReadOnly = true,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                Width = 120,
+                FillsFreeSpace = true,
+                IsEditable = false
             };
-            var colCheck = new DataGridViewCheckBoxColumn()
+            var colCheck = new OLVColumn("", "IsCheck")
             {
-                HeaderText = "",
                 Width = 30,
-                DataPropertyName = "IsCheck"
+                CheckBoxes = true,
+                TextAlign = HorizontalAlignment.Center
             };
-            this.ThreadListGrid.Columns.AddRange(new DataGridViewColumn[] {
+            this.ThreadListGrid.Columns.AddRange(new ColumnHeader[] {
+                colThreadName,
+                colUserName,
+                colCheck
+            });
+            this.ThreadListGrid.AllColumns.AddRange(new OLVColumn[] {
                 colThreadName,
                 colUserName,
                 colCheck
