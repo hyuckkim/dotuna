@@ -138,7 +138,6 @@ namespace DoTuna
                 Padding = new System.Windows.Forms.Padding(5, 50, 5, 50),
                 AllowDrop = true
             };
-            mainPanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.OnFolderDrop);
             mainPanel.DragEnter += (s, e) => { if (e.Data.GetDataPresent(System.Windows.Forms.DataFormats.FileDrop)) e.Effect = System.Windows.Forms.DragDropEffects.Copy; else e.Effect = System.Windows.Forms.DragDropEffects.None; };
 
             // Inside mainPanel: 
