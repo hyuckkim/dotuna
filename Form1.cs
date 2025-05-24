@@ -119,7 +119,7 @@ namespace DoTuna
                         obj.IsCheck = isChecked;
                     }
                 
-                    ThreadListGrid.RefreshObjects(items);
+                    ThreadListGrid.RefreshObjects(items.ToList());
                 }
             }
         }
