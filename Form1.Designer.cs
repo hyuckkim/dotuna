@@ -24,7 +24,7 @@ namespace DoTuna
             this.TitleLabel = new Label();
             this.GetFolderButton = new Button();
             this.ThreadListGrid = new AdvancedDataGridView();  // 변경
-            this.SelectAllCheckBox = new CheckBox();
+            this.SelectAllButton = new Button();
             this.GetThreadSourceFileButton = new Button();
             this.ExportFileButton = new Button();
             this.ReadyButtonPanel = new Panel();
