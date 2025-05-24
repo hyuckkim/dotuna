@@ -109,6 +109,7 @@ namespace DoTuna
             // ExportFileButton
             // 
             this.ExportFileButton.Text = "내보내기";
+            this.GetThreadSourceFileButton.Width = 120;
             this.ExportFileButton.Margin = new System.Windows.Forms.Padding(0, 0, 5, 0);
             this.ExportFileButton.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
             this.ExportFileButton.Click += new System.EventHandler(this.ExportButtonClick);
