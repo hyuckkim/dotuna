@@ -56,21 +56,21 @@ namespace DoTuna
             this.ThreadListGrid.FilterAndSortEnabled = true;  // 필터 정렬 기능 활성화
 
             // Define columns
-            var colThreadName = new AdvancedDataGridViewTextBoxColumn()
+            var colThreadName = new DataGridViewTextBoxColumn()
             {
                 HeaderText = "스레드 이름",
                 DataPropertyName = "title",
                 ReadOnly = true,
                 AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
             };
-            var colUserName = new AdvancedDataGridViewTextBoxColumn()
+            var colUserName = new DataGridViewTextBoxColumn()
             {
                 HeaderText = "유저 이름",
                 DataPropertyName = "username",
                 ReadOnly = true,
                 AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
             };
-            var colCheck = new AdvancedDataGridViewCheckBoxColumn()
+            var colCheck = new DataGridViewCheckBoxColumn()
             {
                 HeaderText = "",
                 Width = 30,
@@ -110,7 +110,7 @@ namespace DoTuna
             // ExportFileButton
             // 
             this.ExportFileButton.Text = "내보내기";
-            this.ExportFileButton.Width = 120;  // 여기 오타 수정 (원래는 GetThreadSourceFileButton.Width로 돼있었음)
+            this.ExportFileButton.Width = 120; 
             this.ExportFileButton.Margin = new System.Windows.Forms.Padding(0, 0, 5, 0);
             this.ExportFileButton.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
             this.ExportFileButton.Click += new System.EventHandler(this.ExportButtonClick);
@@ -146,10 +146,9 @@ namespace DoTuna
                     e.Effect = System.Windows.Forms.DragDropEffects.None;
             };
 
-            // mainPanel 내부에 GetFolderButton, ThreadListGrid, SelectAllCheckBox 배치
             mainPanel.Controls.Add(this.GetFolderButton);
             mainPanel.Controls.Add(this.ThreadListGrid);
-            mainPanel.Controls.Add(this.SelectAllCheckBox); // ThreadListGrid 대신 mainPanel에 올림
+            mainPanel.Controls.Add(this.SelectAllCheckBox);
 
             this.Controls.Add(mainPanel);
             this.Controls.Add(this.ReadyButtonPanel);
