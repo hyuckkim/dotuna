@@ -12,6 +12,12 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+
+    <Compile Include="thread/JsonIndexDocument.cs" />
+    <Compile Include="thread/JsonThreadDocument.cs" />
+    <Compile Include="thread/ThreadManager.cs" />
+    <Compile Include="export/ExportManager.cs" />
+
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Drawing" />
