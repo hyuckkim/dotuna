@@ -1,38 +1,41 @@
+using System;
+using System.Drawing;
+using System.Windows.Forms;
 using Zuby.ADGV;
 
 namespace DoTuna
 {
     partial class Form1
     {
-        private System.ComponentModel.IContainer components = null;
-        private System.Windows.Forms.Label TitleLabel;
-        private System.Windows.Forms.Button GetFolderButton;
+        private ComponentModel.IContainer components = null;
+        private Label TitleLabel;
+        private Button GetFolderButton;
         private AdvancedDataGridView ThreadListGrid;  // 변경
-        private System.Windows.Forms.CheckBox SelectAllCheckBox;
-        private System.Windows.Forms.Button GetThreadSourceFileButton;
-        private System.Windows.Forms.Button ExportFileButton;
-        private System.Windows.Forms.Panel ReadyButtonPanel;
-        private System.Windows.Forms.Panel RunningButtonPanel;
+        private CheckBox SelectAllCheckBox;
+        private Button GetThreadSourceFileButton;
+        private Button ExportFileButton;
+        private Panel ReadyButtonPanel;
+        private Panel RunningButtonPanel;
 
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.components = new ComponentModel.Container();
 
-            this.TitleLabel = new System.Windows.Forms.Label();
-            this.GetFolderButton = new System.Windows.Forms.Button();
+            this.TitleLabel = new Label();
+            this.GetFolderButton = new Button();
             this.ThreadListGrid = new AdvancedDataGridView();  // 변경
-            this.SelectAllCheckBox = new System.Windows.Forms.CheckBox();
-            this.GetThreadSourceFileButton = new System.Windows.Forms.Button();
-            this.ExportFileButton = new System.Windows.Forms.Button();
-            this.ReadyButtonPanel = new System.Windows.Forms.Panel();
-            this.RunningButtonPanel = new System.Windows.Forms.Panel();
+            this.SelectAllCheckBox = new CheckBox();
+            this.GetThreadSourceFileButton = new Button();
+            this.ExportFileButton = new Button();
+            this.ReadyButtonPanel = new Panel();
+            this.RunningButtonPanel = new Panel();
 
             // 
             // TitleLabel
             // 
             this.TitleLabel.Text = "Dotuna: 스레드 추출하기";
-            this.TitleLabel.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.TitleLabel.Location = new System.Drawing.Point(0, 10);
+            this.TitleLabel.Font = new Font("Segoe UI", 24F, FontStyle.Regular, GraphicsUnit.Point);
+            this.TitleLabel.Location = new Point(0, 10);
             this.TitleLabel.AutoSize = true;
 
             // 
@@ -40,8 +43,8 @@ namespace DoTuna
             // 
             this.GetFolderButton.Name = "GetFolderButton";
             this.GetFolderButton.Text = "폴더 가져오기";
-            this.GetFolderButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GetFolderButton.Click += new System.EventHandler(this.OnGetFolderClick);
+            this.GetFolderButton.Dock = DockStyle.Fill;
+            this.GetFolderButton.Click += new EventHandler(this.OnGetFolderClick);
 
             // 
             // ThreadListGrid (AdvancedDataGridView)
@@ -49,8 +52,8 @@ namespace DoTuna
             this.ThreadListGrid.Name = "ThreadListGrid";
             this.ThreadListGrid.AllowUserToAddRows = false;
             this.ThreadListGrid.Visible = false;
-            this.ThreadListGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ThreadListGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.ThreadListGrid.Dock = DockStyle.Fill;
+            this.ThreadListGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             this.ThreadListGrid.MultiSelect = false;
             this.ThreadListGrid.AutoGenerateColumns = false;
             this.ThreadListGrid.FilterAndSortEnabled = true;  // 필터 정렬 기능 활성화
@@ -61,14 +64,14 @@ namespace DoTuna
                 HeaderText = "스레드 이름",
                 DataPropertyName = "title",
                 ReadOnly = true,
-                AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             };
             var colUserName = new DataGridViewTextBoxColumn()
             {
                 HeaderText = "유저 이름",
                 DataPropertyName = "username",
                 ReadOnly = true,
-                AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             };
             var colCheck = new DataGridViewCheckBoxColumn()
             {
@@ -76,7 +79,7 @@ namespace DoTuna
                 Width = 30,
                 DataPropertyName = "IsCheck"
             };
-            this.ThreadListGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ThreadListGrid.Columns.AddRange(new DataGridViewColumn[] {
                 colThreadName,
                 colUserName,
                 colCheck
@@ -85,14 +88,14 @@ namespace DoTuna
             // 
             // ReadyButtonPanel
             // 
-            this.ReadyButtonPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.ReadyButtonPanel.Dock = DockStyle.Bottom;
             this.ReadyButtonPanel.Height = 40;
             this.ReadyButtonPanel.Controls.Add(this.GetThreadSourceFileButton);
 
             // 
             // RunningButtonPanel
             // 
-            this.RunningButtonPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.RunningButtonPanel.Dock = DockStyle.Bottom;
             this.RunningButtonPanel.Height = 40;
             this.RunningButtonPanel.Visible = false;
             this.RunningButtonPanel.Controls.Add(this.ExportFileButton);
@@ -102,48 +105,48 @@ namespace DoTuna
             // 
             this.GetThreadSourceFileButton.Text = "스레드 원본 파일 받기";
             this.GetThreadSourceFileButton.Width = 240;
-            this.GetThreadSourceFileButton.Margin = new System.Windows.Forms.Padding(0, 0, 5, 0);
-            this.GetThreadSourceFileButton.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
-            this.GetThreadSourceFileButton.Click += new System.EventHandler(this.OnGetThreadSourceFileClick);
+            this.GetThreadSourceFileButton.Margin = new Padding(0, 0, 5, 0);
+            this.GetThreadSourceFileButton.Padding = new Padding(10, 0, 10, 0);
+            this.GetThreadSourceFileButton.Click += new EventHandler(this.OnGetThreadSourceFileClick);
 
             // 
             // ExportFileButton
             // 
             this.ExportFileButton.Text = "내보내기";
             this.ExportFileButton.Width = 120; 
-            this.ExportFileButton.Margin = new System.Windows.Forms.Padding(0, 0, 5, 0);
-            this.ExportFileButton.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
-            this.ExportFileButton.Click += new System.EventHandler(this.ExportButtonClick);
+            this.ExportFileButton.Margin = new Padding(0, 0, 5, 0);
+            this.ExportFileButton.Padding = new Padding(10, 0, 10, 0);
+            this.ExportFileButton.Click += new EventHandler(this.ExportButtonClick);
 
             // 
             // SelectAllCheckBox
             // 
             this.SelectAllCheckBox.Text = "전체 선택";
             this.SelectAllCheckBox.AutoSize = true;
-            this.SelectAllCheckBox.CheckedChanged += new System.EventHandler(this.OnSelectAllCheckBoxClick);
-            this.SelectAllCheckBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.SelectAllCheckBox.CheckedChanged += new EventHandler(this.OnSelectAllCheckBoxClick);
+            this.SelectAllCheckBox.Dock = DockStyle.Top;
 
             // 
             // Form1 (this)
             // 
             this.Text = "DoTuna";
-            this.MinimumSize = new System.Drawing.Size(450, 450);
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.MinimumSize = new Size(450, 450);
+            this.ClientSize = new Size(800, 450);
 
             // Layout controls
             this.Controls.Add(this.TitleLabel);
 
-            var mainPanel = new System.Windows.Forms.Panel
+            var mainPanel = new Panel
             {
-                Dock = System.Windows.Forms.DockStyle.Fill,
-                Padding = new System.Windows.Forms.Padding(5, 50, 5, 50),
+                Dock = DockStyle.Fill,
+                Padding = new Padding(5, 50, 5, 50),
                 AllowDrop = true
             };
             mainPanel.DragEnter += (s, e) => {
-                if (e.Data.GetDataPresent(System.Windows.Forms.DataFormats.FileDrop))
-                    e.Effect = System.Windows.Forms.DragDropEffects.Copy;
+                if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                    e.Effect = DragDropEffects.Copy;
                 else
-                    e.Effect = System.Windows.Forms.DragDropEffects.None;
+                    e.Effect = DragDropEffects.None;
             };
 
             mainPanel.Controls.Add(this.GetFolderButton);
