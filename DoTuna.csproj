@@ -5,6 +5,7 @@
     <RootNamespace>Dotuna</RootNamespace>
     <AssemblyName>Dotuna</AssemblyName>
     <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,6 +30,10 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Threading" />
     <Reference Include="System.Threading.Tasks" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="6.0.0" />
   </ItemGroup>
 
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
