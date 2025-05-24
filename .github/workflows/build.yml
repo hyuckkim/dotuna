@@ -12,11 +12,8 @@ jobs:
     - uses: actions/checkout@v4
     - uses: microsoft/setup-msbuild@v1.3
     - run: msbuild Dotuna.csproj /p:Configuration=Release
-    - run: |
-        mkdir out
-        copy .\bin\Release\*.exe out\
-        powershell Compress-Archive out\* WinFormsApp.zip
+    - run: ls ./bin/Release
     - uses: actions/upload-artifact@v4
       with:
         name: WinFormsApp
-        path: WinFormsApp.zip
+        path: ./bin/Release/Dotuna.exe
