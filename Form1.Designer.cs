@@ -1,3 +1,5 @@
+using ADGV;  // 네임스페이스 추가 필요
+
 namespace DoTuna
 {
     partial class Form1
@@ -5,7 +7,7 @@ namespace DoTuna
         private System.ComponentModel.IContainer components = null;
         private System.Windows.Forms.Label TitleLabel;
         private System.Windows.Forms.Button GetFolderButton;
-        private System.Windows.Forms.DataGridView ThreadListGrid;
+        private ADGV.AdvancedDataGridView ThreadListGrid;  // 변경
         private System.Windows.Forms.CheckBox SelectAllCheckBox;
         private System.Windows.Forms.Button GetThreadSourceFileButton;
         private System.Windows.Forms.Button ExportFileButton;
@@ -18,7 +20,7 @@ namespace DoTuna
 
             this.TitleLabel = new System.Windows.Forms.Label();
             this.GetFolderButton = new System.Windows.Forms.Button();
-            this.ThreadListGrid = new System.Windows.Forms.DataGridView();
+            this.ThreadListGrid = new ADGV.AdvancedDataGridView();  // 변경
             this.SelectAllCheckBox = new System.Windows.Forms.CheckBox();
             this.GetThreadSourceFileButton = new System.Windows.Forms.Button();
             this.ExportFileButton = new System.Windows.Forms.Button();
@@ -42,7 +44,7 @@ namespace DoTuna
             this.GetFolderButton.Click += new System.EventHandler(this.OnGetFolderClick);
 
             // 
-            // ThreadListGrid (DataGridView)
+            // ThreadListGrid (AdvancedDataGridView)
             // 
             this.ThreadListGrid.Name = "ThreadListGrid";
             this.ThreadListGrid.AllowUserToAddRows = false;
@@ -51,23 +53,24 @@ namespace DoTuna
             this.ThreadListGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.ThreadListGrid.MultiSelect = false;
             this.ThreadListGrid.AutoGenerateColumns = false;
+            this.ThreadListGrid.FilterAndSortEnabled = true;  // 필터 정렬 기능 활성화
 
-            // Define columns like WPF DataGrid
-            var colThreadName = new System.Windows.Forms.DataGridViewTextBoxColumn
+            // Define columns
+            var colThreadName = new ADGV.AdvancedDataGridViewTextBoxColumn()
             {
                 HeaderText = "스레드 이름",
                 DataPropertyName = "title",
                 ReadOnly = true,
                 AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
             };
-            var colUserName = new System.Windows.Forms.DataGridViewTextBoxColumn
+            var colUserName = new ADGV.AdvancedDataGridViewTextBoxColumn()
             {
                 HeaderText = "유저 이름",
                 DataPropertyName = "username",
                 ReadOnly = true,
                 AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
             };
-            var colCheck = new System.Windows.Forms.DataGridViewCheckBoxColumn
+            var colCheck = new ADGV.AdvancedDataGridViewCheckBoxColumn()
             {
                 HeaderText = "",
                 Width = 30,
@@ -78,8 +81,6 @@ namespace DoTuna
                 colUserName,
                 colCheck
             });
-
-            // SelectAllCheckBox 위치는 별도 컨트롤로 구현해야 하므로 아래 패널에 배치 예정
 
             // 
             // ReadyButtonPanel
@@ -109,7 +110,7 @@ namespace DoTuna
             // ExportFileButton
             // 
             this.ExportFileButton.Text = "내보내기";
-            this.GetThreadSourceFileButton.Width = 120;
+            this.ExportFileButton.Width = 120;  // 여기 오타 수정 (원래는 GetThreadSourceFileButton.Width로 돼있었음)
             this.ExportFileButton.Margin = new System.Windows.Forms.Padding(0, 0, 5, 0);
             this.ExportFileButton.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
             this.ExportFileButton.Click += new System.EventHandler(this.ExportButtonClick);
@@ -130,25 +131,25 @@ namespace DoTuna
             this.ClientSize = new System.Drawing.Size(800, 450);
 
             // Layout controls
-            // TitleLabel top-left
             this.Controls.Add(this.TitleLabel);
 
-            // Create a panel to hold GetFolderButton and ThreadListGrid to mimic Grid with Margin
             var mainPanel = new System.Windows.Forms.Panel
             {
                 Dock = System.Windows.Forms.DockStyle.Fill,
                 Padding = new System.Windows.Forms.Padding(5, 50, 5, 50),
                 AllowDrop = true
             };
-            mainPanel.DragEnter += (s, e) => { if (e.Data.GetDataPresent(System.Windows.Forms.DataFormats.FileDrop)) e.Effect = System.Windows.Forms.DragDropEffects.Copy; else e.Effect = System.Windows.Forms.DragDropEffects.None; };
+            mainPanel.DragEnter += (s, e) => {
+                if (e.Data.GetDataPresent(System.Windows.Forms.DataFormats.FileDrop))
+                    e.Effect = System.Windows.Forms.DragDropEffects.Copy;
+                else
+                    e.Effect = System.Windows.Forms.DragDropEffects.None;
+            };
 
-            // Inside mainPanel: 
-            // Place GetFolderButton filling area initially
+            // mainPanel 내부에 GetFolderButton, ThreadListGrid, SelectAllCheckBox 배치
             mainPanel.Controls.Add(this.GetFolderButton);
-            // Place ThreadListGrid (hidden initially)
             mainPanel.Controls.Add(this.ThreadListGrid);
-            // Place SelectAllCheckBox on top of ThreadListGrid
-            this.ThreadListGrid.Controls.Add(this.SelectAllCheckBox);
+            mainPanel.Controls.Add(this.SelectAllCheckBox); // ThreadListGrid 대신 mainPanel에 올림
 
             this.Controls.Add(mainPanel);
             this.Controls.Add(this.ReadyButtonPanel);

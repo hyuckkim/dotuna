@@ -36,6 +36,7 @@
     <PackageReference Include="Fody" Version="6.9.2" PrivateAssets="all" />
     <PackageReference Include="Costura.Fody" Version="5.0.2" />
     <PackageReference Include="System.Text.Json" Version="6.0.0" />
+  <PackageReference Include="AdvancedDataGridView" Version="3.1.2" />
   </ItemGroup>
 
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
