@@ -75,7 +75,7 @@ namespace DoTuna
                 ThreadListGrid.DataSource = null;
                 ThreadListGrid.DataSource = ThreadManager.Index
                     .Where(thread => thread.title.Contains(this.FilterTitleInputField.Text))
-                    .Where(thread => thread.username.Contains(this.FilterAuthorInputField.Text));
+                    .Where(thread => thread.username.Contains(this.FilterAuthorInputField.Text))
                     .ToList();
             }
             catch (DirectoryNotFoundException)
@@ -116,7 +116,7 @@ namespace DoTuna
                 .Where(thread => thread.username.Contains(this.FilterAuthorInputField.Text))
                 .ToList();
         }
-        
+
         private void SelectAllCheckBoxChanged(object sender, EventArgs e)
         {
             if (this.SelectAllCheckBox.Checked)
