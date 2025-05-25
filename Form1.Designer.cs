@@ -9,7 +9,7 @@ namespace DoTuna
         private System.ComponentModel.IContainer components = null;
         private Label TitleLabel;
         private Button GetFolderButton;
-        private DataGridView ThreadListGrid;
+        private GridView ThreadListGrid;
         private Button GetThreadSourceFileButton;
         private Button ExportFileButton;
         private Panel ReadyButtonPanel;
@@ -35,35 +35,35 @@ namespace DoTuna
             };
             this.GetFolderButton.Click += new EventHandler(this.OnGetFolderClick);
 
-            this.ThreadListGrid = new DataGridView
+            this.ThreadListGrid = new GridView
             {
                 Name = "ThreadListGrid",
                 AllowUserToAddRows = false,
                 Visible = false,
                 Dock = DockStyle.Fill,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                SelectionMode = GridViewSelectionMode.FullRowSelect,
                 MultiSelect = false,
                 AutoGenerateColumns = false,
                 FilterAndSortEnabled = true
             };
 
-            var colThreadName = new DataGridViewTextBoxColumn
+            var colThreadName = new GridViewTextBoxColumn
             {
                 HeaderText = "스레드 이름",
                 DataPropertyName = "title",
                 ReadOnly = true,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                AutoSizeMode = GridViewAutoSizeColumnMode.Fill
             };
 
-            var colUserName = new DataGridViewTextBoxColumn
+            var colUserName = new GridViewTextBoxColumn
             {
                 HeaderText = "유저 이름",
                 DataPropertyName = "username",
                 ReadOnly = true,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                AutoSizeMode = GridViewAutoSizeColumnMode.Fill
             };
 
-            var colCheck = new DataGridViewCheckBoxColumn
+            var colCheck = new GridViewCheckBoxColumn
             {
                 HeaderText = "",
                 Width = 30,
@@ -71,7 +71,7 @@ namespace DoTuna
                 Name = "IsCheck"
             };
 
-            this.ThreadListGrid.Columns.AddRange(new DataGridViewColumn[]
+            this.ThreadListGrid.Columns.AddRange(new GridViewColumn[]
             {
                 colThreadName,
                 colUserName,
