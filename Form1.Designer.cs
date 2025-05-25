@@ -9,12 +9,9 @@ namespace DoTuna
         private System.ComponentModel.IContainer components = null;
         private Label TitleLabel;
         private Button GetFolderButton;
-        private GridView ThreadListGrid;
+        private DataGridView ThreadListGrid;
         private Button GetThreadSourceFileButton;
         private Button ExportFileButton;
-        private InputField FilterAuthorInputField;
-        private InputField FilterTitleInputField;
-        
         private Panel ReadyButtonPanel;
         private Panel RunningButtonPanel;
 
@@ -38,35 +35,34 @@ namespace DoTuna
             };
             this.GetFolderButton.Click += new EventHandler(this.OnGetFolderClick);
 
-            this.ThreadListGrid = new GridView
+            this.ThreadListGrid = new DataGridView
             {
                 Name = "ThreadListGrid",
                 AllowUserToAddRows = false,
                 Visible = false,
                 Dock = DockStyle.Fill,
-                SelectionMode = GridViewSelectionMode.FullRowSelect,
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 MultiSelect = false,
-                AutoGenerateColumns = false,
-                FilterAndSortEnabled = true
+                AutoGenerateColumns = false
             };
 
-            var colThreadName = new GridViewTextBoxColumn
+            var colThreadName = new DataGridViewTextBoxColumn
             {
                 HeaderText = "스레드 이름",
                 DataPropertyName = "title",
                 ReadOnly = true,
-                AutoSizeMode = GridViewAutoSizeColumnMode.Fill
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             };
 
-            var colUserName = new GridViewTextBoxColumn
+            var colUserName = new DataGridViewTextBoxColumn
             {
                 HeaderText = "유저 이름",
                 DataPropertyName = "username",
                 ReadOnly = true,
-                AutoSizeMode = GridViewAutoSizeColumnMode.Fill
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             };
 
-            var colCheck = new GridViewCheckBoxColumn
+            var colCheck = new DataGridViewCheckBoxColumn
             {
                 HeaderText = "",
                 Width = 30,
@@ -74,7 +70,7 @@ namespace DoTuna
                 Name = "IsCheck"
             };
 
-            this.ThreadListGrid.Columns.AddRange(new GridViewColumn[]
+            this.ThreadListGrid.Columns.AddRange(new DataGridViewColumn[]
             {
                 colThreadName,
                 colUserName,
@@ -112,19 +108,7 @@ namespace DoTuna
                 Padding = new Padding(10, 0, 10, 0)
             };
             this.ExportFileButton.Click += new EventHandler(this.ExportButtonClick);
-
-            this.FilterAuthorInputField = new InputField
-            {
-                winth = 200,
-            };
-            this.FilterTitleInputField = new InputField
-            {
-                winth = 200,
-            };
-
             this.RunningButtonPanel.Controls.Add(this.ExportFileButton);
-            this.RunningButtonPanel.Controls.Add(this.FilterAuthorInputField);
-            this.RunningButtonPanel.Controls.Add(this.FilterTitleInputField);
         
             this.Text = "DoTuna";
             this.MinimumSize = new Size(450, 450);
