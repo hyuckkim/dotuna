@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 
 namespace DoTuna.Thread
@@ -31,7 +32,34 @@ namespace DoTuna.Thread
                 .Replace("{name}", this.username)
                 .Replace("{created}", this.createdAt.ToString("yyyy-MM-dd"))
                 .Replace("{updated}", this.updatedAt.ToString("yyyy-MM-dd"))
-                .Replace("{size}", this.size.ToString());
+                .Replace("{size}", this.size.ToString())
+                .ReplaceInvalidFileNameChars()
+                .Truncate(200);
+        }
+    }
+    internal static class StringExtensions
+    {
+        private const int MaxFileNameLength = 100;
+
+        internal static string ReplaceInvalidFileNameChars(this string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return string.Empty;
+
+            var invalidChars = Path.GetInvalidFileNameChars();
+            foreach (var c in invalidChars)
+            {
+                input = input.Replace(c, '');
+            }
+            return input;
+        }
+
+        internal static string Truncate(this string input, int maxLength)
+        {
+            if (string.IsNullOrEmpty(input) || input.Length <= maxLength)
+                return input;
+
+            return input.Substring(0, maxLength);
         }
     }
 }
