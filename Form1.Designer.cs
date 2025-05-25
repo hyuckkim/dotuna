@@ -143,6 +143,8 @@ namespace DoTuna
             this.Controls.Add(mainPanel);
             this.Controls.Add(this.ReadyButtonPanel);
             this.Controls.Add(this.RunningButtonPanel);
+            
+            this.TitleLabel.SendToBack();
         }
 
         protected override void Dispose(bool disposing)
