@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace DoTuna.Thread
 {
@@ -27,12 +26,12 @@ namespace DoTuna.Thread
         public string getTemplateName(string template)
         {
             return template
-                .Replace("{id}", this.threadId)
+                .Replace("{id}", this.threadId.ToString())
                 .Replace("{title}", this.title)
                 .Replace("{name}", this.username)
                 .Replace("{created}", this.createdAt.ToString("yyyy-MM-dd"))
                 .Replace("{updated}", this.updatedAt.ToString("yyyy-MM-dd"))
-                .Replace("{size}", this.size);
+                .Replace("{size}", this.size.ToString());
         }
     }
 }
