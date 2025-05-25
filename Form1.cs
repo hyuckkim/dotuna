@@ -70,7 +70,6 @@ namespace DoTuna
                 ReadyButtonPanel.Visible = false;
                 RunningButtonPanel.Visible = true;
                 GetFolderButton.Visible = false;
-                SelectAllButton.Visible = true;
 
                 ThreadListGrid.DataSource = null;
                 ThreadListGrid.DataSource = ThreadManager.Index;
