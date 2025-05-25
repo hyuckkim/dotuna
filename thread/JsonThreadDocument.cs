@@ -36,8 +36,8 @@ namespace DoTuna.Thread
                 .Replace("{id}", this.threadId)
                 .Replace("{title}", this.title)
                 .Replace("{name}", this.username)
-                .Replace("{created}", this.createdAt.toString("yyyy-mm-dd"))
-                .Replace("{updated}", this.updatedAt.toString("yyyy-mm-dd"))
+                .Replace("{created}", this.createdAt.ToString("yyyy-MM-dd"))
+                .Replace("{updated}", this.updatedAt.ToString("yyyy-MM-dd"))
                 .Replace("{size}", this.size);
         }
     }
