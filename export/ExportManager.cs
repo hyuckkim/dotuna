@@ -79,7 +79,7 @@ namespace DoTuna.Export
                 sb.Append($"thread_id: \"{doc.threadId}\",");
                 sb.Append($"thread_title: \"{Escape(doc.title)}\",");
                 sb.Append($"thread_username: \"{Escape(doc.username)}\",");
-                sb.Append($"file_name: \"{Escape(doc.getTemplateName(filenameTemplate))}.html\"");
+                sb.Append($"file_name: \"{Uri.EscapeDataString(doc.getTemplateName(filenameTemplate))}.html\"");
                 sb.Append(" },");
             }
 
