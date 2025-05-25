@@ -49,7 +49,7 @@ namespace DoTuna.Thread
             var invalidChars = Path.GetInvalidFileNameChars();
             foreach (var c in invalidChars)
             {
-                input = input.Replace(c, '');
+                input = input.Replace(c.ToString(), "");
             }
             return input;
         }
