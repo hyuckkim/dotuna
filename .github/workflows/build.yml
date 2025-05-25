@@ -1,0 +1,37 @@
+name: Build
+
+on:
+  push:
+    branches: [ master, framework ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    # NuGet 캐시 설정
+    - name: Cache NuGet packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v1
+
+    - name: Restore NuGet packages
+      run: nuget restore Dotuna.csproj
+
+    # msbuild
+    - uses: microsoft/setup-msbuild@v1.3
+    - run: msbuild Dotuna.csproj /p:Configuration=Release
+
+    # Artifact 생성
+    - uses: actions/upload-artifact@v4
+      with:
+        name: Dotuna
+        path: ./bin/Release/Dotuna.exe

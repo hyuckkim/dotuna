@@ -1,17 +1,43 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows</TargetFramework>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <RootNamespace>Dotuna</RootNamespace>
+    <AssemblyName>Dotuna</AssemblyName>
+    <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UseWPF>true</UseWPF>
-    <PublishSingleFile>true</PublishSingleFile>
-    <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FilterDataGrid" Version="1.2.9" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Form1.cs" />
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+
+    <Compile Include="thread/JsonIndexDocument.cs" />
+    <Compile Include="thread/JsonThreadDocument.cs" />
+    <Compile Include="thread/ThreadManager.cs" />
+    <Compile Include="export/ExportManager.cs" />
+
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Threading" />
+    <Reference Include="System.Threading.Tasks" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Fody" Version="6.9.2" PrivateAssets="all" />
+    <PackageReference Include="Costura.Fody" Version="5.0.2" />
+    <PackageReference Include="System.Text.Json" Version="6.0.0" />
+  </ItemGroup>
+
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
