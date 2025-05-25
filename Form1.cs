@@ -116,7 +116,18 @@ namespace DoTuna
                 .Where(thread => thread.username.Contains(this.FilterAuthorInputField.Text))
                 .ToList();
         }
+        
+        private void SelectAllCheckBoxChanged(object sender, EventArgs e)
+        {
+            if (this.SelectAllCheckBox.Checked)
+            {
 
+            }
+            else
+            {
+
+            }
+        }
         private async void ExportButtonClick(object sender, EventArgs e)
         {
             ExportFileButton.Enabled = false;

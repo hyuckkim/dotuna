@@ -124,13 +124,14 @@ namespace DoTuna
             this.SelectAllCheckBox = new CheckBox
             {
                 Text = "전체 선택",
-            }
+            };
             this.SelectAllCheckBox.CheckedChanged += new EventHandler(this.SelectAllCheckBoxChanged);
             
 
             this.RunningButtonPanel.Controls.Add(this.ExportFileButton);
             this.RunningButtonPanel.Controls.Add(this.FilterAuthorInputField);
             this.RunningButtonPanel.Controls.Add(this.FilterTitleInputField);
+            this.RunningButtonPanel.Controls.Add(this.SelectAllCheckBox);
         
             this.Text = "DoTuna";
             this.MinimumSize = new Size(450, 450);
