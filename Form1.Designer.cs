@@ -12,6 +12,8 @@ namespace DoTuna
         private GridView ThreadListGrid;
         private Button GetThreadSourceFileButton;
         private Button ExportFileButton;
+        private InputField FilterAuthorInputField;
+        private InputField FilterTitleInputField
         private Panel ReadyButtonPanel;
         private Panel RunningButtonPanel;
 
@@ -109,7 +111,19 @@ namespace DoTuna
                 Padding = new Padding(10, 0, 10, 0)
             };
             this.ExportFileButton.Click += new EventHandler(this.ExportButtonClick);
+
+            this.FilterAuthorInputField = new InputField
+            {
+                winth = 200,
+            };
+            this.FilterTitleInputField = new InputField
+            {
+                winth = 200,
+            };
+
             this.RunningButtonPanel.Controls.Add(this.ExportFileButton);
+            this.RunningButtonPanel.Controls.Add(this.FilterAuthorInputField);
+            this.RunningButtonPanel.Controls.Add(this.FilterTitleInputField);
         
             this.Text = "DoTuna";
             this.MinimumSize = new Size(450, 450);
