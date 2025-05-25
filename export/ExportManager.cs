@@ -13,7 +13,7 @@ namespace DoTuna.Export
     {
         public static readonly string ResultPath = Path.Combine(Directory.GetCurrentDirectory(), "Result");
 
-        public static async Task Build(IProgress<string> progress)
+        public static async Task Build(string filenameTemplate, IProgress<string> progress)
         {
             string indexPath = Path.Combine(ResultPath, "index.html");
 
@@ -36,11 +36,11 @@ namespace DoTuna.Export
             foreach (var doc in selectedThreads)
             {
                 int threadId = doc.threadId;
-                string threadPath = Path.Combine(ResultPath, $"{threadId}.html");
 
-                var content = await ThreadManager.GetThreadAsync(threadId);
+                JsonThreadDocument content = await ThreadManager.GetThreadAsync(threadId);
                 string html = await GenerateThreadPage(threadId);
 
+                string threadPath = Path.Combine(ResultPath, $"{content.getTemplateName(filenameTemplate)}.html");
                 await Task.Run(() => File.WriteAllText(threadPath, html));
 
                 Interlocked.Increment(ref completed);
