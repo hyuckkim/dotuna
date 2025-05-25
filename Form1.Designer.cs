@@ -18,7 +18,7 @@ namespace DoTuna
         private Panel ReadyButtonPanel;
         private Panel RunningButtonPanel;
         private TextBox DocumentPatternInputField;
-        private Tooltip PatternTooltip;
+        private ToolTip PatternToolTip;
 
         private void InitializeComponent()
         {
@@ -134,12 +134,12 @@ namespace DoTuna
                 Text = "{id}",
 
             };
-            this.PatternTooltip = new ToolTip();
-            this.PatternTooltip.AutoPopDelay = 10000;
-            this.PatternTooltip.InitialDelay = 500;
-            this.PatternTooltip.ReshowDelay = 100;
+            this.PatternToolTip = new ToolTip();
+            this.PatternToolTip.AutoPopDelay = 10000;
+            this.PatternToolTip.InitialDelay = 500;
+            this.PatternToolTip.ReshowDelay = 100;
 
-            this.PatternTooltip.SetToolTip(this.DocumentPatternInputField,
+            this.PatternToolTip.SetToolTip(this.DocumentPatternInputField,
                 "각 문서의 제목입니다.\n" +
                 "{id}, {title}, {name}, {created}, {updated}, {size}가\n" +
                 "실제 값으로 대체됩니다.\n" +
