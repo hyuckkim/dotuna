@@ -106,18 +106,6 @@ namespace DoTuna
             }
         }
 
-        private void OnSelectAllButtonClick(object sender, EventArgs e)
-        {
-            foreach (DataGridViewRow row in ThreadListGrid.Rows)
-            {
-                if (row.DataBoundItem is DataRowView drv)
-                {
-                    drv["IsCheck"] = true;
-                }
-            }
-            ThreadListGrid.Refresh();
-        }
-
         private async void ExportButtonClick(object sender, EventArgs e)
         {
             ExportFileButton.Enabled = false;
