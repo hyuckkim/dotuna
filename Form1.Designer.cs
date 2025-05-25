@@ -133,7 +133,7 @@ namespace DoTuna
                 Width = 200,
                 Text = "{id}",
 
-            }
+            };
             this.PatternTooltip = new ToolTip();
             this.PatternTooltip.AutoPopDelay = 10000;
             this.PatternTooltip.InitialDelay = 500;
