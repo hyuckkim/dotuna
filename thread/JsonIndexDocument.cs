@@ -23,5 +23,16 @@ namespace DoTuna.Thread
         }
 
         public bool IsCheck { get; set; }
+
+        public string getTemplateName(string template)
+        {
+            return template
+                .Replace("{id}", this.threadId)
+                .Replace("{title}", this.title)
+                .Replace("{name}", this.username)
+                .Replace("{created}", this.createdAt.ToString("yyyy-MM-dd"))
+                .Replace("{updated}", this.updatedAt.ToString("yyyy-MM-dd"))
+                .Replace("{size}", this.size);
+        }
     }
 }
