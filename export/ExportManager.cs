@@ -13,7 +13,7 @@ namespace DoTuna.Export
     {
         public static readonly string ResultPath = Path.Combine(Directory.GetCurrentDirectory(), "Result");
 
-        public static async Task Build(IProgress<string> progress)
+        public static async Task Build(string filenameTemplate, IProgress<string> progress)
         {
             string indexPath = Path.Combine(ResultPath, "index.html");
 
@@ -21,7 +21,7 @@ namespace DoTuna.Export
                 Directory.CreateDirectory(ResultPath);
 
             progress?.Report("(index.html 생성 중)");
-            await Task.Run(() => File.WriteAllText(indexPath, GenerateIndexPage()));
+            await Task.Run(() => File.WriteAllText(indexPath, GenerateIndexPage(filenameTemplate)));
             progress?.Report("(index.html 생성됨)");
 
             int completed = 0;
@@ -36,11 +36,11 @@ namespace DoTuna.Export
             foreach (var doc in selectedThreads)
             {
                 int threadId = doc.threadId;
-                string threadPath = Path.Combine(ResultPath, $"{threadId}.html");
 
-                var content = await ThreadManager.GetThreadAsync(threadId);
+                JsonThreadDocument content = await ThreadManager.GetThreadAsync(threadId);
                 string html = await GenerateThreadPage(threadId);
 
+                string threadPath = Path.Combine(ResultPath, $"{doc.getTemplateName(filenameTemplate)}.html");
                 await Task.Run(() => File.WriteAllText(threadPath, html));
 
                 Interlocked.Increment(ref completed);
@@ -48,7 +48,7 @@ namespace DoTuna.Export
             }
         }
 
-        static string GenerateIndexPage()
+        static string GenerateIndexPage(string filenameTemplate)
         {
             var sb = new StringBuilder();
             sb.Append("<html lang=\"ko\"><head><meta charset=\"UTF-8\"><meta content=\"width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no\" name=\"viewport\"><title>anchor</title><style>");
@@ -58,13 +58,13 @@ namespace DoTuna.Export
             sb.Append("<div class=\"pagination\" id=\"pagination\"></div>");
             sb.Append("<div id=\"thread_list\"></div>");
             sb.Append("<script>");
-            sb.Append(MakeJsIndex());
-            sb.Append("window.Build = (pI = 0) => { let pagination = ''; for (let i = 0; i < filtered().length / 100; i++) { pagination += `<button class=\"btn_pg\" onclick=\"Build(${i})\">${i + 1}</button>`; } document.querySelector('#pagination').innerHTML = pagination; let threadList = ''; filtered().slice(pI * 100, (pI + 1) * 100).forEach((item) => { threadList += `<div><ul><li class=\"thread_id\">${item.thread_id}</li><li class=\"thread_title\"> <a href=\"${item.thread_id}.html\" target=\"_blank\">${item.thread_title}</a></li><li class=\"thread_username\">${item.thread_username}</li></ul></div>` }); document.querySelector('#thread_list').innerHTML = threadList; }; const sv = () => document.querySelector(\".search_container\").value; const filtered = () => data.filter((item) => item.thread_title.includes(sv()) || item.thread_username.includes(sv())); Build(); </script>");
+            sb.Append(MakeJsIndex(filenameTemplate));
+            sb.Append("window.Build = (pI = 0) => { let pagination = ''; for (let i = 0; i < filtered().length / 100; i++) { pagination += `<button class=\"btn_pg\" onclick=\"Build(${i})\">${i + 1}</button>`; } document.querySelector('#pagination').innerHTML = pagination; let threadList = ''; filtered().slice(pI * 100, (pI + 1) * 100).forEach((item) => { threadList += `<div><ul><li class=\"thread_id\">${item.thread_id}</li><li class=\"thread_title\"> <a href=\"${item.file_name}\" target=\"_blank\">${item.thread_title}</a></li><li class=\"thread_username\">${item.thread_username}</li></ul></div>` }); document.querySelector('#thread_list').innerHTML = threadList; }; const sv = () => document.querySelector(\".search_container\").value; const filtered = () => data.filter((item) => item.thread_title.includes(sv()) || item.thread_username.includes(sv())); Build(); </script>");
             sb.Append("</body></html>");
             return sb.ToString();
         }
 
-        static string MakeJsIndex()
+        static string MakeJsIndex(string filenameTemplate)
         {
             var sb = new StringBuilder();
             sb.Append("const data = [");
@@ -76,7 +76,10 @@ namespace DoTuna.Export
             foreach (var doc in rows)
             {
                 sb.Append("{ ");
-                sb.Append($"thread_id: \"{doc.threadId}\", thread_title: \"{Escape(doc.title)}\", thread_username: \"{Escape(doc.username)}\"");
+                sb.Append($"thread_id: \"{doc.threadId}\",");
+                sb.Append($"thread_title: \"{Escape(doc.title)}\",");
+                sb.Append($"thread_username: \"{Escape(doc.username)}\",");
+                sb.Append($"file_name: \"{Escape(doc.getTemplateName(filenameTemplate))}.html\"");
                 sb.Append(" },");
             }
 

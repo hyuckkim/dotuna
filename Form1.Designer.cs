@@ -17,6 +17,8 @@ namespace DoTuna
         private CheckBox SelectAllCheckBox;
         private Panel ReadyButtonPanel;
         private Panel RunningButtonPanel;
+        private TextBox DocumentPatternInputField;
+        private ToolTip PatternToolTip;
 
         private void InitializeComponent()
         {
@@ -111,22 +113,38 @@ namespace DoTuna
                 Padding = new Padding(10, 0, 10, 0)
             };
             this.ExportFileButton.Click += new EventHandler(this.ExportButtonClick);
-            this.FilterAuthorInputField = new TextBox
-            {
-                Width = 200,
-            };
-            this.FilterAuthorInputField.TextChanged += new EventHandler(this.OnFilterChanged);
             this.FilterTitleInputField = new TextBox
             {
                 Width = 200,
             };
             this.FilterTitleInputField.TextChanged += new EventHandler(this.OnFilterChanged);
+            this.FilterAuthorInputField = new TextBox
+            {
+                Width = 200,
+            };
+            this.FilterAuthorInputField.TextChanged += new EventHandler(this.OnFilterChanged);
             this.SelectAllCheckBox = new CheckBox
             {
                 Text = "전체 선택",
             };
             this.SelectAllCheckBox.CheckedChanged += new EventHandler(this.SelectAllCheckBoxChanged);
-    
+            this.DocumentPatternInputField = new TextBox
+            {
+                Width = 200,
+                Text = "{id}",
+
+            };
+            this.PatternToolTip = new ToolTip();
+            this.PatternToolTip.AutoPopDelay = 10000;
+            this.PatternToolTip.InitialDelay = 500;
+            this.PatternToolTip.ReshowDelay = 100;
+
+            this.PatternToolTip.SetToolTip(this.DocumentPatternInputField,
+                "각 문서의 제목입니다.\n" +
+                "{id}, {title}, {name}, {created}, {updated}, {size}가\n" +
+                "실제 값으로 대체됩니다.\n" +
+                "예: \"{title} - {name} ({created})\"");
+          
             var flowLayout = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
@@ -138,9 +156,10 @@ namespace DoTuna
             };
 
             flowLayout.Controls.Add(this.ExportFileButton);
-            flowLayout.Controls.Add(this.FilterAuthorInputField);
             flowLayout.Controls.Add(this.FilterTitleInputField);
+            flowLayout.Controls.Add(this.FilterAuthorInputField);
             flowLayout.Controls.Add(this.SelectAllCheckBox);
+            flowLayout.Controls.Add(this.DocumentPatternInputField);
 
             this.RunningButtonPanel.Controls.Add(flowLayout);
         
