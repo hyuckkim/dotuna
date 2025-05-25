@@ -113,16 +113,16 @@ namespace DoTuna
                 Padding = new Padding(10, 0, 10, 0)
             };
             this.ExportFileButton.Click += new EventHandler(this.ExportButtonClick);
-            this.FilterAuthorInputField = new TextBox
-            {
-                Width = 200,
-            };
-            this.FilterAuthorInputField.TextChanged += new EventHandler(this.OnFilterChanged);
             this.FilterTitleInputField = new TextBox
             {
                 Width = 200,
             };
             this.FilterTitleInputField.TextChanged += new EventHandler(this.OnFilterChanged);
+            this.FilterAuthorInputField = new TextBox
+            {
+                Width = 200,
+            };
+            this.FilterAuthorInputField.TextChanged += new EventHandler(this.OnFilterChanged);
             this.SelectAllCheckBox = new CheckBox
             {
                 Text = "전체 선택",
@@ -156,8 +156,8 @@ namespace DoTuna
             };
 
             flowLayout.Controls.Add(this.ExportFileButton);
-            flowLayout.Controls.Add(this.FilterAuthorInputField);
             flowLayout.Controls.Add(this.FilterTitleInputField);
+            flowLayout.Controls.Add(this.FilterAuthorInputField);
             flowLayout.Controls.Add(this.SelectAllCheckBox);
             flowLayout.Controls.Add(this.DocumentPatternInputField);
 
