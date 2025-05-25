@@ -73,10 +73,7 @@ namespace DoTuna
                 GetFolderButton.Visible = false;
 
                 ThreadListGrid.DataSource = null;
-                ThreadListGrid.DataSource = ThreadManager.Index
-                    .Where(thread => thread.title.Contains(this.FilterTitleInputField.Text))
-                    .Where(thread => thread.username.Contains(this.FilterAuthorInputField.Text))
-                    .ToList();
+                ThreadListGrid.DataSource = FilteredDoc.ToList();
                 ThreadListGrid.Refresh();
             }
             catch (DirectoryNotFoundException)
@@ -112,10 +109,7 @@ namespace DoTuna
 
         private void OnFilterChanged(object sender, EventArgs e)
         {
-            ThreadListGrid.DataSource = ThreadManager.Index
-                .Where(thread => thread.title.Contains(this.FilterTitleInputField.Text))
-                .Where(thread => thread.username.Contains(this.FilterAuthorInputField.Text))
-                .ToList();
+            ThreadListGrid.DataSource = FilteredDoc.ToList();
             ThreadListGrid.Refresh();
         }
 
@@ -123,11 +117,27 @@ namespace DoTuna
         {
             if (this.SelectAllCheckBox.Checked)
             {
-
+                foreach(JsonIndexDocument doc in FilteredDoc)
+                {
+                    doc.IsCheck = true;
+                }
             }
             else
             {
-
+                foreach(JsonIndexDocument doc in ThreadManager.Index)
+                {
+                    doc.IsCheck = false;
+                }
+            }
+            ThreadListGrid.Refresh();
+        }
+        private IEnumerable<JsonIndexDocument> FilteredDoc
+        {
+            get
+            {
+                return ThreadManager.Index
+                    .Where(thread => thread.title.Contains(this.FilterTitleInputField.Text))
+                    .Where(thread => thread.username.Contains(this.FilterAuthorInputField.Text));
             }
         }
         private async void ExportButtonClick(object sender, EventArgs e)
