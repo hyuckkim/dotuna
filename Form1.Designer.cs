@@ -126,12 +126,23 @@ namespace DoTuna
                 Text = "전체 선택",
             };
             this.SelectAllCheckBox.CheckedChanged += new EventHandler(this.SelectAllCheckBoxChanged);
-            
+    
+            var flowLayout = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                AutoSize = true,
+                WrapContents = false,
+                FlowDirection = FlowDirection.LeftToRight,
+                Padding = new Padding(5),
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            };
 
-            this.RunningButtonPanel.Controls.Add(this.ExportFileButton);
-            this.RunningButtonPanel.Controls.Add(this.FilterAuthorInputField);
-            this.RunningButtonPanel.Controls.Add(this.FilterTitleInputField);
-            this.RunningButtonPanel.Controls.Add(this.SelectAllCheckBox);
+            flowLayout.Controls.Add(this.ExportFileButton);
+            flowLayout.Controls.Add(this.FilterAuthorInputField);
+            flowLayout.Controls.Add(this.FilterTitleInputField);
+            flowLayout.Controls.Add(this.SelectAllCheckBox);
+
+            this.RunningButtonPanel.Controls.Add(flowLayout);
         
             this.Text = "DoTuna";
             this.MinimumSize = new Size(450, 450);
