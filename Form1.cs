@@ -72,7 +72,9 @@ namespace DoTuna
                 GetFolderButton.Visible = false;
 
                 ThreadListGrid.DataSource = null;
-                ThreadListGrid.DataSource = ThreadManager.Index;
+                ThreadListGrid.DataSource = ThreadManager.Index
+                    .Where(thread => thread.title.Contains(this.FilterTitleInputField.Text))
+                    .Where(thread => thread.username.Contains(this.FilterAuthorInputField.Text));
             }
             catch (DirectoryNotFoundException)
             {
@@ -103,6 +105,13 @@ namespace DoTuna
                     item.IsCheck = !item.IsCheck;
                 }
             }
+        }
+
+        private void OnFilterChanged(object sender, EventArgs e)
+        {
+            ThreadListGrid.DataSource = ThreadManager.Index
+                .Where(thread => thread.title.Contains(this.FilterTitleInputField.Text))
+                .Where(thread => thread.username.Contains(this.FilterAuthorInputField.Text));
         }
 
         private async void ExportButtonClick(object sender, EventArgs e)

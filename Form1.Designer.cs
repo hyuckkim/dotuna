@@ -12,8 +12,8 @@ namespace DoTuna
         private DataGridView ThreadListGrid;
         private Button GetThreadSourceFileButton;
         private Button ExportFileButton;
-        private InputField FilterAuthorInputField;
-        private InputField FilterTitleInputField;
+        private TextBox FilterAuthorInputField;
+        private TextBox FilterTitleInputField;
         private Panel ReadyButtonPanel;
         private Panel RunningButtonPanel;
 
@@ -110,14 +110,16 @@ namespace DoTuna
                 Padding = new Padding(10, 0, 10, 0)
             };
             this.ExportFileButton.Click += new EventHandler(this.ExportButtonClick);
-            this.FilterAuthorInputField = new InputField
+            this.FilterAuthorInputField = new TextBox
             {
                 Width = 200,
             };
-            this.FilterTitleInputField = new InputField
+            this.FilterAuthorInputField.TextChanged += new EventHandler(this.OnFilterChanged);
+            this.FilterTitleInputField = new TextBox
             {
                 Width = 200,
             };
+            this.FilterTitleInputField.TextChanged += new EventHandler(this.OnFilterChanged);
 
             this.RunningButtonPanel.Controls.Add(this.ExportFileButton);
             this.RunningButtonPanel.Controls.Add(this.FilterAuthorInputField);
