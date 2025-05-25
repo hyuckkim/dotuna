@@ -144,7 +144,7 @@ namespace DoTuna
                 "{id}, {title}, {name}, {created}, {updated}, {size}가\n" +
                 "실제 값으로 대체됩니다.\n" +
                 "예: \"{title} - {name} ({created})\"");
-
+          
             var flowLayout = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
