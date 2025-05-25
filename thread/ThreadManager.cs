@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.Data;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -11,55 +9,27 @@ namespace DoTuna.Thread
 {
     public static class ThreadManager
     {
-        public static string FilePath { get; set; } = String.Empty;
-        public static bool SomethingSelected
-        {
-            get
-            {
-                if (Index == null) return false;
-                foreach (DataRow row in Index.Rows)
-                {
-                    if (row.Table.Columns.Contains("IsCheck") && row["IsCheck"] is bool isCheck && isCheck)
-                        return true;
-                }
-                return false;
-            }
-        }
+        public static string FilePath { get; set; } = string.Empty;
 
-        public static DataTable Index { get; private set; } = new DataTable();
+        public static bool SomethingSelected =>
+            Index != null && Index.Any(doc => doc.IsCheck);
+
+        public static List<JsonIndexDocument> Index { get; private set; } = new List<JsonIndexDocument>();
 
         public static void Open(string path)
         {
             if (!Directory.Exists(path))
-            {
                 throw new DirectoryNotFoundException($"Directory not found: {path}");
-            }
+
             FilePath = path;
+
             try
             {
                 var jsonText = File.ReadAllText(Path.Combine(path, "index.json"));
-                var deSerialized = JsonSerializer.Deserialize<List<JsonIndexDocument>>(jsonText) ?? new List<JsonIndexDocument>();
+                var deSerialized = JsonSerializer.Deserialize<List<JsonIndexDocument>>(jsonText);
 
-                // Create DataTable schema if not already created
-                Index = new DataTable();
-                Index.Columns.Add("threadId", typeof(int));
-                Index.Columns.Add("IsCheck", typeof(bool));
-                Index.Columns.Add("Title", typeof(string));
-                Index.Columns.Add("CreatedAt", typeof(DateTime));
-                Index.Columns.Add("username", typeof(string));
-                // Add other columns as needed based on JsonIndexDocument properties
-
-                foreach (var doc in deSerialized.OrderBy(x => x.threadId))
-                {
-                    var row = Index.NewRow();
-                    row["threadId"] = doc.threadId;
-                    row["IsCheck"] = doc.IsCheck;
-                    row["title"] = doc.title;
-                    row["CreatedAt"] = doc.createdAt;
-                    row["username"] = doc.username;
-                    // Set other properties as needed
-                    Index.Rows.Add(row);
-                }
+                Index = deSerialized?.OrderBy(x => x.threadId).ToList()
+                         ?? new List<JsonIndexDocument>();
             }
             catch (JsonException e)
             {
@@ -71,31 +41,22 @@ namespace DoTuna.Thread
         {
             var threadPath = Path.Combine(FilePath, $"{id}.json");
             if (!File.Exists(threadPath))
-            {
                 throw new FileNotFoundException($"Thread file not found: {threadPath}");
-            }
+
             var jsonText = File.ReadAllText(threadPath);
             return JsonSerializer.Deserialize<JsonThreadDocument>(jsonText)
-                ?? throw new JsonException($"Failed to parse thread JSON file: {threadPath}");
+                   ?? throw new JsonException($"Failed to parse thread JSON file: {threadPath}");
         }
 
         public static async Task<JsonThreadDocument> GetThreadAsync(int id)
         {
             var threadPath = Path.Combine(FilePath, $"{id}.json");
             if (!File.Exists(threadPath))
-            {
                 throw new FileNotFoundException($"Thread file not found: {threadPath}");
-            }
 
-            using (var stream = File.OpenRead(threadPath))
-            {
-                var doc = await JsonSerializer.DeserializeAsync<JsonThreadDocument>(stream);
-                if (doc == null)
-                {
-                    throw new JsonException($"Failed to parse thread JSON file: {threadPath}");
-                }
-                return doc;
-            }
+            using var stream = File.OpenRead(threadPath);
+            var doc = await JsonSerializer.DeserializeAsync<JsonThreadDocument>(stream);
+            return doc ?? throw new JsonException($"Failed to parse thread JSON file: {threadPath}");
         }
     }
 }

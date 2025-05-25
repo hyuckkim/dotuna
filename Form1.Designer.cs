@@ -1,7 +1,6 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Zuby.ADGV;
 
 namespace DoTuna
 {
@@ -10,7 +9,7 @@ namespace DoTuna
         private System.ComponentModel.IContainer components = null;
         private Label TitleLabel;
         private Button GetFolderButton;
-        private AdvancedDataGridView ThreadListGrid;  // 변경
+        private DataGridView ThreadListGrid;  // 변경
         private Button SelectAllButton;
         private Button GetThreadSourceFileButton;
         private Button ExportFileButton;
@@ -23,7 +22,7 @@ namespace DoTuna
 
             this.TitleLabel = new Label();
             this.GetFolderButton = new Button();
-            this.ThreadListGrid = new AdvancedDataGridView();  // 변경
+            this.ThreadListGrid = new DataGridView();  // 변경
             this.SelectAllButton = new Button();
             this.GetThreadSourceFileButton = new Button();
             this.ExportFileButton = new Button();
@@ -47,7 +46,7 @@ namespace DoTuna
             this.GetFolderButton.Click += new EventHandler(this.OnGetFolderClick);
 
             // 
-            // ThreadListGrid (AdvancedDataGridView)
+            // ThreadListGrid (DataGridView)
             // 
             this.ThreadListGrid.Name = "ThreadListGrid";
             this.ThreadListGrid.AllowUserToAddRows = false;

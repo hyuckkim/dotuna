@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DoTuna.Thread;
 
-namespace DoTuna.Export 
+namespace DoTuna.Export
 {
     public static class ExportManager
     {
@@ -19,35 +18,24 @@ namespace DoTuna.Export
             string indexPath = Path.Combine(ResultPath, "index.html");
 
             if (!Directory.Exists(ResultPath))
-            {
                 Directory.CreateDirectory(ResultPath);
-            }
+
             progress?.Report("(index.html 생성 중)");
-
             await Task.Run(() => File.WriteAllText(indexPath, GenerateIndexPage()));
-
             progress?.Report("(index.html 생성됨)");
 
             int completed = 0;
-            int total = 0;
-            foreach (DataRow row in ThreadManager.Index.Rows)
-            {
-                if ((bool)row["IsCheck"])
-                    total++;
-            }
+            int total = ThreadManager.Index.Count(doc => doc.IsCheck);
             progress?.Report($"({completed} of {total})");
 
-            var rows = new List<DataRow>();
-            foreach (DataRow row in ThreadManager.Index.Rows)
-            {
-                if ((bool)row["IsCheck"])
-                    rows.Add(row);
-            }
-            rows = rows.OrderBy(r => (int)r["threadId"]).ToList();
+            var selectedThreads = ThreadManager.Index
+                .Where(doc => doc.IsCheck)
+                .OrderBy(doc => doc.threadId)
+                .ToList();
 
-            foreach (var row in rows)
+            foreach (var doc in selectedThreads)
             {
-                int threadId = (int)row["threadId"];
+                int threadId = doc.threadId;
                 string threadPath = Path.Combine(ResultPath, $"{threadId}.html");
 
                 var content = await ThreadManager.GetThreadAsync(threadId);
@@ -60,7 +48,7 @@ namespace DoTuna.Export
             }
         }
 
-        static string GenerateIndexPage() 
+        static string GenerateIndexPage()
         {
             var sb = new StringBuilder();
             sb.Append("<html lang=\"ko\"><head><meta charset=\"UTF-8\"><meta content=\"width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no\" name=\"viewport\"><title>anchor</title><style>");
@@ -75,24 +63,23 @@ namespace DoTuna.Export
             sb.Append("</body></html>");
             return sb.ToString();
         }
+
         static string MakeJsIndex()
         {
             var sb = new StringBuilder();
             sb.Append("const data = [");
-            var rows = new List<DataRow>();
-            foreach (DataRow row in ThreadManager.Index.Rows)
-            {
-                if ((bool)row["IsCheck"])
-                    rows.Add(row);
-            }
-            rows = rows.OrderBy(r => (int)r["threadId"]).ToList();
 
-            foreach (var row in rows)
+            var rows = ThreadManager.Index
+                .Where(doc => doc.IsCheck)
+                .OrderBy(doc => doc.threadId);
+
+            foreach (var doc in rows)
             {
                 sb.Append("{ ");
-                sb.Append($"thread_id: \"{(int)row["threadId"]}\", thread_title: \"{(string)row["title"]}\", thread_username: \"{(string)row["username"]}\"");
+                sb.Append($"thread_id: \"{doc.threadId}\", thread_title: \"{Escape(doc.title)}\", thread_username: \"{Escape(doc.username)}\"");
                 sb.Append(" },");
             }
+
             sb.Append("];");
             return sb.ToString();
         }
@@ -102,15 +89,16 @@ namespace DoTuna.Export
             var data = await ThreadManager.GetThreadAsync(id);
             var sb = new StringBuilder();
             sb.Append("<html lang=\"ko\"><head><meta charset=\"UTF-8\"><meta content=\"width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no\" name=\"viewport\">");
-            sb.Append($"<title>{data.title}</title>");
+            sb.Append($"<title>{Escape(data.title)}</title>");
             sb.Append("<style>@font-face{font-family:Saitamaar;src:url(https://tunaground.github.io/AA/HeadKasen.woff2)format(\"woff2\"),url(https://tunaground.github.io/AA/HeadKasen.ttf)format(\"ttf\");font-display:swap}@font-face{font-family:Saitamaar;src:url(https://cdn.jsdelivr.net/fontsource/fonts/nanum-gothic-coding@latest/korean-400-normal.woff2)format(\"woff2\"),url(https://cdn.jsdelivr.net/fontsource/fonts/nanum-gothic-coding@latest/korean-400-normal.woff)format(\"woff\");font-display:swap;unicode-range:U+AC00-D7A3,U+3130-318F}body{background-color:#f0f0f0;margin:0;font-family:sans-serif}img{max-height:10em}img:hover{max-width:100%;max-height:50em}.thread{padding-bottom:.4em}.thread_header{color:#fff;background-color:#000;padding:1em}.thread_title{font-size:2em;font-weight:700}.response_list{margin:0;padding:0}.response{background-color:#ffffffb3;border:1px solid #000;margin:.6em;list-style:none}.response_header{background-color:#0003;border-bottom:1px dashed #000;padding:.4em;font-size:.9em}.response_header p{margin:0}.response_body{overflow-wrap:break-word;padding:.4em;font-family:Saitamaar,sans-serif;font-size:.9em;line-height:1.125em}.mona{white-space:nowrap;background-color:#fff;font-family:Saitamaar,sans-serif;line-height:1.125em;overflow:auto hidden}span.spoiler{color:#0000}span.spoiler::selection{color:#fff;background-color:#000}</style></head><body><article>");
-            sb.Append($"<div class=\"thread_header\"><div class=\"thread_title\">{data.boardId}&gt;{data.threadId}&gt; {data.title} ({data.size})</div><div class=\"thread_username\">{data.username}</div><div class=\"thread_date\">{data.createdAt.Tuna()} - {data.updatedAt.Tuna()}</div></div>");
+            sb.Append($"<div class=\"thread_header\"><div class=\"thread_title\">{Escape(data.boardId)}&gt;{data.threadId}&gt; {Escape(data.title)} ({data.size})</div><div class=\"thread_username\">{Escape(data.username)}</div><div class=\"thread_date\">{data.createdAt.Tuna()} - {data.updatedAt.Tuna()}</div></div>");
             sb.Append("<div class=\"thread_body\"><ul class=\"response_list\">");
 
             foreach (var response in data.responses)
             {
                 sb.Append(MakeHtmlResponse(response));
             }
+
             sb.Append("</ul></div></div></article></body></html>");
             return sb.ToString();
         }
@@ -118,7 +106,7 @@ namespace DoTuna.Export
         static string MakeHtmlResponse(Response res)
         {
             var sb = new StringBuilder();
-            sb.Append($"<li class=\"response\" id=\"response_anchor_{res.threadId}_{res.sequence}\"><div class=\"response_header\"><p><b>{res.sequence}</b> {res.username} ({res.userId})</p><p>{res.createdAt.Tuna()}</p></div> <div class=\"response_body\">{res.content}</div></li>");
+            sb.Append($"<li class=\"response\" id=\"response_anchor_{res.threadId}_{res.sequence}\"><div class=\"response_header\"><p><b>{res.sequence}</b> {Escape(res.username)} ({Escape(res.userId)})</p><p>{res.createdAt.Tuna()}</p></div> <div class=\"response_body\">{res.content}</div></li>");
             return sb.ToString();
         }
 
@@ -132,6 +120,11 @@ namespace DoTuna.Export
                 .Replace("Fri", "금")
                 .Replace("Sat", "토")
                 .Replace("Sun", "일");
+        }
+
+        static string Escape(string? s)
+        {
+            return System.Net.WebUtility.HtmlEncode(s ?? "");
         }
     }
 }
