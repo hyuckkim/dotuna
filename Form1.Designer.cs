@@ -121,14 +121,6 @@ namespace DoTuna
             {
                 Dock = DockStyle.Fill,
                 Padding = new Padding(5, 50, 5, 50),
-                AllowDrop = true
-            };
-            mainPanel.DragEnter += (s, e) =>
-            {
-                if (e.Data.GetDataPresent(DataFormats.FileDrop))
-                    e.Effect = DragDropEffects.Copy;
-                else
-                    e.Effect = DragDropEffects.None;
             };
 
             mainPanel.Controls.Add(this.GetFolderButton);
