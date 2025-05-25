@@ -14,6 +14,7 @@ namespace DoTuna
         private Button ExportFileButton;
         private TextBox FilterAuthorInputField;
         private TextBox FilterTitleInputField;
+        private CheckBox SelectAllCheckBox;
         private Panel ReadyButtonPanel;
         private Panel RunningButtonPanel;
 
@@ -120,6 +121,12 @@ namespace DoTuna
                 Width = 200,
             };
             this.FilterTitleInputField.TextChanged += new EventHandler(this.OnFilterChanged);
+            this.SelectAllCheckBox = new CheckBox
+            {
+                Text = "전체 선택",
+            }
+            this.SelectAllCheckBox.CheckedChanged += new EventHandler(this.SelectAllCheckBoxChanged);
+            
 
             this.RunningButtonPanel.Controls.Add(this.ExportFileButton);
             this.RunningButtonPanel.Controls.Add(this.FilterAuthorInputField);
@@ -143,7 +150,7 @@ namespace DoTuna
             this.Controls.Add(mainPanel);
             this.Controls.Add(this.ReadyButtonPanel);
             this.Controls.Add(this.RunningButtonPanel);
-            
+
             this.TitleLabel.SendToBack();
         }
 

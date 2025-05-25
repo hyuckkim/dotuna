@@ -76,6 +76,7 @@ namespace DoTuna
                 ThreadListGrid.DataSource = ThreadManager.Index
                     .Where(thread => thread.title.Contains(this.FilterTitleInputField.Text))
                     .Where(thread => thread.username.Contains(this.FilterAuthorInputField.Text));
+                    .ToList();
             }
             catch (DirectoryNotFoundException)
             {
@@ -112,7 +113,8 @@ namespace DoTuna
         {
             ThreadListGrid.DataSource = ThreadManager.Index
                 .Where(thread => thread.title.Contains(this.FilterTitleInputField.Text))
-                .Where(thread => thread.username.Contains(this.FilterAuthorInputField.Text));
+                .Where(thread => thread.username.Contains(this.FilterAuthorInputField.Text))
+                .ToList();
         }
 
         private async void ExportButtonClick(object sender, EventArgs e)
