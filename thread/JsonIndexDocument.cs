@@ -33,7 +33,6 @@ namespace DoTuna.Thread
                 .Replace("{updated}", this.updatedAt.ToString("yyyy-MM-dd"))
                 .Replace("{size}", this.size.ToString())
                 .ReplaceInvalidFileNameChars()
-                .EscapeHtml()
                 .Truncate(200);
         }
     }
@@ -58,10 +57,6 @@ namespace DoTuna.Thread
                 return input;
 
             return input.Substring(0, maxLength);
-        }
-        internal static string EscapeHtml(this string input)
-        {
-            return System.Net.WebUtility.HtmlEncode(input);
         }
     }
 }
