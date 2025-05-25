@@ -13,7 +13,8 @@ namespace DoTuna
         private Button GetThreadSourceFileButton;
         private Button ExportFileButton;
         private InputField FilterAuthorInputField;
-        private InputField FilterTitleInputField
+        private InputField FilterTitleInputField;
+        
         private Panel ReadyButtonPanel;
         private Panel RunningButtonPanel;
 
