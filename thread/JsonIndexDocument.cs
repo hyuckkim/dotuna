@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Collections.Generic;
 
 namespace DoTuna.Thread
 {
@@ -34,13 +33,12 @@ namespace DoTuna.Thread
                 .Replace("{updated}", this.updatedAt.ToString("yyyy-MM-dd"))
                 .Replace("{size}", this.size.ToString())
                 .ReplaceInvalidFileNameChars()
+                .EscapeHtml()
                 .Truncate(200);
         }
     }
     internal static class StringExtensions
     {
-        private const int MaxFileNameLength = 100;
-
         internal static string ReplaceInvalidFileNameChars(this string input)
         {
             if (string.IsNullOrEmpty(input))
@@ -60,6 +58,10 @@ namespace DoTuna.Thread
                 return input;
 
             return input.Substring(0, maxLength);
+        }
+        internal static string EscapeHtml(this string input)
+        {
+            return System.Net.WebUtility.HtmlEncode(input);
         }
     }
 }
