@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using DoTuna.Export;
 
 public class ExportAppService

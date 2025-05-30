@@ -3,8 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Windows.Forms;
-using DoTuna.Export;
-using DoTuna.Thread;
 using System.Diagnostics;
 using System.Collections.Generic;
 
