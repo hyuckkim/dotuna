@@ -1,9 +1,6 @@
 name: Build
 
-on:
-  push:
-    branches: [ master, framework ]
-  workflow_dispatch:
+on: [push]
 
 jobs:
   build:
