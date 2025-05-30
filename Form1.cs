@@ -99,7 +99,7 @@ namespace DoTuna
                 FilterAuthorInputField.Text);
 
             ThreadListGrid.DataSource = null;
-            ThreadListGrid.DataSource = FilteredDoc.ToList();
+            ThreadListGrid.DataSource = filtered.ToList();
             ThreadListGrid.Refresh();
         }
 
@@ -118,7 +118,11 @@ namespace DoTuna
 
         private void OnFilterChanged(object sender, EventArgs e)
         {
-            ThreadListGrid.DataSource = FilteredDoc.ToList();
+            var filtered = _threadAppService.GetFiltered(
+                FilterTitleInputField.Text,
+                FilterAuthorInputField.Text);
+            
+            ThreadListGrid.DataSource = filtered.ToList();
             ThreadListGrid.Refresh();
         }
 
