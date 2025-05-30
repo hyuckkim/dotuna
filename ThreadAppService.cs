@@ -12,28 +12,29 @@ public class ThreadAppService
 
     public IEnumerable<JsonIndexDocument> GetFiltered(string title, string author)
     {
-        return ThreadManager.Index
-            .Where(d => d.title.Contains(title))
-            .Where(d => d.username.Contains(author));
+        return Filter(title, author);
     }
 
     public void CheckFiltered(string title, string author, bool select)
     {
-        var filtered = ThreadManager.Index
-            .Where(d => d.title.Contains(title))
-            .Where(d => d.username.Contains(author));
-
-        foreach(JsonIndexDocument doc in filtered)
+        foreach (var doc in Filter(title, author))
         {
             doc.IsCheck = select;
         }
     }
-    
+
     public void CheckAll(bool select)
     {
-        foreach(JsonIndexDocument doc in ThreadManager.Index)
+        foreach (var doc in ThreadManager.Index)
         {
             doc.IsCheck = select;
         }
+    }
+
+    private IEnumerable<JsonIndexDocument> Filter(string title, string author)
+    {
+        return ThreadManager.Index
+            .Where(d => d.title.Contains(title))
+            .Where(d => d.username.Contains(author));
     }
 }
