@@ -14,6 +14,8 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="ExportAppService.cs" />
+    <Compile Include="ThreadAppService.cs" />
 
     <Compile Include="thread/JsonIndexDocument.cs" />
     <Compile Include="thread/JsonThreadDocument.cs" />

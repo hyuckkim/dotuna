@@ -62,19 +62,19 @@ namespace DoTuna
             }
         }
 
+        private readonly ThreadAppService _threadAppService = new ThreadAppService();
         private void HandleFolderPath(string folderPath)
         {
             try
             {
-                ThreadManager.Open(folderPath);
+                _threadAppService.openFolder(folderPath);
+
                 ThreadListGrid.Visible = true;
                 ReadyButtonPanel.Visible = false;
                 RunningButtonPanel.Visible = true;
                 GetFolderButton.Visible = false;
 
-                ThreadListGrid.DataSource = null;
-                ThreadListGrid.DataSource = FilteredDoc.ToList();
-                ThreadListGrid.Refresh();
+                BindFilteredDocs();
             }
             catch (DirectoryNotFoundException)
             {
@@ -92,6 +92,17 @@ namespace DoTuna
             {
                 GetFolderButton.Text = $"폴더 가져오기\n(예상치 못한 오류: {ex.Message})";
             }
+        }
+
+        private void BindFilteredDocs()
+        {
+            var filtered = _threadAppService.GetFiltered(
+                FilterTitleInputField.Text,
+                FilterAuthorInputField.Text);
+
+            ThreadListGrid.DataSource = null;
+            ThreadListGrid.DataSource = FilteredDoc.ToList();
+            ThreadListGrid.Refresh();
         }
 
         private void OnCheckBoxClick(object sender, DataGridViewCellEventArgs e)
@@ -117,39 +128,25 @@ namespace DoTuna
         {
             if (this.SelectAllCheckBox.Checked)
             {
-                foreach(JsonIndexDocument doc in FilteredDoc)
-                {
-                    doc.IsCheck = true;
-                }
+                _threadAppService.SelectFiltered(
+                FilterTitleInputField.Text,
+                FilterAuthorInputField.Text,
+                true);
             }
             else
             {
-                foreach(JsonIndexDocument doc in ThreadManager.Index)
-                {
-                    doc.IsCheck = false;
-                }
+                _threadAppService.SelectAll(false);
             }
             ThreadListGrid.Refresh();
         }
-        private IEnumerable<JsonIndexDocument> FilteredDoc
-        {
-            get
-            {
-                return ThreadManager.Index
-                    .Where(thread => thread.title.Contains(this.FilterTitleInputField.Text))
-                    .Where(thread => thread.username.Contains(this.FilterAuthorInputField.Text));
-            }
-        }
+
+        private readonly ExportAppService _exportAppService = new ExportAppService();
         private async void ExportButtonClick(object sender, EventArgs e)
         {
             ExportFileButton.Enabled = false;
 
-            var progress = new Progress<string>(message =>
-            {
-                ExportFileButton.Text = message;
-            });
-
-            await ExportManager.Build(this.DocumentPatternInputField.Text, progress);
+            var progress = new Progress<string>(msg => ExportFileButton.Text = msg);
+            await _exportAppService.ExportAsync(DocumentPatternInputField.Text, progress);
 
             ExportFileButton.Enabled = true;
             ExportFileButton.Text = "내보내기";
