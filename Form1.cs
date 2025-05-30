@@ -126,14 +126,14 @@ namespace DoTuna
         {
             if (this.SelectAllCheckBox.Checked)
             {
-                _threadAppService.SelectFiltered(
+                _threadAppService.CheckFiltered(
                 FilterTitleInputField.Text,
                 FilterAuthorInputField.Text,
                 true);
             }
             else
             {
-                _threadAppService.SelectAll(false);
+                _threadAppService.CheckAll(false);
             }
             ThreadListGrid.Refresh();
         }

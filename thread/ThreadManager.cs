@@ -11,9 +11,6 @@ namespace DoTuna.Thread
     {
         public static string FilePath { get; set; } = string.Empty;
 
-        public static bool SomethingSelected =>
-            Index != null && Index.Any(doc => doc.IsCheck);
-
         public static List<JsonIndexDocument> Index { get; private set; } = new List<JsonIndexDocument>();
 
         public static void Open(string path)

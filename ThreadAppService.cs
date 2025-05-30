@@ -17,7 +17,7 @@ public class ThreadAppService
             .Where(d => d.username.Contains(author));
     }
 
-    public void SelectFiltered(string title, string author, bool select)
+    public void CheckFiltered(string title, string author, bool select)
     {
         var filtered = ThreadManager.Index
             .Where(d => d.title.Contains(title))
@@ -29,7 +29,7 @@ public class ThreadAppService
         }
     }
     
-    public void SelectAll(bool select)
+    public void CheckAll(bool select)
     {
         foreach(JsonIndexDocument doc in ThreadManager.Index)
         {
