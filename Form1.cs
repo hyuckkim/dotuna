@@ -5,13 +5,14 @@ using System.Text.Json;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DoTuna
 {
     public partial class Form1 : Form
     {
         public string SourcePath { get; private set; } = string.Empty;
-        public ThreadManager threadManager = new ThreadManager();
+        public ThreadManager threadManager;
         public Form1()
         {
             InitializeComponent();
@@ -62,12 +63,16 @@ namespace DoTuna
             }
         }
 
-        private void HandleFolderPath(string folderPath)
+        private async Task HandleFolderPath(string folderPath)
         {
             try
             {
                 SourcePath = folderPath;
-                threadManager.Open(folderPath);
+                var repository = new IndexFileRepository();
+                await repository.OpenAsync(SourcePath);
+
+                threadManager = new ThreadManager(repository);
+
                 ThreadListGrid.Visible = true;
                 ReadyButtonPanel.Visible = false;
                 RunningButtonPanel.Visible = true;

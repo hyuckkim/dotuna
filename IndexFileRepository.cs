@@ -1,25 +1,53 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
 
-public class IndexFileRepository : IIndexRepository
+namespace DoTuna
 {
-    private List<JsonThreadDocument> _documents;
-    public IEnumerable<JsonThreadDocument> Get() => _documents;
-
-    public Open(string path)
+    public class IndexFileRepository : IIndexRepository
     {
-        if (!Directory.Exists(path))
-            throw new DirectoryNotFoundException($"Directory not found: {path}");
+        private List<JsonIndexDocument> _documents = new List<JsonIndexDocument>();
+        public List<JsonIndexDocument> Get() => _documents;
 
-        try
+        public void Open(string path)
         {
-            var jsonText = File.ReadAllText(Path.Combine(path, "index.json"));
-            var deSerialized = JsonSerializer.Deserialize<List<JsonIndexDocument>>(jsonText);
+            if (!Directory.Exists(path))
+                throw new DirectoryNotFoundException($"Directory not found: {path}");
 
-            _documents = deSerialized?.OrderBy(x => x.threadId).ToList()
-                ?? new List<JsonIndexDocument>();
+            try
+            {
+                var jsonText = File.ReadAllText(Path.Combine(path, "index.json"));
+                var deSerialized = JsonSerializer.Deserialize<List<JsonIndexDocument>>(jsonText);
+
+                _documents = deSerialized?.OrderBy(x => x.threadId).ToList()
+                    ?? new List<JsonIndexDocument>();
+            }
+            catch (JsonException e)
+            {
+                throw new JsonException($"Failed to parse JSON file: {e.Message}", e);
+            }
         }
-        catch (JsonException e)
+        public async Task OpenAsync(string path)
         {
-            throw new JsonException($"Failed to parse JSON file: {e.Message}", e);
+            if (!Directory.Exists(path))
+                throw new DirectoryNotFoundException($"Directory not found: {path}");
+
+            try
+            {
+                using (var stream = File.OpenRead(Path.Combine(path, "index.json")))
+                {
+                    var deSerialized = await JsonSerializer.DeserializeAsync<List<JsonIndexDocument>>(stream);
+
+                    _documents = deSerialized?.OrderBy(x => x.threadId).ToList()
+                        ?? new List<JsonIndexDocument>();
+                }
+            }
+            catch (JsonException e)
+            {
+                throw new JsonException($"Failed to parse JSON file: {e.Message}", e);
+            }
         }
     }
 }

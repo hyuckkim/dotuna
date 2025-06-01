@@ -1,5 +1,9 @@
+using System.Collections.Generic;
 
-public interface IIndexRepository
+namespace DoTuna
 {
-    public IEnumerable<JsonThreadDocument> Get();
+    public interface IIndexRepository
+    {
+        public List<JsonIndexDocument> Get();
+    }
 }

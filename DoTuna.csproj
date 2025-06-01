@@ -18,6 +18,8 @@
     <Compile Include="JsonIndexDocument.cs" />
     <Compile Include="JsonThreadDocument.cs" />
     <Compile Include="ThreadManager.cs" />
+    <Compile Include="IIndexRepository.cs" />
+    <Compile Include="IndexFileRepository.cs" />
     <Compile Include="Exporter.cs" />
 
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -9,25 +9,15 @@ namespace DoTuna
 {
     public class ThreadManager
     {
-        public List<JsonIndexDocument> Index { get; private set; } = new List<JsonIndexDocument>();
-
-        public void Open(string path)
+        private IIndexRepository _indexRepository;
+        public IEnumerable<JsonIndexDocument> Index
         {
-            if (!Directory.Exists(path))
-                throw new DirectoryNotFoundException($"Directory not found: {path}");
+            get => _indexRepository.Get();
+        }
 
-            try
-            {
-                var jsonText = File.ReadAllText(Path.Combine(path, "index.json"));
-                var deSerialized = JsonSerializer.Deserialize<List<JsonIndexDocument>>(jsonText);
-
-                Index = deSerialized?.OrderBy(x => x.threadId).ToList()
-                         ?? new List<JsonIndexDocument>();
-            }
-            catch (JsonException e)
-            {
-                throw new JsonException($"Failed to parse JSON file: {e.Message}", e);
-            }
+        public ThreadManager(IIndexRepository indexRepository)
+        {
+            _indexRepository = indexRepository;
         }
     }
 }
