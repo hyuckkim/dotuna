@@ -5,7 +5,7 @@ namespace DoTuna
 {
     public class JsonIndexDocument
     {
-#pragma warning disable IDE1006 // Naming Styles: Because the JSON properties are in snake_case, we need to disable this rule for the properties.
+#pragma warning disable IDE1006 // Naming Styles: Json has camelCase but c# is PascalCase
         public string version { get; set; } = "";
         public string boardId { get; set; } = "";
         public int threadId { get; set; } = 0;

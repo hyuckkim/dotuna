@@ -149,7 +149,11 @@ namespace DoTuna
                 ExportFileButton.Text = message;
             });
 
-            await new Exporter(this.DocumentPatternInputField.Text).Build(SourcePath, progress);
+            var selectedDocuments = ThreadManager.Index
+                .Where(doc => doc.IsCheck)
+                .OrderBy(doc => doc.threadId)
+                .ToList();
+            await new Exporter(this.DocumentPatternInputField.Text).Build(SourcePath, selectedDocuments, progress);
 
             ExportFileButton.Enabled = true;
             ExportFileButton.Text = "내보내기";
