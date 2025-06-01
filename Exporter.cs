@@ -41,13 +41,13 @@ namespace DoTuna
             foreach (var doc in selectedThreads)
             {
                 int threadId = doc.threadId;
-                var threadPath = Path.Combine(FilePath, $"{threadId}.json");
+                var threadPath = Path.Combine(sourcePath, $"{threadId}.json");
 
                 JsonThreadDocument content = await JsonThreadDocument.GetThreadAsync(threadPath);
-                string html = await GenerateThreadPage(threadId);
+                string html = await GenerateThreadPage(content);
 
-                string threadPath = Path.Combine(ResultPath, $"{doc.getTemplateName(template)}.html");
-                await Task.Run(() => File.WriteAllText(threadPath, html));
+                string jsonPath = Path.Combine(ResultPath, $"{doc.getTemplateName(template)}.html");
+                await Task.Run(() => File.WriteAllText(jsonPath, html));
 
                 Interlocked.Increment(ref completed);
                 progress?.Report($"({completed} of {total})");
@@ -93,7 +93,7 @@ namespace DoTuna
             return sb.ToString();
         }
 
-        async Task<string> GenerateThreadPage(JsonThreadDocument data)
+        string GenerateThreadPage(JsonThreadDocument data)
         {
             var sb = new StringBuilder();
             sb.Append("<html lang=\"ko\"><head><meta charset=\"UTF-8\"><meta content=\"width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no\" name=\"viewport\">");
