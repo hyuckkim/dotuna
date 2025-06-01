@@ -130,7 +130,7 @@ namespace DoTuna
             }
             else
             {
-                foreach(JsonIndexDocument doc in threadManager.Index)
+                foreach(JsonIndexDocument doc in threadManager.All)
                 {
                     doc.IsCheck = false;
                 }
@@ -141,9 +141,10 @@ namespace DoTuna
         {
             get
             {
-                return threadManager.Index
-                    .Where(thread => thread.title.Contains(this.FilterTitleInputField.Text))
-                    .Where(thread => thread.username.Contains(this.FilterAuthorInputField.Text));
+                return threadManager.Filtered(
+                    this.FilterTitleInputField.Text,
+                    this.FilterAuthorInputField.Text
+                );
             }
         }
         private async void ExportButtonClick(object sender, EventArgs e)
@@ -155,11 +156,11 @@ namespace DoTuna
                 ExportFileButton.Text = message;
             });
 
-            var selectedDocuments = threadManager.Index
-                .Where(doc => doc.IsCheck)
-                .OrderBy(doc => doc.threadId)
-                .ToList();
-            await new Exporter(this.DocumentPatternInputField.Text).Build(SourcePath, selectedDocuments, progress);
+            await new Exporter(this.DocumentPatternInputField.Text).Build(
+                SourcePath,
+                threadManager.Checked.ToList(),
+                progress
+            );
 
             ExportFileButton.Enabled = true;
             ExportFileButton.Text = "내보내기";

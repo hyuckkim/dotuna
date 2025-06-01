@@ -10,9 +10,12 @@ namespace DoTuna
     public class ThreadManager
     {
         private IIndexRepository _indexRepository;
-        public IEnumerable<JsonIndexDocument> Index
+        public IEnumerable<JsonIndexDocument> All { get => _indexRepository.Get(); }
+        public IEnumerable<JsonIndexDocument> Checked { get => All.Where(x => x.IsCheck).OrderBy(x => x.threadId); }
+        public IEnumerable<JsonIndexDocument> Filtered(string title, string author)
         {
-            get => _indexRepository.Get();
+            return All.Where(x => x.title.Contains(title) &&
+                                  x.username.Contains(author));
         }
 
         public ThreadManager(IIndexRepository indexRepository)
