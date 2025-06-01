@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace DoTuna
 {
-    public static class ExportManager
+    public class Exporter
     {
-        public static readonly string ResultPath = Path.Combine(Directory.GetCurrentDirectory(), "Result");
+        public readonly string ResultPath = Path.Combine(Directory.GetCurrentDirectory(), "Result");
 
-        public static async Task Build(string filenameTemplate, IProgress<string> progress)
+        public async Task Build(string filenameTemplate, IProgress<string> progress)
         {
             string indexPath = Path.Combine(ResultPath, "index.html");
 
@@ -47,7 +47,7 @@ namespace DoTuna
             }
         }
 
-        static string GenerateIndexPage(string filenameTemplate)
+        string GenerateIndexPage(string filenameTemplate)
         {
             var sb = new StringBuilder();
             sb.Append("<html lang=\"ko\"><head><meta charset=\"UTF-8\"><meta content=\"width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no\" name=\"viewport\"><title>anchor</title><style>");
@@ -63,7 +63,7 @@ namespace DoTuna
             return sb.ToString();
         }
 
-        static string MakeJsIndex(string filenameTemplate)
+        string MakeJsIndex(string filenameTemplate)
         {
             var sb = new StringBuilder();
             sb.Append("const data = [");
@@ -86,14 +86,14 @@ namespace DoTuna
             return sb.ToString();
         }
 
-        static async Task<string> GenerateThreadPage(int id)
+        async Task<string> GenerateThreadPage(int id)
         {
             var data = await ThreadManager.GetThreadAsync(id);
             var sb = new StringBuilder();
             sb.Append("<html lang=\"ko\"><head><meta charset=\"UTF-8\"><meta content=\"width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no\" name=\"viewport\">");
             sb.Append($"<title>{Escape(data.title)}</title>");
             sb.Append("<style>@font-face{font-family:Saitamaar;src:url(https://tunaground.github.io/AA/HeadKasen.woff2)format(\"woff2\"),url(https://tunaground.github.io/AA/HeadKasen.ttf)format(\"ttf\");font-display:swap}@font-face{font-family:Saitamaar;src:url(https://cdn.jsdelivr.net/fontsource/fonts/nanum-gothic-coding@latest/korean-400-normal.woff2)format(\"woff2\"),url(https://cdn.jsdelivr.net/fontsource/fonts/nanum-gothic-coding@latest/korean-400-normal.woff)format(\"woff\");font-display:swap;unicode-range:U+AC00-D7A3,U+3130-318F}body{background-color:#f0f0f0;margin:0;font-family:sans-serif}img{max-height:10em}img:hover{max-width:100%;max-height:50em}.thread{padding-bottom:.4em}.thread_header{color:#fff;background-color:#000;padding:1em}.thread_title{font-size:2em;font-weight:700}.response_list{margin:0;padding:0}.response{background-color:#ffffffb3;border:1px solid #000;margin:.6em;list-style:none}.response_header{background-color:#0003;border-bottom:1px dashed #000;padding:.4em;font-size:.9em}.response_header p{margin:0}.response_body{overflow-wrap:break-word;padding:.4em;font-family:Saitamaar,sans-serif;font-size:.9em;line-height:1.125em}.mona{white-space:nowrap;background-color:#fff;font-family:Saitamaar,sans-serif;line-height:1.125em;overflow:auto hidden}span.spoiler{color:#0000}span.spoiler::selection{color:#fff;background-color:#000}</style></head><body><article>");
-            sb.Append($"<div class=\"thread_header\"><div class=\"thread_title\">{Escape(data.boardId)}&gt;{data.threadId}&gt; {Escape(data.title)} ({data.size})</div><div class=\"thread_username\">{Escape(data.username)}</div><div class=\"thread_date\">{data.createdAt.Tuna()} - {data.updatedAt.Tuna()}</div></div>");
+            sb.Append($"<div class=\"thread_header\"><div class=\"thread_title\">{Escape(data.boardId)}&gt;{data.threadId}&gt; {Escape(data.title)} ({data.size})</div><div class=\"thread_username\">{Escape(data.username)}</div><div class=\"thread_date\">{Tuna(data.createdAt)} - {Tuna(data.updatedAt)}</div></div>");
             sb.Append("<div class=\"thread_body\"><ul class=\"response_list\">");
 
             foreach (var response in data.responses)
@@ -105,14 +105,14 @@ namespace DoTuna
             return sb.ToString();
         }
 
-        static string MakeHtmlResponse(Response res)
+        string MakeHtmlResponse(Response res)
         {
             var sb = new StringBuilder();
-            sb.Append($"<li class=\"response\" id=\"response_anchor_{res.threadId}_{res.sequence}\"><div class=\"response_header\"><p><b>{res.sequence}</b> {Escape(res.username)} ({Escape(res.userId)})</p><p>{res.createdAt.Tuna()}</p></div> <div class=\"response_body\">{res.content}</div></li>");
+            sb.Append($"<li class=\"response\" id=\"response_anchor_{res.threadId}_{res.sequence}\"><div class=\"response_header\"><p><b>{res.sequence}</b> {Escape(res.username)} ({Escape(res.userId)})</p><p>{Tuna(res.createdAt)}</p></div> <div class=\"response_body\">{res.content}</div></li>");
             return sb.ToString();
         }
 
-        static string Tuna(this DateTime time)
+        string Tuna(DateTime time)
         {
             return time.AddHours(9).ToString("yyyy-MM-dd '('ddd')' HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)
                 .Replace("Mon", "월")

@@ -18,7 +18,7 @@
     <Compile Include="JsonIndexDocument.cs" />
     <Compile Include="JsonThreadDocument.cs" />
     <Compile Include="ThreadManager.cs" />
-    <Compile Include="ExportManager.cs" />
+    <Compile Include="Exporter.cs" />
 
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -10,6 +10,8 @@ namespace DoTuna
 {
     public partial class Form1 : Form
     {
+        private readonly Exporter exporter = new Exporter();
+
         public Form1()
         {
             InitializeComponent();
@@ -147,7 +149,7 @@ namespace DoTuna
                 ExportFileButton.Text = message;
             });
 
-            await ExportManager.Build(this.DocumentPatternInputField.Text, progress);
+            await exporter.Build(this.DocumentPatternInputField.Text, progress);
 
             ExportFileButton.Enabled = true;
             ExportFileButton.Text = "내보내기";
