@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace DoTuna.Thread
+namespace DoTuna
 {
     public class JsonIndexDocument
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DoTuna.Thread
+namespace DoTuna
 {
     public class Response
     {

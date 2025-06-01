@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace DoTuna.Thread
+namespace DoTuna
 {
     public static class ThreadManager
     {

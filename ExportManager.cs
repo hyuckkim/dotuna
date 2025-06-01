@@ -5,9 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using DoTuna.Thread;
 
-namespace DoTuna.Export
+namespace DoTuna
 {
     public static class ExportManager
     {
