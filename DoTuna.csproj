@@ -15,10 +15,10 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
 
-    <Compile Include="thread/JsonIndexDocument.cs" />
-    <Compile Include="thread/JsonThreadDocument.cs" />
-    <Compile Include="thread/ThreadManager.cs" />
-    <Compile Include="export/ExportManager.cs" />
+    <Compile Include="JsonIndexDocument.cs" />
+    <Compile Include="JsonThreadDocument.cs" />
+    <Compile Include="ThreadManager.cs" />
+    <Compile Include="ExportManager.cs" />
 
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
