@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Text.Json;
 using System.Collections.Generic;
 
 namespace DoTuna
@@ -29,5 +31,25 @@ namespace DoTuna
         public int size { get; set; } = 0;
         public List<Response> responses { get; set; } = new List<Response>();
 #pragma warning restore IDE1006 // Naming Styles
+
+        public static JsonThreadDocument GetThread(string path)
+        {
+            if (!File.Exists(path))
+                throw new FileNotFoundException($"Thread file not found: {path}");
+
+            var jsonText = File.ReadAllText(path);
+            return JsonSerializer.Deserialize<JsonThreadDocument>(jsonText)
+                ?? throw new JsonException($"Failed to parse thread JSON file: {path}");
+        }
+
+        public static async Task<JsonThreadDocument> GetThreadAsync(string path)
+        {
+            if (!File.Exists(path))
+                throw new FileNotFoundException($"Thread file not found: {path}");
+
+            using var stream = File.OpenRead(path);
+            var doc = await JsonSerializer.DeserializeAsync<JsonThreadDocument>(stream);
+            return doc ?? throw new JsonException($"Failed to parse thread JSON file: {path}");
+        }
     }
 }

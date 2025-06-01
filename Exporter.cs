@@ -43,7 +43,7 @@ namespace DoTuna
                 int threadId = doc.threadId;
                 var threadPath = Path.Combine(FilePath, $"{threadId}.json");
 
-                JsonThreadDocument content = await ThreadManager.GetThreadAsync(threadPath);
+                JsonThreadDocument content = await JsonThreadDocument.GetThreadAsync(threadPath);
                 string html = await GenerateThreadPage(threadId);
 
                 string threadPath = Path.Combine(ResultPath, $"{doc.getTemplateName(template)}.html");

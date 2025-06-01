@@ -32,25 +32,5 @@ namespace DoTuna
                 throw new JsonException($"Failed to parse JSON file: {e.Message}", e);
             }
         }
-
-        public static JsonThreadDocument GetThread(string path)
-        {
-            if (!File.Exists(path))
-                throw new FileNotFoundException($"Thread file not found: {path}");
-
-            var jsonText = File.ReadAllText(path);
-            return JsonSerializer.Deserialize<JsonThreadDocument>(jsonText)
-                   ?? throw new JsonException($"Failed to parse thread JSON file: {path}");
-        }
-
-        public static async Task<JsonThreadDocument> GetThreadAsync(string path)
-        {
-            if (!File.Exists(path))
-                throw new FileNotFoundException($"Thread file not found: {path}");
-
-            using var stream = File.OpenRead(path);
-            var doc = await JsonSerializer.DeserializeAsync<JsonThreadDocument>(stream);
-            return doc ?? throw new JsonException($"Failed to parse thread JSON file: {path}");
-        }
     }
 }
