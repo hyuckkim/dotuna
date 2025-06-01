@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace DoTuna
 {
-    public static class ThreadManager
+    public class ThreadManager
     {
-        public static List<JsonIndexDocument> Index { get; private set; } = new List<JsonIndexDocument>();
+        public List<JsonIndexDocument> Index { get; private set; } = new List<JsonIndexDocument>();
 
-        public static void Open(string path)
+        public void Open(string path)
         {
             if (!Directory.Exists(path))
                 throw new DirectoryNotFoundException($"Directory not found: {path}");

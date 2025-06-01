@@ -11,6 +11,7 @@ namespace DoTuna
     public partial class Form1 : Form
     {
         public string SourcePath { get; private set; } = string.Empty;
+        public ThreadManager threadManager = new ThreadManager();
         public Form1()
         {
             InitializeComponent();
@@ -66,7 +67,7 @@ namespace DoTuna
             try
             {
                 SourcePath = folderPath;
-                ThreadManager.Open(folderPath);
+                threadManager.Open(folderPath);
                 ThreadListGrid.Visible = true;
                 ReadyButtonPanel.Visible = false;
                 RunningButtonPanel.Visible = true;
@@ -124,7 +125,7 @@ namespace DoTuna
             }
             else
             {
-                foreach(JsonIndexDocument doc in ThreadManager.Index)
+                foreach(JsonIndexDocument doc in threadManager.Index)
                 {
                     doc.IsCheck = false;
                 }
@@ -135,7 +136,7 @@ namespace DoTuna
         {
             get
             {
-                return ThreadManager.Index
+                return threadManager.Index
                     .Where(thread => thread.title.Contains(this.FilterTitleInputField.Text))
                     .Where(thread => thread.username.Contains(this.FilterAuthorInputField.Text));
             }
@@ -149,7 +150,7 @@ namespace DoTuna
                 ExportFileButton.Text = message;
             });
 
-            var selectedDocuments = ThreadManager.Index
+            var selectedDocuments = threadManager.Index
                 .Where(doc => doc.IsCheck)
                 .OrderBy(doc => doc.threadId)
                 .ToList();
