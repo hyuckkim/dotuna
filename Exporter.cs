@@ -40,14 +40,11 @@ namespace DoTuna
 
             foreach (var doc in selectedThreads)
             {
-                int threadId = doc.threadId;
-                var threadPath = Path.Combine(sourcePath, $"{threadId}.json");
-
+                var threadPath = Path.Combine(sourcePath, $"{doc.threadId}.json");
                 JsonThreadDocument content = await JsonThreadDocument.GetThreadAsync(threadPath);
-                string html = await GenerateThreadPage(content);
 
                 string jsonPath = Path.Combine(ResultPath, $"{doc.getTemplateName(template)}.html");
-                await Task.Run(() => File.WriteAllText(jsonPath, html));
+                await Task.Run(() => File.WriteAllText(jsonPath, GenerateThreadPage(content)));
 
                 Interlocked.Increment(ref completed);
                 progress?.Report($"({completed} of {total})");
