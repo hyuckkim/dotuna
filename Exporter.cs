@@ -11,8 +11,14 @@ namespace DoTuna
     public class Exporter
     {
         public readonly string ResultPath = Path.Combine(Directory.GetCurrentDirectory(), "Result");
+        readonly string template;
 
-        public async Task Build(string filenameTemplate, IProgress<string> progress)
+        public Exporter(string template)
+        {
+            this.template = template;
+        }
+
+        public async Task Build(IProgress<string> progress)
         {
             string indexPath = Path.Combine(ResultPath, "index.html");
 
@@ -20,7 +26,7 @@ namespace DoTuna
                 Directory.CreateDirectory(ResultPath);
 
             progress?.Report("(index.html 생성 중)");
-            await Task.Run(() => File.WriteAllText(indexPath, GenerateIndexPage(filenameTemplate)));
+            await Task.Run(() => File.WriteAllText(indexPath, GenerateIndexPage()));
             progress?.Report("(index.html 생성됨)");
 
             int completed = 0;
@@ -39,7 +45,7 @@ namespace DoTuna
                 JsonThreadDocument content = await ThreadManager.GetThreadAsync(threadId);
                 string html = await GenerateThreadPage(threadId);
 
-                string threadPath = Path.Combine(ResultPath, $"{doc.getTemplateName(filenameTemplate)}.html");
+                string threadPath = Path.Combine(ResultPath, $"{doc.getTemplateName(template)}.html");
                 await Task.Run(() => File.WriteAllText(threadPath, html));
 
                 Interlocked.Increment(ref completed);
@@ -47,7 +53,7 @@ namespace DoTuna
             }
         }
 
-        string GenerateIndexPage(string filenameTemplate)
+        string GenerateIndexPage()
         {
             var sb = new StringBuilder();
             sb.Append("<html lang=\"ko\"><head><meta charset=\"UTF-8\"><meta content=\"width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no\" name=\"viewport\"><title>anchor</title><style>");
@@ -57,13 +63,13 @@ namespace DoTuna
             sb.Append("<div class=\"pagination\" id=\"pagination\"></div>");
             sb.Append("<div id=\"thread_list\"></div>");
             sb.Append("<script>");
-            sb.Append(MakeJsIndex(filenameTemplate));
+            sb.Append(MakeJsIndex());
             sb.Append("window.Build = (pI = 0) => { let pagination = ''; for (let i = 0; i < filtered().length / 100; i++) { pagination += `<button class=\"btn_pg\" onclick=\"Build(${i})\">${i + 1}</button>`; } document.querySelector('#pagination').innerHTML = pagination; let threadList = ''; filtered().slice(pI * 100, (pI + 1) * 100).forEach((item) => { threadList += `<div><ul><li class=\"thread_id\">${item.thread_id}</li><li class=\"thread_title\"> <a href=\"${item.file_name}\" target=\"_blank\">${item.thread_title}</a></li><li class=\"thread_username\">${item.thread_username}</li></ul></div>` }); document.querySelector('#thread_list').innerHTML = threadList; }; const sv = () => document.querySelector(\".search_container\").value; const filtered = () => data.filter((item) => item.thread_title.includes(sv()) || item.thread_username.includes(sv())); Build(); </script>");
             sb.Append("</body></html>");
             return sb.ToString();
         }
 
-        string MakeJsIndex(string filenameTemplate)
+        string MakeJsIndex()
         {
             var sb = new StringBuilder();
             sb.Append("const data = [");
@@ -78,7 +84,7 @@ namespace DoTuna
                 sb.Append($"thread_id: \"{doc.threadId}\",");
                 sb.Append($"thread_title: \"{Escape(doc.title)}\",");
                 sb.Append($"thread_username: \"{Escape(doc.username)}\",");
-                sb.Append($"file_name: \"{Uri.EscapeDataString(doc.getTemplateName(filenameTemplate))}.html\"");
+                sb.Append($"file_name: \"{Uri.EscapeDataString(doc.getTemplateName(template))}.html\"");
                 sb.Append(" },");
             }
 
