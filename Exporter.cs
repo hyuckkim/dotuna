@@ -20,7 +20,7 @@ namespace DoTuna
                 Directory.CreateDirectory(ResultPath);
 
             progress?.Report("(index.html 생성 중)");
-            await File.WriteAllTextAsync(indexPath, GenerateIndexPage(filenameTemplate))
+            await Task.Run(() => File.WriteAllText(indexPath, GenerateIndexPage(filenameTemplate)));
             progress?.Report("(index.html 생성됨)");
 
             int completed = 0;
@@ -40,7 +40,7 @@ namespace DoTuna
                 string html = await GenerateThreadPage(threadId);
 
                 string threadPath = Path.Combine(ResultPath, $"{doc.getTemplateName(filenameTemplate)}.html");
-                await File.WriteAllTextAsync(threadPath, html)
+                await Task.Run(() => File.WriteAllText(threadPath, html));
 
                 Interlocked.Increment(ref completed);
                 progress?.Report($"({completed} of {total})");
