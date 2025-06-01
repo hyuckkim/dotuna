@@ -9,8 +9,6 @@ namespace DoTuna
 {
     public static class ThreadManager
     {
-        public static string FilePath { get; set; } = string.Empty;
-
         public static bool SomethingSelected =>
             Index != null && Index.Any(doc => doc.IsCheck);
 
@@ -20,8 +18,6 @@ namespace DoTuna
         {
             if (!Directory.Exists(path))
                 throw new DirectoryNotFoundException($"Directory not found: {path}");
-
-            FilePath = path;
 
             try
             {
@@ -37,26 +33,24 @@ namespace DoTuna
             }
         }
 
-        public static JsonThreadDocument GetThread(int id)
+        public static JsonThreadDocument GetThread(string path)
         {
-            var threadPath = Path.Combine(FilePath, $"{id}.json");
-            if (!File.Exists(threadPath))
-                throw new FileNotFoundException($"Thread file not found: {threadPath}");
+            if (!File.Exists(path))
+                throw new FileNotFoundException($"Thread file not found: {path}");
 
-            var jsonText = File.ReadAllText(threadPath);
+            var jsonText = File.ReadAllText(path);
             return JsonSerializer.Deserialize<JsonThreadDocument>(jsonText)
-                   ?? throw new JsonException($"Failed to parse thread JSON file: {threadPath}");
+                   ?? throw new JsonException($"Failed to parse thread JSON file: {path}");
         }
 
-        public static async Task<JsonThreadDocument> GetThreadAsync(int id)
+        public static async Task<JsonThreadDocument> GetThreadAsync(string path)
         {
-            var threadPath = Path.Combine(FilePath, $"{id}.json");
-            if (!File.Exists(threadPath))
-                throw new FileNotFoundException($"Thread file not found: {threadPath}");
+            if (!File.Exists(path))
+                throw new FileNotFoundException($"Thread file not found: {path}");
 
-            using var stream = File.OpenRead(threadPath);
+            using var stream = File.OpenRead(path);
             var doc = await JsonSerializer.DeserializeAsync<JsonThreadDocument>(stream);
-            return doc ?? throw new JsonException($"Failed to parse thread JSON file: {threadPath}");
+            return doc ?? throw new JsonException($"Failed to parse thread JSON file: {path}");
         }
     }
 }

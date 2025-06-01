@@ -18,7 +18,7 @@ namespace DoTuna
             this.template = template;
         }
 
-        public async Task Build(IProgress<string> progress)
+        public async Task Build(string sourcePath, IProgress<string> progress)
         {
             string indexPath = Path.Combine(ResultPath, "index.html");
 
@@ -41,8 +41,9 @@ namespace DoTuna
             foreach (var doc in selectedThreads)
             {
                 int threadId = doc.threadId;
+                var threadPath = Path.Combine(FilePath, $"{threadId}.json");
 
-                JsonThreadDocument content = await ThreadManager.GetThreadAsync(threadId);
+                JsonThreadDocument content = await ThreadManager.GetThreadAsync(threadPath);
                 string html = await GenerateThreadPage(threadId);
 
                 string threadPath = Path.Combine(ResultPath, $"{doc.getTemplateName(template)}.html");
@@ -92,9 +93,8 @@ namespace DoTuna
             return sb.ToString();
         }
 
-        async Task<string> GenerateThreadPage(int id)
+        async Task<string> GenerateThreadPage(JsonThreadDocument data)
         {
-            var data = await ThreadManager.GetThreadAsync(id);
             var sb = new StringBuilder();
             sb.Append("<html lang=\"ko\"><head><meta charset=\"UTF-8\"><meta content=\"width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no\" name=\"viewport\">");
             sb.Append($"<title>{Escape(data.title)}</title>");
