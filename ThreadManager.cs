@@ -9,9 +9,6 @@ namespace DoTuna
 {
     public static class ThreadManager
     {
-        public static bool SomethingSelected =>
-            Index != null && Index.Any(doc => doc.IsCheck);
-
         public static List<JsonIndexDocument> Index { get; private set; } = new List<JsonIndexDocument>();
 
         public static void Open(string path)
