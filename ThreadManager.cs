@@ -27,11 +27,10 @@ namespace DoTuna
         public void Check(JsonIndexDocument doc, bool isCheck)
         {
             if (doc == null) return;
-            doc.IsCheck = isCheck;
 
             if (isCheck)
             {
-                _checked.Add(doc); // 이미 존재하면 추가되지 않음
+                _checked.Add(doc);
             }
             else
             {

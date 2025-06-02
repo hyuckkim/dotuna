@@ -21,8 +21,6 @@ namespace DoTuna
             return string.Format("{0} /  Username: {1} {2}", title, username, threadId);
         }
 
-        public bool IsCheck { get; set; }
-
         public string getTemplateName(string template)
         {
             return template
