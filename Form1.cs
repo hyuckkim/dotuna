@@ -109,7 +109,7 @@ namespace DoTuna
             if (!(row.DataBoundItem is JsonIndexDocument item))
                 return;
 
-            item.IsCheck = !item.IsCheck;
+            threadManager.Check(item, !(bool)row.Cells[e.ColumnIndex].Value!);
         }
 
         private void OnFilterChanged(object sender, EventArgs e)
@@ -124,14 +124,14 @@ namespace DoTuna
             {
                 foreach(JsonIndexDocument doc in FilteredDoc)
                 {
-                    doc.IsCheck = true;
+                    threadManager.Check(doc, true);
                 }
             }
             else
             {
                 foreach(JsonIndexDocument doc in threadManager.All)
                 {
-                    doc.IsCheck = false;
+                    threadManager.Check(doc, false);
                 }
             }
             ThreadListGrid.Refresh();
