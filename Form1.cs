@@ -101,16 +101,15 @@ namespace DoTuna
         }
 
         private void OnCheckBoxClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0 &&
-                ThreadListGrid.Rows[e.RowIndex].DataBoundItem is JsonIndexDocument item)
-            {
-                var cell = ThreadListGrid.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                if (cell is DataGridViewCheckBoxCell)
-                {
-                    item.IsCheck = !item.IsCheck;
-                }
-            }
+        {    
+            if (e.RowIndex < 0 || e.ColumnIndex < 0 || !(ThreadListGrid.Columns[e.ColumnIndex] is DataGridViewCheckBoxColumn))
+                return;
+
+            var row = ThreadListGrid.Rows[e.RowIndex];
+            if (row.DataBoundItem is not JsonIndexDocument item)
+                return;
+
+            item.IsCheck = !item.IsCheck;
         }
 
         private void OnFilterChanged(object sender, EventArgs e)

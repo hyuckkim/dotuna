@@ -22,5 +22,10 @@ namespace DoTuna
         {
             _indexRepository = indexRepository;
         }
+        public void Check(JsonIndexDocument doc, bool isCheck)
+        {
+            if (doc == null) return;
+            doc.IsCheck = isCheck;
+        }
     }
 }

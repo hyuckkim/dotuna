@@ -66,7 +66,6 @@ namespace DoTuna
                 ReadOnly = true,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             };
-
             var colCheck = new DataGridViewCheckBoxColumn
             {
                 HeaderText = "",
@@ -81,6 +80,8 @@ namespace DoTuna
                 colUserName,
                 colCheck
             });
+
+            this.ThreadListGrid.CellContentClick += new DataGridViewCellEventHandler(this.OnCheckBoxClick);
 
             this.ReadyButtonPanel = new Panel
             {
