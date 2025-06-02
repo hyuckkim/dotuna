@@ -37,7 +37,7 @@
 
   <ItemGroup>
     <PackageReference Include="Fody" Version="6.9.2" PrivateAssets="all" />
-    <PackageReference Include="Costura.Fody" Version="5.0.2" />
+    <PackageReference Include="Costura.Fody" Version="5.0.2" PrivateAssets="All" />
     <PackageReference Include="System.Text.Json" Version="6.0.0" />
   </ItemGroup>
 
