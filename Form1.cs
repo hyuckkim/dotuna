@@ -12,7 +12,7 @@ namespace DoTuna
     public partial class Form1 : Form
     {
         public string SourcePath { get; private set; } = string.Empty;
-        public ThreadManager threadManager;
+        public ThreadManager threadManager = null!;
         public Form1()
         {
             InitializeComponent();
@@ -32,7 +32,7 @@ namespace DoTuna
             if (folderDialog.ShowDialog() == DialogResult.OK)
             {
                 var selectedPath = folderDialog.SelectedPath;
-                HandleFolderPath(selectedPath);
+                _ = HandleFolderPath(selectedPath);
             }
         }
 
@@ -58,7 +58,7 @@ namespace DoTuna
                 var droppedFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
                 if (droppedFiles.Length > 0 && Directory.Exists(droppedFiles[0]))
                 {
-                    HandleFolderPath(droppedFiles[0]);
+                    _ = HandleFolderPath(droppedFiles[0]);
                 }
             }
         }
