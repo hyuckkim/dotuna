@@ -108,9 +108,16 @@ namespace DoTuna
 
         private void OnCheckBoxClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
             var row = ThreadListGrid.Rows[e.RowIndex];
-            var item = (JsonIndexDocument)row.DataBoundItem;
-            threadManager.Check(item, !(row.Cells[e.ColumnIndex]?.Value ?? false));
+            if (row?.DataBoundItem is not JsonIndexDocument item) return;
+
+            var cell = row.Cells[e.ColumnIndex];
+            var value = cell?.Value;
+            bool isChecked = value is bool b && b;
+
+            threadManager.Check(item, !isChecked);
         }
 
         private void OnTitleFilterChanged(object sender, EventArgs e)
