@@ -131,7 +131,7 @@ namespace DoTuna
         {
             if (this.SelectAllCheckBox.Checked)
             {
-                foreach(JsonIndexDocument doc in FilteredDoc)
+                foreach(JsonIndexDocument doc in threadManager.Filtered())
                 {
                     threadManager.Check(doc, true);
                 }
@@ -147,15 +147,8 @@ namespace DoTuna
         }
         private RefreshGrid()
         {
-            ThreadListGrid.DataSource = FilteredDoc.ToList();
+            ThreadListGrid.DataSource = threadManager.Filtered().ToList();
             ThreadListGrid.Refresh();
-        }
-        private IEnumerable<JsonIndexDocument> FilteredDoc
-        {
-            get
-            {
-                return threadManager.Filtered();
-            }
         }
         private async void ExportButtonClick(object sender, EventArgs e)
         {
