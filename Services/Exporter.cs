@@ -69,7 +69,7 @@ namespace DoTuna
                 thread_id = doc.threadId,
                 thread_title = Escape(doc.title),
                 thread_username = Escape(doc.username),
-                file_name = _threadIdToFileName[doc.threadId.ToString()]
+                file_name = Uri.EscapeDataString(_threadIdToFileName[doc.threadId.ToString()])
             }).ToList();
 
             var model = new { threads = threadList };
@@ -120,7 +120,7 @@ namespace DoTuna
                 @"([a-z]*)&gt;([0-9]*)&gt;([0-9]*)-?([0-9]*)",
                 m => {
                     var threadId = m.Groups[2].Value == "" ? thread.threadId.ToString() : m.Groups[2].Value;
-                    var fileName = _threadIdToFileName.TryGetValue(threadId, out var f) ? f : threadId + ".html";
+                    var fileName = Uri.EscapeDataString(_threadIdToFileName.TryGetValue(threadId, out var f) ? f : threadId + ".html");
                     var responseStart = m.Groups[3].Value;
                     if (string.IsNullOrEmpty(threadId) && string.IsNullOrEmpty(responseStart))
                         return m.Value;
@@ -138,7 +138,7 @@ namespace DoTuna
                 @"https?://bbs.tunaground.net/trace.php/([a-z]+)/([0-9]+)/([\S]*)",
                 m => {
                     var threadId = m.Groups[2].Value;
-                    var fileName = _threadIdToFileName.TryGetValue(threadId, out var f) ? f : threadId + ".html";
+                    var fileName = Uri.EscapeDataString(_threadIdToFileName.TryGetValue(threadId, out var f) ? f : threadId + ".html");
                     return $"<a href=\"{fileName}#response_{m.Groups[3].Value}\" target=\"_blank\">{m.Value}</a>";
                 },
                 RegexOptions.IgnoreCase
@@ -153,7 +153,7 @@ namespace DoTuna
                 @"https?://tunaground.co/card2?post/trace.php/([a-z]+)/([0-9]+)/([\S]*)",
                 m => {
                     var threadId = m.Groups[2].Value;
-                    var fileName = _threadIdToFileName.TryGetValue(threadId, out var f) ? f : threadId + ".html";
+                    var fileName = Uri.EscapeDataString(_threadIdToFileName.TryGetValue(threadId, out var f) ? f : threadId + ".html");
                     return $"<a href=\"{fileName}#response_{m.Groups[3].Value}\" target=\"_blank\">{m.Value}</a>";
                 },
                 RegexOptions.IgnoreCase
@@ -168,7 +168,7 @@ namespace DoTuna
                 @"https?://tunaground.co/card2?post/trace.php\\?bbs=([a-z]+)&amp;card_number=([0-9]+)([\S]*)",
                 m => {
                     var threadId = m.Groups[2].Value;
-                    var fileName = _threadIdToFileName.TryGetValue(threadId, out var f) ? f : threadId + ".html";
+                    var fileName = Uri.EscapeDataString(_threadIdToFileName.TryGetValue(threadId, out var f) ? f : threadId + ".html");
                     return $"<a href=\"{fileName}\" target=\"_blank\">{m.Value}</a>";
                 },
                 RegexOptions.IgnoreCase
