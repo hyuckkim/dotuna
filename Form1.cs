@@ -67,17 +67,12 @@ namespace DoTuna
         {
             try
             {
-                SourcePath = folderPath;
                 var repository = new IndexFileRepository();
-                await repository.OpenAsync(SourcePath);
+                await repository.OpenAsync(folderPath);
 
                 threadManager = new ThreadManager(repository);
 
-                ThreadListGrid.Visible = true;
-                ReadyButtonPanel.Visible = false;
-                RunningButtonPanel.Visible = true;
-                GetFolderButton.Visible = false;
-
+                EnableExportUI();
                 RefreshGrid();
             }
             catch (DirectoryNotFoundException)
@@ -96,6 +91,14 @@ namespace DoTuna
             {
                 GetFolderButton.Text = $"폴더 가져오기\n(예상치 못한 오류: {ex.Message})";
             }
+        }
+
+        private void EnableExportUI()
+        {
+            ThreadListGrid.Visible = true;
+            ReadyButtonPanel.Visible = false;
+            RunningButtonPanel.Visible = true;
+            GetFolderButton.Visible = false;
         }
 
         private void OnCheckBoxClick(object sender, DataGridViewCellEventArgs e)
