@@ -78,8 +78,7 @@ namespace DoTuna
                 RunningButtonPanel.Visible = true;
                 GetFolderButton.Visible = false;
 
-                ThreadListGrid.DataSource = FilteredDoc.ToList();
-                ThreadListGrid.Refresh();
+                RefreshGrid();
             }
             catch (DirectoryNotFoundException)
             {
@@ -108,20 +107,20 @@ namespace DoTuna
 
         private void OnTitleFilterChanged(object sender, EventArgs e)
         {
-            ThreadListGrid.DataSource = FilteredDoc.ToList();
-            ThreadListGrid.Refresh();
+            threadManager.TitleFilter = this.FilterTitleInputField.Text;
+            RefreshGrid();
         }
         private void OnAuthorFilterChanged(object sender, EventArgs e)
         {
-            ThreadListGrid.DataSource = FilteredDoc.ToList();
-            ThreadListGrid.Refresh();
+            threadManagaer.AuthorFilter = this.FilterAuthorInputField.Text;
+            RefreshGrid();
         }
 
         private void SelectAllCheckBoxChanged(object sender, EventArgs e)
         {
             if (this.SelectAllCheckBox.Checked)
             {
-                foreach(JsonIndexDocument doc in FilteredDoc)
+                foreach(JsonIndexDocument doc in threadManager.Filtered)
                 {
                     threadManager.Check(doc, true);
                 }
@@ -133,17 +132,12 @@ namespace DoTuna
                     threadManager.Check(doc, false);
                 }
             }
-            ThreadListGrid.Refresh();
+            RefreshGrid();
         }
-        private IEnumerable<JsonIndexDocument> FilteredDoc
+        private RefreshGrid()
         {
-            get
-            {
-                return threadManager.Filtered(
-                    this.FilterTitleInputField.Text,
-                    this.FilterAuthorInputField.Text
-                );
-            }
+            ThreadListGrid.DataSource = threadManager.Filtered.ToList();
+            ThreadListGrid.Refresh();
         }
         private async void ExportButtonClick(object sender, EventArgs e)
         {
