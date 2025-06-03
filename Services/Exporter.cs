@@ -83,40 +83,37 @@ namespace DoTuna
             // <br> 보정 (JS fixBr)
             content = System.Text.RegularExpressions.Regex.Replace(content, @"<br\s*/?>", "\n<br>", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
-            // 앵커 변환 (JS applyAnchor)
             content = System.Text.RegularExpressions.Regex.Replace(
                 content,
                 @"([a-z]*)&gt;([0-9]*)&gt;([0-9]*)-?([0-9]*)",
                 m => {
-                    var boardId = m.Groups[1].Value == "" ? thread.boardId : m.Groups[1].Value;
                     var threadId = m.Groups[2].Value == "" ? thread.threadId.ToString() : m.Groups[2].Value;
                     var responseStart = m.Groups[3].Value;
-                    if (string.IsNullOrEmpty(boardId) && string.IsNullOrEmpty(threadId) && string.IsNullOrEmpty(responseStart))
+                    if (string.IsNullOrEmpty(threadId) && string.IsNullOrEmpty(responseStart))
                         return m.Value;
-                    var inPageAnchor = $"response_{boardId}_{threadId}_{responseStart}";
+                    var inPageAnchor = $"response_{responseStart}";
                     // 같은 문서 내 앵커
                     return $"<a href=\"#{inPageAnchor}\">{m.Value}</a>";
                 },
                 System.Text.RegularExpressions.RegexOptions.IgnoreCase
             );
 
-            // tunaground trace 링크 변환 (JS updateLink)
             content = System.Text.RegularExpressions.Regex.Replace(
                 content,
-                @"https?://bbs.tunaground.net/trace.php/([a-z]+)/([0-9]+)/(\S*)",
-                m => $"<a href=\"/{m.Groups[1].Value}/{m.Groups[2].Value}.html#{m.Groups[3].Value}\" target=\"_blank\">{m.Value}</a>",
+                @"https?://bbs.tunaground.net/trace.php/([a-z]+)/([0-9]+)/([\S]*)",
+                m => $"<a href=\"{m.Groups[2].Value}.html#response_{m.Groups[3].Value}\" target=\"_blank\">{m.Value}</a>",
                 System.Text.RegularExpressions.RegexOptions.IgnoreCase
             );
             content = System.Text.RegularExpressions.Regex.Replace(
                 content,
-                @"https?://tunaground.co/card2?post/trace.php/([a-z]+)/([0-9]+)/(\S*)",
-                m => $"<a href=\"/{m.Groups[1].Value}/{m.Groups[2].Value}.html#{m.Groups[3].Value}\" target=\"_blank\">{m.Value}</a>",
+                @"https?://tunaground.co/card2?post/trace.php/([a-z]+)/([0-9]+)/([\S]*)",
+                m => $"<a href=\"{m.Groups[2].Value}.html#response_{m.Groups[3].Value}\" target=\"_blank\">{m.Value}</a>",
                 System.Text.RegularExpressions.RegexOptions.IgnoreCase
             );
             content = System.Text.RegularExpressions.Regex.Replace(
                 content,
-                @"https?://tunaground.co/card2?post/trace.php\?bbs=([a-z]+)&amp;card_number=([0-9]+)(\S*)",
-                m => $"<a href=\"/{m.Groups[1].Value}/{m.Groups[2].Value}.html\" target=\"_blank\">{m.Value}</a>",
+                @"https?://tunaground.co/card2?post/trace.php\\?bbs=([a-z]+)&amp;card_number=([0-9]+)([\S]*)",
+                m => $"<a href=\"{m.Groups[2].Value}.html\" target=\"_blank\">{m.Value}</a>",
                 System.Text.RegularExpressions.RegexOptions.IgnoreCase
             );
 

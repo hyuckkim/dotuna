@@ -33,7 +33,7 @@
         <div class="thread_body">
             <ul class="response_list">
                 {{ for res in responses }}
-                <li class="response" id="response_anchor_{{ res.thread_id }}_{{ res.sequence }}">
+                <li class="response" id="response_{{ res.sequence }}">
                     <div class="response_header">
                         <p><b>{{ res.sequence }}</b> {{ res.username }} ({{ res.user_id }})</p>
                         <p>{{ res.created_at }}</p>
