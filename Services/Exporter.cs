@@ -51,7 +51,7 @@ namespace DoTuna
                 .UseMemoryCachingProvider()
                 .Build();
 
-            string templateKey = "DoTuna.Templates.index"; // 네임스페이스.폴더.파일명(확장자 제외) 형식
+            string templateKey = "DoTuna.Templates.index";
             string result = await engine.CompileRenderAsync<List<JsonIndexDocument>>(
                 templateKey,
                 threads

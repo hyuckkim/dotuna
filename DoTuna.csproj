@@ -2,8 +2,8 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <RootNamespace>Dotuna</RootNamespace>
-    <AssemblyName>Dotuna</AssemblyName>
+    <RootNamespace>DoTuna</RootNamespace>
+    <AssemblyName>DoTuna</AssemblyName>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
