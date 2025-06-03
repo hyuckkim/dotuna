@@ -38,7 +38,12 @@
                         <p><b>{{ res.sequence }}</b> {{ res.username }} ({{ res.user_id }})</p>
                         <p>{{ res.created_at }}</p>
                     </div>
-                    <div class="response_body">{{ res.content }}</div>
+                    <div class="response_body">
+                        {{ if res.attachment }}
+                        <div><img src="data/{{ res.attachment }}" alt="attachment" /></div>
+                        {{ end }}
+                        {{ res.content }}
+                    </div>
                 </li>
                 {{ end }}
             </ul>
