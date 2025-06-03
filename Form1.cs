@@ -134,7 +134,7 @@ namespace DoTuna
             }
             RefreshGrid();
         }
-        private RefreshGrid()
+        private void RefreshGrid()
         {
             ThreadListGrid.DataSource = threadManager.Filtered.ToList();
             ThreadListGrid.Refresh();
