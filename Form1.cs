@@ -112,7 +112,7 @@ namespace DoTuna
         }
         private void OnAuthorFilterChanged(object sender, EventArgs e)
         {
-            threadManagaer.AuthorFilter = this.FilterAuthorInputField.Text;
+            threadManager.AuthorFilter = this.FilterAuthorInputField.Text;
             RefreshGrid();
         }
 
