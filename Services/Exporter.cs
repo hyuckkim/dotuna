@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using RazorLight;
 
 namespace DoTuna
 {
@@ -13,6 +14,7 @@ namespace DoTuna
         public string SourcePath { get; set; } = string.Empty;
         public string ResultPath { get; set; } = Path.Combine(Directory.GetCurrentDirectory(), "Result");
         public string Template { get; set; } = "{id}";
+        public string IndexTemplatePath { get; set; } = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "index.cshtml");
 
         public async Task Build(List<JsonIndexDocument> threads, IProgress<string> progress)
         {
@@ -22,7 +24,8 @@ namespace DoTuna
                 Directory.CreateDirectory(ResultPath);
 
             progress?.Report("(index.html 생성 중)");
-            await Task.Run(() => File.WriteAllText(indexPath, GenerateIndexPage(threads)));
+            string indexContent = await GenerateIndexPageAsync(threads);
+            await Task.Run(() => File.WriteAllText(indexPath, indexContent));
             progress?.Report("(index.html 생성됨)");
 
             int completed = 0;
@@ -41,39 +44,21 @@ namespace DoTuna
             }
         }
 
-        string GenerateIndexPage(List<JsonIndexDocument> threads)
+        async Task<string> GenerateIndexPageAsync(List<JsonIndexDocument> threads)
         {
-            var sb = new StringBuilder();
-            sb.Append("<html lang=\"ko\"><head><meta charset=\"UTF-8\"><meta content=\"width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no\" name=\"viewport\"><title>anchor</title><style>");
-            sb.Append("body{background-color:#f0f0f0;margin:0;font-family:sans-serif}nav{background-color:#000;padding:.5em 1em}.search_container{display:flex}.search{flex-grow:1;margin:.5em;font-size:1em}.pagination{margin:.5em;line-height:1.5em}.btn_pg{margin:.2em}ul{margin:.7em .5em;padding:0;display:flex}li{list-style:none}.thread_id{min-width:6em}.thread_username{margin-left:auto;margin-right:0}@media (width<=768px){.thread_id{display:none}");
-            sb.Append("</style></head>");
-            sb.Append("<body><nav><input class=\"search_container\" type=\"text\" placeholder=\"검색\" oninput=\"Build()\"></nav>");
-            sb.Append("<div class=\"pagination\" id=\"pagination\"></div>");
-            sb.Append("<div id=\"thread_list\"></div>");
-            sb.Append("<script>");
-            sb.Append(MakeJsIndex(threads));
-            sb.Append("window.Build = (pI = 0) => { let pagination = ''; for (let i = 0; i < filtered().length / 100; i++) { pagination += `<button class=\"btn_pg\" onclick=\"Build(${i})\">${i + 1}</button>`; } document.querySelector('#pagination').innerHTML = pagination; let threadList = ''; filtered().slice(pI * 100, (pI + 1) * 100).forEach((item) => { threadList += `<div><ul><li class=\"thread_id\">${item.thread_id}</li><li class=\"thread_title\"> <a href=\"${item.file_name}\" target=\"_blank\">${item.thread_title}</a></li><li class=\"thread_username\">${item.thread_username}</li></ul></div>` }); document.querySelector('#thread_list').innerHTML = threadList; }; const sv = () => document.querySelector(\".search_container\").value; const filtered = () => data.filter((item) => item.thread_title.includes(sv()) || item.thread_username.includes(sv())); Build(); </script>");
-            sb.Append("</body></html>");
-            return sb.ToString();
-        }
-
-        string MakeJsIndex(List<JsonIndexDocument> threads)
-        {
-            var sb = new StringBuilder();
-            sb.Append("const data = [");
-
-            foreach (var doc in threads)
+            string template;
+            using (var reader = new StreamReader(IndexTemplatePath, Encoding.UTF8))
             {
-                sb.Append("{ ");
-                sb.Append($"thread_id: \"{doc.threadId}\",");
-                sb.Append($"thread_title: \"{Escape(doc.title)}\",");
-                sb.Append($"thread_username: \"{Escape(doc.username)}\",");
-                sb.Append($"file_name: \"{Uri.EscapeDataString(doc.getTemplateName(Template))}.html\"");
-                sb.Append(" },");
+            template = await reader.ReadToEndAsync().ConfigureAwait(false);
             }
 
-            sb.Append("];");
-            return sb.ToString();
+            var engine = new RazorLightEngineBuilder()
+            .UseFilesystemProject(Path.GetDirectoryName(IndexTemplatePath))
+            .UseMemoryCachingProvider()
+            .Build();
+
+            string result = await engine.CompileRenderStringAsync("index", template, threads).ConfigureAwait(false);
+            return result;
         }
 
         string GenerateThreadPage(JsonThreadDocument data)
