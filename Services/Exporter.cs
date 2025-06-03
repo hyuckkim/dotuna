@@ -19,6 +19,12 @@ namespace DoTuna
         {
             string indexPath = Path.Combine(ResultPath, "index.html");
 
+            // threadId -> 파일명 매핑 테이블 생성
+            var threadIdToFileName = threads.ToDictionary(
+                doc => doc.threadId.ToString(),
+                doc => doc.getTemplateName(TitleTemplate) + ".html"
+            );
+            
             if (!Directory.Exists(ResultPath))
                 Directory.CreateDirectory(ResultPath);
 
@@ -30,11 +36,6 @@ namespace DoTuna
             int completed = 0;
             progress?.Report($"({completed} of {threads.Count})");
 
-            // threadId -> 파일명 매핑 테이블 생성
-            var threadIdToFileName = threads.ToDictionary(
-                doc => doc.threadId.ToString(),
-                doc => doc.getTemplateName(TitleTemplate) + ".html"
-            );
 
             foreach (var doc in threads)
             {
