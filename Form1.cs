@@ -78,8 +78,7 @@ namespace DoTuna
                 RunningButtonPanel.Visible = true;
                 GetFolderButton.Visible = false;
 
-                ThreadListGrid.DataSource = FilteredDoc.ToList();
-                ThreadListGrid.Refresh();
+                RefreshGrid();
             }
             catch (DirectoryNotFoundException)
             {
@@ -120,14 +119,12 @@ namespace DoTuna
         private void OnTitleFilterChanged(object sender, EventArgs e)
         {
             threadManager.TitleFilter = this.FilterTitleInputField.Text;
-            ThreadListGrid.DataSource = FilteredDoc.ToList();
-            ThreadListGrid.Refresh();
+            RefreshGrid();
         }
         private void OnAuthorFilterChanged(object sender, EventArgs e)
         {
             threadManagaer.AuthorFilter = this.FilterAuthorInputField.Text;
-            ThreadListGrid.DataSource = FilteredDoc.ToList();
-            ThreadListGrid.Refresh();
+            RefreshGrid();
         }
 
         private void SelectAllCheckBoxChanged(object sender, EventArgs e)
@@ -146,6 +143,11 @@ namespace DoTuna
                     threadManager.Check(doc, false);
                 }
             }
+            RefreshGrid();
+        }
+        private RefreshGrid()
+        {
+            ThreadListGrid.DataSource = FilteredDoc.ToList();
             ThreadListGrid.Refresh();
         }
         private IEnumerable<JsonIndexDocument> FilteredDoc
