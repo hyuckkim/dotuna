@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -51,9 +52,13 @@ namespace DoTuna
                 .UseMemoryCachingProvider()
                 .Build();
 
+            dynamic viewBag = new ExpandoObject();
+            viewBag.Template = this.Template;
+
             string result = await engine.CompileRenderAsync<List<JsonIndexDocument>>(
                 "DoTuna.Templates.index",
-                threads
+                threads,
+                viewBag
             ).ConfigureAwait(false);
             return result;
         }

@@ -1,4 +1,6 @@
-@model List<Dotuna.JsonIndexDocument>
+@using System
+@using System.Text.Encodings.Web
+@model List<DoTuna.JsonIndexDocument>
 
 <html lang="ko">
   <head>
@@ -65,9 +67,9 @@
         {
             <text>{
                 thread_id: '@doc.ThreadId',
-                thread_title: '@Html.Raw(HttpUtility.JavaScriptStringEncode(doc.ThreadTitle))',  // Escape 처리
-                thread_username: '@Html.Raw(HttpUtility.JavaScriptStringEncode(doc.ThreadUsername))',
-                file_name: '@Uri.EscapeDataString(doc.GetTemplateName(Template))' + '.html'
+                thread_title: '@JavaScriptEncoder.Default.Encode(doc.ThreadTitle)',
+                thread_username: '@JavaScriptEncoder.Default.Encode(doc.ThreadUsername)',
+                file_name: '@System.Uri.EscapeDataString(doc.GetTemplateName(ViewBag.Template as string ?? "{id}"))' + '.html'
             },</text>
         }
     ];

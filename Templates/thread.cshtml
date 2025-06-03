@@ -120,7 +120,15 @@
                         <p><b>@response.sequence</b> @Escape(response.username) (@Escape(response.userId))</p>
                         <p>@Tuna(response.createdAt)</p>
                     </div>
-                    <div class="response_body">@Html.Raw(response.content)</div>
+                    <div class="response_body">
+                    @if (!string.IsNullOrEmpty(response.attachment))
+                    {
+                        <div>
+                            <img src="/img/@Escape(response.attachment)" alt="attachment" />
+                        </div>
+                    }
+                    @Html.Raw(response.content)
+                    </div>
                 </li>
             }
         </ul>
