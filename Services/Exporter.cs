@@ -23,20 +23,26 @@ namespace DoTuna
                 Directory.CreateDirectory(ResultPath);
 
             progress?.Report("(index.html 생성 중)");
-            var indexHtml = await GenerateIndexPageAsync(threads);
+            var indexHtml = await GenerateIndexPageAsync(threads, threadIdToFileName);
             await Task.Run(() => File.WriteAllText(indexPath, indexHtml));
             progress?.Report("(index.html 생성됨)");
 
             int completed = 0;
             progress?.Report($"({completed} of {threads.Count})");
 
+            // threadId -> 파일명 매핑 테이블 생성
+            var threadIdToFileName = threads.ToDictionary(
+                doc => doc.threadId.ToString(),
+                doc => doc.getTemplateName(TitleTemplate) + ".html"
+            );
+
             foreach (var doc in threads)
             {
                 var threadPath = Path.Combine(SourcePath, $"{doc.threadId}.json");
                 JsonThreadDocument content = await JsonThreadDocument.GetThreadAsync(threadPath);
 
-                string jsonPath = Path.Combine(ResultPath, $"{doc.getTemplateName(TitleTemplate)}.html");
-                var threadHtml = await GenerateThreadPage(content);
+                string jsonPath = Path.Combine(ResultPath, threadIdToFileName[doc.threadId.ToString()]);
+                var threadHtml = await GenerateThreadPage(content, threadIdToFileName);
                 await Task.Run(() => File.WriteAllText(jsonPath, threadHtml));
 
                 Interlocked.Increment(ref completed);
@@ -44,7 +50,7 @@ namespace DoTuna
             }
         }
 
-        async Task<string> GenerateIndexPageAsync(List<JsonIndexDocument> threads)
+        async Task<string> GenerateIndexPageAsync(List<JsonIndexDocument> threads, Dictionary<string, string> threadIdToFileName)
         {
             var assembly = typeof(Exporter).Assembly;
             var stream = assembly.GetManifestResourceStream("DoTuna.Templates.index.html");
@@ -57,30 +63,27 @@ namespace DoTuna
                 thread_id = doc.threadId,
                 thread_title = Escape(doc.title),
                 thread_username = Escape(doc.username),
-                file_name = doc.getTemplateName(this.TitleTemplate) + ".html"
+                file_name = threadIdToFileName[doc.threadId.ToString()]
             }).ToList();
 
             var model = new { threads = threadList };
             return Template.Parse(templateText).Render(model);
         }
 
-        async Task<string> GenerateThreadPage(JsonThreadDocument data)
+        async Task<string> GenerateThreadPage(JsonThreadDocument data, Dictionary<string, string> threadIdToFileName)
         {
-            // 링크/앵커/줄바꿈 등 tunaground 스타일 서버사이드 변환
             var responses = data.responses.Select(res => new {
                 sequence = res.sequence.ToString(),
                 username = Escape(res.username),
                 user_id = Escape(res.userId),
                 created_at = Tuna(res.createdAt),
-                content = ConvertContent(res.content, data, res),
+                content = ConvertContent(res.content, data, res, threadIdToFileName),
                 thread_id = res.threadId.ToString()
             }).ToList();
-        // 서버사이드에서 tunaground 스타일 링크/앵커/줄바꿈 변환
-        string ConvertContent(string content, JsonThreadDocument thread, Response res)
+        string ConvertContent(string content, JsonThreadDocument thread, Response res, Dictionary<string, string> threadIdToFileName)
         {
             if (string.IsNullOrEmpty(content)) return string.Empty;
 
-            // <br> 보정 (JS fixBr)
             content = System.Text.RegularExpressions.Regex.Replace(content, @"<br\s*/?>", "\n<br>", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
             content = System.Text.RegularExpressions.Regex.Replace(
@@ -92,7 +95,6 @@ namespace DoTuna
                     if (string.IsNullOrEmpty(threadId) && string.IsNullOrEmpty(responseStart))
                         return m.Value;
                     var inPageAnchor = $"response_{responseStart}";
-                    // 같은 문서 내 앵커
                     return $"<a href=\"#{inPageAnchor}\">{m.Value}</a>";
                 },
                 System.Text.RegularExpressions.RegexOptions.IgnoreCase
@@ -101,19 +103,31 @@ namespace DoTuna
             content = System.Text.RegularExpressions.Regex.Replace(
                 content,
                 @"https?://bbs.tunaground.net/trace.php/([a-z]+)/([0-9]+)/([\S]*)",
-                m => $"<a href=\"{m.Groups[2].Value}.html#response_{m.Groups[3].Value}\" target=\"_blank\">{m.Value}</a>",
+                m => {
+                    var threadId = m.Groups[2].Value;
+                    var fileName = threadIdToFileName.TryGetValue(threadId, out var f) ? f : threadId + ".html";
+                    return $"<a href=\"{fileName}#response_{m.Groups[3].Value}\" target=\"_blank\">{m.Value}</a>";
+                },
                 System.Text.RegularExpressions.RegexOptions.IgnoreCase
             );
             content = System.Text.RegularExpressions.Regex.Replace(
                 content,
                 @"https?://tunaground.co/card2?post/trace.php/([a-z]+)/([0-9]+)/([\S]*)",
-                m => $"<a href=\"{m.Groups[2].Value}.html#response_{m.Groups[3].Value}\" target=\"_blank\">{m.Value}</a>",
+                m => {
+                    var threadId = m.Groups[2].Value;
+                    var fileName = threadIdToFileName.TryGetValue(threadId, out var f) ? f : threadId + ".html";
+                    return $"<a href=\"{fileName}#response_{m.Groups[3].Value}\" target=\"_blank\">{m.Value}</a>";
+                },
                 System.Text.RegularExpressions.RegexOptions.IgnoreCase
             );
             content = System.Text.RegularExpressions.Regex.Replace(
                 content,
                 @"https?://tunaground.co/card2?post/trace.php\\?bbs=([a-z]+)&amp;card_number=([0-9]+)([\S]*)",
-                m => $"<a href=\"{m.Groups[2].Value}.html\" target=\"_blank\">{m.Value}</a>",
+                m => {
+                    var threadId = m.Groups[2].Value;
+                    var fileName = threadIdToFileName.TryGetValue(threadId, out var f) ? f : threadId + ".html";
+                    return $"<a href=\"{fileName}\" target=\"_blank\">{m.Value}</a>";
+                },
                 System.Text.RegularExpressions.RegexOptions.IgnoreCase
             );
 
