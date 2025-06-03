@@ -46,18 +46,17 @@ namespace DoTuna
 
         async Task<string> GenerateIndexPageAsync(List<JsonIndexDocument> threads)
         {
-            string template;
-            using (var reader = new StreamReader(IndexTemplatePath, Encoding.UTF8))
-            {
-            template = await reader.ReadToEndAsync().ConfigureAwait(false);
-            }
-
             var engine = new RazorLightEngineBuilder()
-            .UseFilesystemProject(Path.GetDirectoryName(IndexTemplatePath))
-            .UseMemoryCachingProvider()
-            .Build();
+                .UseEmbeddedResourcesProject(typeof(Exporter))
+                .UseMemoryCachingProvider()
+                .Build();
 
-            string result = await engine.CompileRenderStringAsync("index", template, threads).ConfigureAwait(false);
+            string templateKey = "Dotuna.Templates.index"; // 네임스페이스.폴더.파일명(확장자 제외) 형식
+            string result = await engine.CompileRenderAsync(
+                templateKey,
+                threads,
+                typeof(List<JsonIndexDocument>)
+            ).ConfigureAwait(false);
             return result;
         }
 

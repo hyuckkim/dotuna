@@ -1,4 +1,4 @@
-@model List<JsonIndexDocument>
+@model List<Dotuna.JsonIndexDocument>
 
 <html lang="ko">
   <head>
@@ -68,7 +68,7 @@
                 thread_title: '@Html.Raw(HttpUtility.JavaScriptStringEncode(doc.ThreadTitle))',  // Escape 처리
                 thread_username: '@Html.Raw(HttpUtility.JavaScriptStringEncode(doc.ThreadUsername))',
                 file_name: '@Uri.EscapeDataString(doc.GetTemplateName(Template))' + '.html'
-            }@((Model.IndexOf(doc) < Model.Count - 1) ? "," : "")</text>
+            },</text>
         }
     ];
       // Generate the JavaScript data for index page from the `threads` variable
