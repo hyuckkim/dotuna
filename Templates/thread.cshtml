@@ -1,0 +1,130 @@
+@model DoTuna.JsonThreadDocument
+@functions {
+    string Tuna(DateTime time)
+    {
+        return time.AddHours(9).ToString("yyyy-MM-dd '('ddd')' HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)
+            .Replace("Mon", "월")
+            .Replace("Tue", "화")
+            .Replace("Wed", "수")
+            .Replace("Thu", "목")
+            .Replace("Fri", "금")
+            .Replace("Sat", "토")
+            .Replace("Sun", "일");
+    }
+    static string Escape(string? s)
+    {
+        return System.Net.WebUtility.HtmlEncode(s ?? "");
+    }
+}
+
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+    <title>@Escape(Model.title)</title>
+    <style>
+    @font-face {
+        font-family: Saitamaar;
+        src:
+            url(https://tunaground.github.io/AA/HeadKasen.woff2) format("woff2"),
+            url(https://tunaground.github.io/AA/HeadKasen.ttf) format("ttf");
+        font-display: swap;
+    }
+    @font-face {
+        font-family: Saitamaar;
+        src:
+            url(https://cdn.jsdelivr.net/fontsource/fonts/nanum-gothic-coding@latest/korean-400-normal.woff2) format("woff2"),
+            url(https://cdn.jsdelivr.net/fontsource/fonts/nanum-gothic-coding@latest/korean-400-normal.woff) format("woff");
+        font-display: swap;
+        unicode-range: U+AC00-D7A3, U+3130-318F;
+    }
+    body {
+        background-color: #f0f0f0;
+        margin: 0;
+        font-family: sans-serif;
+    }
+    img {
+        max-height: 10em;
+    }
+    img:hover {
+        max-width: 100%;
+        max-height: 50em;
+    }
+    .thread {
+        padding-bottom: .4em;
+    }
+    .thread_header {
+        color: #fff;
+        background-color: #000;
+        padding: 1em;
+    }
+    .thread_title {
+        font-size: 2em;
+        font-weight: 700;
+    }
+    .response_list {
+        margin: 0;
+        padding: 0;
+    }
+    .response {
+        background-color: #ffffffb3;
+        border: 1px solid #000;
+        margin: .6em;
+        list-style: none;
+    }
+    .response_header {
+        background-color: #0003;
+        border-bottom: 1px dashed #000;
+        padding: .4em;
+        font-size: .9em;
+    }
+    .response_header p {
+        margin: 0;
+    }
+    .response_body {
+        overflow-wrap: break-word;
+        padding: .4em;
+        font-family: Saitamaar, sans-serif;
+        font-size: .9em;
+        line-height: 1.125em;
+    }
+    .mona {
+        white-space: nowrap;
+        background-color: #fff;
+        font-family: Saitamaar, sans-serif;
+        line-height: 1.125em;
+        overflow: auto hidden;
+    }
+    span.spoiler {
+        color: #0000;
+    }
+    span.spoiler::selection {
+        color: #fff;
+        background-color: #000;
+    }
+</style>
+</head>
+<body>
+<article>
+    <div class="thread_header">
+        <div class="thread_title">@Escape(Model.boardId)>(@Model.threadId)>@Escape(Model.title) (@Model.size)</div>
+        <div class="thread_username">@Escape(Model.username)</div>
+        <div class="thread_date">@Tuna(Model.createdAt) - @Tuna(Model.updatedAt)</div>
+    </div>
+    <div class="thread_body">
+        <ul class="response_list">
+            @foreach (var response in Model.responses)
+            {
+                <li class="response" id="response_anchor_@response.threadId_@response.sequence">
+                    <div class="response_header">
+                        <p><b>@response.sequence</b> @Escape(response.username) (@Escape(response.userId))</p>
+                        <p>@Tuna(response.createdAt)</p>
+                    </div>
+                    <div class="response_body">@Html.Raw(response.content)</div>
+                </li>
+            }
+        </ul>
+    </div>
+</article>
+</body>
+</html>
