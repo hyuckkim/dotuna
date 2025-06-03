@@ -161,7 +161,7 @@ namespace DoTuna
                 ExportFileButton.Text = message;
             });
 
-            exporter.Template = this.DocumentPatternInputField.Text;
+            exporter.TitleTemplate = this.DocumentPatternInputField.Text;
             await exporter.Build(
                 threadManager.Checked.ToList(),
                 progress
