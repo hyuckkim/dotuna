@@ -47,13 +47,12 @@ namespace DoTuna
         async Task<string> GenerateIndexPageAsync(List<JsonIndexDocument> threads)
         {
             var engine = new RazorLightEngineBuilder()
-                .UseEmbeddedResourcesProject(typeof(Exporter))
+                .UseEmbeddedResourcesProject(typeof(Exporter).Assembly)
                 .UseMemoryCachingProvider()
                 .Build();
 
-            string templateKey = "DoTuna.Templates.index";
             string result = await engine.CompileRenderAsync<List<JsonIndexDocument>>(
-                templateKey,
+                "DoTuna.Templates.index",
                 threads
             ).ConfigureAwait(false);
             return result;
