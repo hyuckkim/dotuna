@@ -66,14 +66,70 @@ namespace DoTuna
 
         async Task<string> GenerateThreadPage(JsonThreadDocument data)
         {
+            // 링크/앵커/줄바꿈 등 tunaground 스타일 서버사이드 변환
             var responses = data.responses.Select(res => new {
                 sequence = res.sequence.ToString(),
                 username = Escape(res.username),
                 user_id = Escape(res.userId),
                 created_at = Tuna(res.createdAt),
-                content = res.content,
+                content = ConvertContent(res.content, data, res),
                 thread_id = res.threadId.ToString()
             }).ToList();
+        // 서버사이드에서 tunaground 스타일 링크/앵커/줄바꿈 변환
+        string ConvertContent(string content, JsonThreadDocument thread, Response res)
+        {
+            if (string.IsNullOrEmpty(content)) return string.Empty;
+
+            // <br> 보정 (JS fixBr)
+            content = System.Text.RegularExpressions.Regex.Replace(content, @"<br\s*/?>", "\n<br>", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+            // 앵커 변환 (JS applyAnchor)
+            content = System.Text.RegularExpressions.Regex.Replace(
+                content,
+                @"([a-z]*)&gt;([0-9]*)&gt;([0-9]*)-?([0-9]*)",
+                m => {
+                    var boardId = m.Groups[1].Value == "" ? thread.boardId : m.Groups[1].Value;
+                    var threadId = m.Groups[2].Value == "" ? thread.threadId.ToString() : m.Groups[2].Value;
+                    var responseStart = m.Groups[3].Value;
+                    if (string.IsNullOrEmpty(boardId) && string.IsNullOrEmpty(threadId) && string.IsNullOrEmpty(responseStart))
+                        return m.Value;
+                    var inPageAnchor = $"response_{boardId}_{threadId}_{responseStart}";
+                    // 같은 문서 내 앵커
+                    return $"<a href=\"#{inPageAnchor}\">{m.Value}</a>";
+                },
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase
+            );
+
+            // tunaground trace 링크 변환 (JS updateLink)
+            content = System.Text.RegularExpressions.Regex.Replace(
+                content,
+                @"https?://bbs.tunaground.net/trace.php/([a-z]+)/([0-9]+)/(\S*)",
+                m => $"<a href=\"/{m.Groups[1].Value}/{m.Groups[2].Value}.html#{m.Groups[3].Value}\" target=\"_blank\">{m.Value}</a>",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase
+            );
+            content = System.Text.RegularExpressions.Regex.Replace(
+                content,
+                @"https?://tunaground.co/card2?post/trace.php/([a-z]+)/([0-9]+)/(\S*)",
+                m => $"<a href=\"/{m.Groups[1].Value}/{m.Groups[2].Value}.html#{m.Groups[3].Value}\" target=\"_blank\">{m.Value}</a>",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase
+            );
+            content = System.Text.RegularExpressions.Regex.Replace(
+                content,
+                @"https?://tunaground.co/card2?post/trace.php\?bbs=([a-z]+)&amp;card_number=([0-9]+)(\S*)",
+                m => $"<a href=\"/{m.Groups[1].Value}/{m.Groups[2].Value}.html\" target=\"_blank\">{m.Value}</a>",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase
+            );
+
+            // 일반 링크 변환 (JS applyLink)
+            content = System.Text.RegularExpressions.Regex.Replace(
+                content,
+                @"https?://((?!www\.youtube\.com/embed/|bbs.tunaground.net|tunaground.co)(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b[-a-zA-Z0-9가-힣()@:%_\+;.~#?&//=]*)",
+                m => $"<a href=\"{m.Value}\" target=\"_blank\">{m.Value}</a>",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase
+            );
+
+            return content;
+        }
 
             var model = new {
                 board_id = Escape(data.boardId),
