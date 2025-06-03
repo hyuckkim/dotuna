@@ -111,7 +111,7 @@ namespace DoTuna
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
 
             var row = ThreadListGrid.Rows[e.RowIndex];
-            if (row?.DataBoundItem is not JsonIndexDocument item) return;
+            if (!(row?.DataBoundItem is JsonIndexDocument item)) return;
 
             var cell = row.Cells[e.ColumnIndex];
             var value = cell?.Value;
