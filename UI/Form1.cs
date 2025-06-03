@@ -137,6 +137,17 @@ namespace DoTuna
                 {
                     threadManager.Check(doc);
                 }
+            }
+            else
+            {
+                foreach (JsonIndexDocument doc in threadManager.All)
+                {
+                    threadManager.Uncheck(doc);
+                }
+            }
+            RefreshGrid();
+            if (this.SelectAllCheckBox.Checked)
+            {
                 foreach (DataGridViewRow row in ThreadListGrid.Rows)
                 {
                     if (row.DataBoundItem is JsonIndexDocument doc && threadManager.Filtered.Contains(doc))
@@ -147,10 +158,6 @@ namespace DoTuna
             }
             else
             {
-                foreach (JsonIndexDocument doc in threadManager.All)
-                {
-                    threadManager.Uncheck(doc);
-                }
                 foreach (DataGridViewRow row in ThreadListGrid.Rows)
                 {
                     if (row.DataBoundItem is JsonIndexDocument)
@@ -159,7 +166,6 @@ namespace DoTuna
                     }
                 }
             }
-            RefreshGrid();
         }
         private void RefreshGrid()
         {
