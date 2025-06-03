@@ -100,20 +100,9 @@ namespace DoTuna
         }
 
         private void OnCheckBoxClick(object sender, DataGridViewCellEventArgs e)
-        {    
-            if (e.RowIndex < 0 || e.ColumnIndex < 0 || !(ThreadListGrid.Columns[e.ColumnIndex] is DataGridViewCheckBoxColumn))
-                return;
-
+        {
             var row = ThreadListGrid.Rows[e.RowIndex];
-            if (row == null || row.DataBoundItem == null)
-                return;
-
-            if (!(row.DataBoundItem is JsonIndexDocument item))
-                return;
-
-            if (threadManager == null)
-                return;
-
+            var item = (JsonIndexDocument)row.DataBoundItem;
             threadManager.Check(item, !(bool)row.Cells[e.ColumnIndex].Value!);
         }
 
