@@ -1,6 +1,6 @@
 @using System
 @using System.Text.Encodings.Web
-@model List<DoTuna.JsonIndexDocument>
+@model dynamic
 
 <html lang="ko">
   <head>
@@ -63,13 +63,13 @@
     
     <script>
     const data = [
-        @foreach (var doc in Model)
+        @foreach (var doc in Model.Threads)
         {
             <text>{
                 thread_id: '@doc.ThreadId',
                 thread_title: '@JavaScriptEncoder.Default.Encode(doc.ThreadTitle)',
                 thread_username: '@JavaScriptEncoder.Default.Encode(doc.ThreadUsername)',
-                file_name: '@System.Uri.EscapeDataString(doc.GetTemplateName(ViewBag.Template as string ?? "{id}"))' + '.html'
+                file_name: '@System.Uri.EscapeDataString(doc.GetTemplateName(Model.Template))' + '.html'
             },</text>
         }
     ];

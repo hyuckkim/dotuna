@@ -51,14 +51,16 @@ namespace DoTuna
                 .UseEmbeddedResourcesProject(typeof(Exporter).Assembly)
                 .UseMemoryCachingProvider()
                 .Build();
+                
+            var model = new
+            {
+                Threads = threads,
+                Template = this.Template
+            };
 
-            dynamic viewBag = new ExpandoObject();
-            viewBag.Template = this.Template;
-
-            string result = await engine.CompileRenderAsync<List<JsonIndexDocument>>(
+            string result = await engine.CompileRenderAsync(
                 "DoTuna.Templates.index",
-                threads,
-                viewBag
+                model
             ).ConfigureAwait(false);
             return result;
         }
