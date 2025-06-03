@@ -217,16 +217,9 @@ namespace DoTuna
             {
                 var src = Path.Combine(SourcePath, "data", imgFile);
                 var dst = Path.Combine(dataDir, imgFile);
-                try
+                if (File.Exists(src))
                 {
-                    if (File.Exists(src))
-                    {
-                        File.Copy(src, dst, true);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // 복사 실패 시 무시 (로그 등 필요시 여기에 추가)
+                    File.Copy(src, dst, true);
                 }
             }
         }

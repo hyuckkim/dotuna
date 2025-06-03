@@ -39,8 +39,8 @@
                         <p>{{ res.created_at }}</p>
                     </div>
                     <div class="response_body">
-                        {{ if res.attachment }}
-                        <div><img src="data/{{ res.attachment }}" alt="attachment" /></div>
+                        {{ if res.attachment and res.attachment != "" }}
+                        <div><img src="data/{{ res.attachment }}" alt="{{ res.attachment }}" /></div>
                         {{ end }}
                         {{ res.content }}
                     </div>
