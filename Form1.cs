@@ -11,8 +11,8 @@ namespace DoTuna
 {
     public partial class Form1 : Form
     {
-        public string SourcePath { get; private set; } = string.Empty;
         public ThreadManager threadManager = null!;
+        public Exporter exporter = null!;
         public Form1()
         {
             InitializeComponent();
@@ -71,6 +71,8 @@ namespace DoTuna
                 await repository.OpenAsync(folderPath);
 
                 threadManager = new ThreadManager(repository);
+                exporter = new Exporter();
+                exporter.SourcePath = folderPath;
 
                 EnableExportUI();
                 RefreshGrid();
@@ -163,8 +165,8 @@ namespace DoTuna
                 ExportFileButton.Text = message;
             });
 
-            await new Exporter(this.DocumentPatternInputField.Text).Build(
-                SourcePath,
+            exporter.Template = this.DocumentPatternInputField.Text;
+            await exporter.Build(
                 threadManager.Checked.ToList(),
                 progress
             );

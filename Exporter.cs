@@ -10,15 +10,11 @@ namespace DoTuna
 {
     public class Exporter
     {
-        public readonly string ResultPath = Path.Combine(Directory.GetCurrentDirectory(), "Result");
-        readonly string template;
+        public string SourcePath { get; set; } = string.Empty;
+        public string ResultPath { get; set; } = Path.Combine(Directory.GetCurrentDirectory(), "Result");
+        public string Template { get; set; } = "{id}";
 
-        public Exporter(string template)
-        {
-            this.template = template;
-        }
-
-        public async Task Build(string sourcePath, List<JsonIndexDocument> threads, IProgress<string> progress)
+        public async Task Build(List<JsonIndexDocument> threads, IProgress<string> progress)
         {
             string indexPath = Path.Combine(ResultPath, "index.html");
 
@@ -34,10 +30,10 @@ namespace DoTuna
 
             foreach (var doc in threads)
             {
-                var threadPath = Path.Combine(sourcePath, $"{doc.threadId}.json");
+                var threadPath = Path.Combine(SourcePath, $"{doc.threadId}.json");
                 JsonThreadDocument content = await JsonThreadDocument.GetThreadAsync(threadPath);
 
-                string jsonPath = Path.Combine(ResultPath, $"{doc.getTemplateName(template)}.html");
+                string jsonPath = Path.Combine(ResultPath, $"{doc.getTemplateName(Template)}.html");
                 await Task.Run(() => File.WriteAllText(jsonPath, GenerateThreadPage(content)));
 
                 Interlocked.Increment(ref completed);
@@ -72,7 +68,7 @@ namespace DoTuna
                 sb.Append($"thread_id: \"{doc.threadId}\",");
                 sb.Append($"thread_title: \"{Escape(doc.title)}\",");
                 sb.Append($"thread_username: \"{Escape(doc.username)}\",");
-                sb.Append($"file_name: \"{Uri.EscapeDataString(doc.getTemplateName(template))}.html\"");
+                sb.Append($"file_name: \"{Uri.EscapeDataString(doc.getTemplateName(Template))}.html\"");
                 sb.Append(" },");
             }
 
