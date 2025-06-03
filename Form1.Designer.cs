@@ -118,12 +118,12 @@ namespace DoTuna
             {
                 Width = 200,
             };
-            this.FilterTitleInputField.TextChanged += new EventHandler(this.OnFilterChanged);
+            this.FilterTitleInputField.TextChanged += new EventHandler(this.OnTitleFilterChanged);
             this.FilterAuthorInputField = new TextBox
             {
                 Width = 200,
             };
-            this.FilterAuthorInputField.TextChanged += new EventHandler(this.OnFilterChanged);
+            this.FilterAuthorInputField.TextChanged += new EventHandler(this.OnAuthorFilterChanged);
             this.SelectAllCheckBox = new CheckBox
             {
                 Text = "전체 선택",

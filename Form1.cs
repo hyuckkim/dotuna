@@ -78,7 +78,7 @@ namespace DoTuna
                 RunningButtonPanel.Visible = true;
                 GetFolderButton.Visible = false;
 
-                ThreadListGrid.DataSource = FilteredDoc;
+                ThreadListGrid.DataSource = FilteredDoc.ToList();
                 ThreadListGrid.Refresh();
             }
             catch (DirectoryNotFoundException)
@@ -113,11 +113,13 @@ namespace DoTuna
 
         private void OnTitleFilterChanged(object sender, EventArgs e)
         {
-
+            ThreadListGrid.DataSource = FilteredDoc.ToList();
+            ThreadListGrid.Refresh();
         }
         private void OnAuthorFilterChanged(object sender, EventArgs e)
         {
-            
+            ThreadListGrid.DataSource = FilteredDoc.ToList();
+            ThreadListGrid.Refresh();
         }
 
         private void SelectAllCheckBoxChanged(object sender, EventArgs e)
