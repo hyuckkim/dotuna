@@ -133,19 +133,39 @@ namespace DoTuna
         {
             if (this.SelectAllCheckBox.Checked)
             {
-                foreach(JsonIndexDocument doc in threadManager.Filtered)
+                foreach (JsonIndexDocument doc in threadManager.Filtered)
                 {
                     threadManager.Check(doc);
                 }
             }
             else
             {
-                foreach(JsonIndexDocument doc in threadManager.All)
+                foreach (JsonIndexDocument doc in threadManager.All)
                 {
                     threadManager.Uncheck(doc);
                 }
             }
             RefreshGrid();
+            if (this.SelectAllCheckBox.Checked)
+            {
+                foreach (DataGridViewRow row in ThreadListGrid.Rows)
+                {
+                    if (row.DataBoundItem is JsonIndexDocument doc && threadManager.Filtered.Contains(doc))
+                    {
+                        row.Cells["IsCheck"].Value = true; 
+                    }
+                }
+            }
+            else
+            {
+                foreach (DataGridViewRow row in ThreadListGrid.Rows)
+                {
+                    if (row.DataBoundItem is JsonIndexDocument)
+                    {
+                        row.Cells["IsCheck"].Value = false;
+                    }
+                }
+            }
         }
         private void RefreshGrid()
         {

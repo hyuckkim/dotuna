@@ -21,6 +21,7 @@
         .mona{white-space:nowrap;background-color:#fff;font-family:Saitamaar,sans-serif;line-height:1.125em;overflow:auto hidden}
         span.spoiler{color:#0000}
         span.spoiler::selection{color:#fff;background-color:#000}
+        .response_header>p>b>a{color: black;text-decoration: none;}
     </style>
 </head>
 <body>
@@ -33,12 +34,17 @@
         <div class="thread_body">
             <ul class="response_list">
                 {{ for res in responses }}
-                <li class="response" id="response_anchor_{{ res.thread_id }}_{{ res.sequence }}">
+                <li class="response" id="response_{{ res.sequence }}">
                     <div class="response_header">
-                        <p><b>{{ res.sequence }}</b> {{ res.username }} ({{ res.user_id }})</p>
+                        <p><b><a href="#response_{{ res.sequence }}"> {{ res.sequence }} </a></b> {{ res.username }} ({{ res.user_id }})</p>
                         <p>{{ res.created_at }}</p>
                     </div>
-                    <div class="response_body">{{ res.content }}</div>
+                    <div class="response_body">
+                        {{ if res.attachment != "" }}
+                        <div><img src="data/{{ res.attachment }}" alt="{{ res.attachment }}" /></div>
+                        {{ end }}
+                        {{ res.content }}
+                    </div>
                 </li>
                 {{ end }}
             </ul>
