@@ -52,10 +52,9 @@ namespace DoTuna
                 .Build();
 
             string templateKey = "Dotuna.Templates.index"; // 네임스페이스.폴더.파일명(확장자 제외) 형식
-            string result = await engine.CompileRenderAsync(
+            string result = await engine.CompileRenderAsync<List<JsonIndexDocument>>(
                 templateKey,
-                threads,
-                typeof(List<JsonIndexDocument>)
+                threads
             ).ConfigureAwait(false);
             return result;
         }
