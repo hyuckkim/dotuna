@@ -90,7 +90,7 @@ namespace DoTuna
                     created_at = Tuna(res.createdAt),
                     content = ConvertContent(res.content, data, res),
                     thread_id = res.threadId.ToString(),
-                    attachment = string.IsNullOrEmpty(res.attachment) ? "" : res.attachment)
+                    attachment = string.IsNullOrEmpty(res.attachment) ? "" : res.attachment
                 };
             }).ToList();
         string ConvertContent(string content, JsonThreadDocument thread, Response res)
