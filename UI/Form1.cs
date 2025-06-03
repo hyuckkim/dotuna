@@ -141,7 +141,7 @@ namespace DoTuna
                 {
                     if (row.DataBoundItem is JsonIndexDocument doc && threadManager.Filtered.Contains(doc))
                     {
-                        row.Cells["colCheck"].Value = true; 
+                        row.Cells["IsCheck"].Value = true; 
                     }
                 }
             }
@@ -155,7 +155,7 @@ namespace DoTuna
                 {
                     if (row.DataBoundItem is JsonIndexDocument)
                     {
-                        row.Cells["colCheck"].Value = false;
+                        row.Cells["IsCheck"].Value = false;
                     }
                 }
             }
