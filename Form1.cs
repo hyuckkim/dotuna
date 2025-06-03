@@ -77,20 +77,25 @@ namespace DoTuna
             }
             catch (DirectoryNotFoundException)
             {
-                GetFolderButton.Text = "폴더 가져오기\n(파일 참조가 잘못되었습니다)";
+                WriteFolderButtonAlert("파일 참조가 잘못되었습니다");
             }
             catch (FileNotFoundException)
             {
-                GetFolderButton.Text = "폴더 가져오기\n(유효한 아카이빙 폴더가 아닙니다)";
+                WriteFolderButtonAlert("유효한 아카이빙 폴더가 아닙니다");
             }
             catch (JsonException)
             {
-                GetFolderButton.Text = "폴더 가져오기\n(index.json 파일이 유효하지 않습니다)";
+                WriteFolderButtonAlert("index.json 파일이 유효하지 않습니다");
             }
             catch (Exception ex)
             {
-                GetFolderButton.Text = $"폴더 가져오기\n(예상치 못한 오류: {ex.Message})";
+                WriteFolderButtonAlert($"예상치 못한 오류: {ex.Message}");
             }
+        }
+
+        private void WriteFolderButtonAlert(string message)
+        {
+            GetFolderButton.Text = $"폴더 가져오기\n({message})";
         }
 
         private void EnableExportUI()
