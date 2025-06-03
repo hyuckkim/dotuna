@@ -14,11 +14,14 @@ namespace DoTuna
 
         public IEnumerable<JsonIndexDocument> All { get => _indexRepository.Get(); }
         public IEnumerable<JsonIndexDocument> Checked { get => _checked.OrderBy(x => x.threadId); }
-        public IEnumerable<JsonIndexDocument> Filtered(string title, string author)
+        public IEnumerable<JsonIndexDocument> Filtered()
         {
-            return All.Where(x => x.title.Contains(title) &&
-                                  x.username.Contains(author));
+            return All.Where(x => x.title.Contains(TitleFilter) &&
+                                  x.username.Contains(AuthorFilter));
         }
+
+        public string TitleFilter { get; set; } = string.Empty;
+        public string AuthorFilter { get; set; } = string.Empty;
 
         public ThreadManager(IIndexRepository indexRepository)
         {

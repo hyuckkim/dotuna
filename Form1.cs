@@ -119,11 +119,13 @@ namespace DoTuna
 
         private void OnTitleFilterChanged(object sender, EventArgs e)
         {
+            threadManager.TitleFilter = this.FilterTitleInputField.Text;
             ThreadListGrid.DataSource = FilteredDoc.ToList();
             ThreadListGrid.Refresh();
         }
         private void OnAuthorFilterChanged(object sender, EventArgs e)
         {
+            threadManagaer.AuthorFilter = this.FilterAuthorInputField.Text;
             ThreadListGrid.DataSource = FilteredDoc.ToList();
             ThreadListGrid.Refresh();
         }
@@ -150,10 +152,7 @@ namespace DoTuna
         {
             get
             {
-                return threadManager.Filtered(
-                    this.FilterTitleInputField.Text,
-                    this.FilterAuthorInputField.Text
-                );
+                return threadManager.Filtered();
             }
         }
         private async void ExportButtonClick(object sender, EventArgs e)
