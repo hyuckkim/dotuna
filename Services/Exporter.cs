@@ -36,7 +36,8 @@ namespace DoTuna
                 JsonThreadDocument content = await JsonThreadDocument.GetThreadAsync(threadPath);
 
                 string jsonPath = Path.Combine(ResultPath, $"{doc.getTemplateName(TitleTemplate)}.html");
-                await Task.Run(() => File.WriteAllText(jsonPath, GenerateThreadPage(content)));
+                var threadHtml = await GenerateThreadPage(content);
+                await Task.Run(() => File.WriteAllText(jsonPath, threadHtml));
 
                 Interlocked.Increment(ref completed);
                 progress?.Report($"({completed} of {threads.Count})");
@@ -63,29 +64,36 @@ namespace DoTuna
             return Template.Parse(templateText).Render(model);
         }
 
-        string GenerateThreadPage(JsonThreadDocument data)
+        async Task<string> GenerateThreadPage(JsonThreadDocument data)
         {
-            var sb = new StringBuilder();
-            sb.Append("<html lang=\"ko\"><head><meta charset=\"UTF-8\"><meta content=\"width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no\" name=\"viewport\">");
-            sb.Append($"<title>{Escape(data.title)}</title>");
-            sb.Append("<style>@font-face{font-family:Saitamaar;src:url(https://tunaground.github.io/AA/HeadKasen.woff2)format(\"woff2\"),url(https://tunaground.github.io/AA/HeadKasen.ttf)format(\"ttf\");font-display:swap}@font-face{font-family:Saitamaar;src:url(https://cdn.jsdelivr.net/fontsource/fonts/nanum-gothic-coding@latest/korean-400-normal.woff2)format(\"woff2\"),url(https://cdn.jsdelivr.net/fontsource/fonts/nanum-gothic-coding@latest/korean-400-normal.woff)format(\"woff\");font-display:swap;unicode-range:U+AC00-D7A3,U+3130-318F}body{background-color:#f0f0f0;margin:0;font-family:sans-serif}img{max-height:10em}img:hover{max-width:100%;max-height:50em}.thread{padding-bottom:.4em}.thread_header{color:#fff;background-color:#000;padding:1em}.thread_title{font-size:2em;font-weight:700}.response_list{margin:0;padding:0}.response{background-color:#ffffffb3;border:1px solid #000;margin:.6em;list-style:none}.response_header{background-color:#0003;border-bottom:1px dashed #000;padding:.4em;font-size:.9em}.response_header p{margin:0}.response_body{overflow-wrap:break-word;padding:.4em;font-family:Saitamaar,sans-serif;font-size:.9em;line-height:1.125em}.mona{white-space:nowrap;background-color:#fff;font-family:Saitamaar,sans-serif;line-height:1.125em;overflow:auto hidden}span.spoiler{color:#0000}span.spoiler::selection{color:#fff;background-color:#000}</style></head><body><article>");
-            sb.Append($"<div class=\"thread_header\"><div class=\"thread_title\">{Escape(data.boardId)}&gt;{data.threadId}&gt; {Escape(data.title)} ({data.size})</div><div class=\"thread_username\">{Escape(data.username)}</div><div class=\"thread_date\">{Tuna(data.createdAt)} - {Tuna(data.updatedAt)}</div></div>");
-            sb.Append("<div class=\"thread_body\"><ul class=\"response_list\">");
+            var responses = data.responses.Select(res => new {
+                sequence = res.sequence.ToString(),
+                username = Escape(res.username),
+                user_id = Escape(res.userId),
+                created_at = Tuna(res.createdAt),
+                content = res.content,
+                thread_id = res.threadId.ToString()
+            }).ToList();
 
-            foreach (var response in data.responses)
-            {
-                sb.Append(MakeHtmlResponse(response));
-            }
+            var model = new {
+                board_id = Escape(data.boardId),
+                thread_id = data.threadId.ToString(),
+                title = Escape(data.title),
+                username = Escape(data.username),
+                created_at = Tuna(data.createdAt),
+                updated_at = Tuna(data.updatedAt),
+                size = data.size.ToString(),
+                responses = responses
+            };
 
-            sb.Append("</ul></div></div></article></body></html>");
-            return sb.ToString();
-        }
+            var assembly = typeof(Exporter).Assembly;
+            var stream = assembly.GetManifestResourceStream("DoTuna.Templates.thread.html");
+            var reader = new StreamReader(stream, Encoding.UTF8);
+            var templateText = await reader.ReadToEndAsync();
+            reader.Dispose();
+            stream.Dispose();
 
-        string MakeHtmlResponse(Response res)
-        {
-            var sb = new StringBuilder();
-            sb.Append($"<li class=\"response\" id=\"response_anchor_{res.threadId}_{res.sequence}\"><div class=\"response_header\"><p><b>{res.sequence}</b> {Escape(res.username)} ({Escape(res.userId)})</p><p>{Tuna(res.createdAt)}</p></div> <div class=\"response_body\">{res.content}</div></li>");
-            return sb.ToString();
+            return Template.Parse(templateText).Render(model);
         }
 
         string Tuna(DateTime time)

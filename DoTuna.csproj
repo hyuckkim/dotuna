@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Templates/index.html" />
+    <EmbeddedResource Include="Templates/thread.html" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
