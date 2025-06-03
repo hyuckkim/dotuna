@@ -70,7 +70,6 @@ namespace DoTuna
             {
                 HeaderText = "",
                 Width = 30,
-                DataPropertyName = "IsCheck",
                 Name = "IsCheck"
             };
 
