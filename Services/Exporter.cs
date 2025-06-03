@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Scriban;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Scriban;
 
 namespace DoTuna
 {
@@ -85,9 +86,25 @@ namespace DoTuna
         {
             if (string.IsNullOrEmpty(content)) return string.Empty;
 
-            content = System.Text.RegularExpressions.Regex.Replace(content, @"<br\s*/?>", "\n<br>", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            content = FixBr(content);
+            content = ConvertAnchors(content, thread, threadIdToFileName);
+            content = ConvertTunagroundLinks(content, threadIdToFileName);
+            content = ConvertCard2Links(content, threadIdToFileName);
+            content = ConvertCard2QueryLinks(content, threadIdToFileName);
+            content = ConvertGeneralLinks(content);
+            return content;
+        }
 
-            content = System.Text.RegularExpressions.Regex.Replace(
+        // <br> 보정
+        string FixBr(string content)
+        {
+            return Regex.Replace(content, @"<br\s*/?>", "\n<br>", RegexOptions.IgnoreCase);
+        }
+
+        // >>threadId>>n 앵커 변환
+        string ConvertAnchors(string content, JsonThreadDocument thread, Dictionary<string, string> threadIdToFileName)
+        {
+            return Regex.Replace(
                 content,
                 @"([a-z]*)&gt;([0-9]*)&gt;([0-9]*)-?([0-9]*)",
                 m => {
@@ -96,13 +113,16 @@ namespace DoTuna
                     var responseStart = m.Groups[3].Value;
                     if (string.IsNullOrEmpty(threadId) && string.IsNullOrEmpty(responseStart))
                         return m.Value;
-                    var inPageAnchor = $"";
                     return $"<a href=\"{fileName}#response_{responseStart}\">{m.Value}</a>";
                 },
-                System.Text.RegularExpressions.RegexOptions.IgnoreCase
+                RegexOptions.IgnoreCase
             );
+        }
 
-            content = System.Text.RegularExpressions.Regex.Replace(
+        // bbs.tunaground.net/trace.php 링크 변환
+        string ConvertTunagroundLinks(string content, Dictionary<string, string> threadIdToFileName)
+        {
+            return Regex.Replace(
                 content,
                 @"https?://bbs.tunaground.net/trace.php/([a-z]+)/([0-9]+)/([\S]*)",
                 m => {
@@ -110,9 +130,14 @@ namespace DoTuna
                     var fileName = threadIdToFileName.TryGetValue(threadId, out var f) ? f : threadId + ".html";
                     return $"<a href=\"{fileName}#response_{m.Groups[3].Value}\" target=\"_blank\">{m.Value}</a>";
                 },
-                System.Text.RegularExpressions.RegexOptions.IgnoreCase
+                RegexOptions.IgnoreCase
             );
-            content = System.Text.RegularExpressions.Regex.Replace(
+        }
+
+        // tunaground.co/card2?post/trace.php/ 링크 변환
+        string ConvertCard2Links(string content, Dictionary<string, string> threadIdToFileName)
+        {
+            return Regex.Replace(
                 content,
                 @"https?://tunaground.co/card2?post/trace.php/([a-z]+)/([0-9]+)/([\S]*)",
                 m => {
@@ -120,9 +145,14 @@ namespace DoTuna
                     var fileName = threadIdToFileName.TryGetValue(threadId, out var f) ? f : threadId + ".html";
                     return $"<a href=\"{fileName}#response_{m.Groups[3].Value}\" target=\"_blank\">{m.Value}</a>";
                 },
-                System.Text.RegularExpressions.RegexOptions.IgnoreCase
+                RegexOptions.IgnoreCase
             );
-            content = System.Text.RegularExpressions.Regex.Replace(
+        }
+
+        // tunaground.co/card2?post/trace.php?bbs=...&card_number=... 링크 변환
+        string ConvertCard2QueryLinks(string content, Dictionary<string, string> threadIdToFileName)
+        {
+            return Regex.Replace(
                 content,
                 @"https?://tunaground.co/card2?post/trace.php\\?bbs=([a-z]+)&amp;card_number=([0-9]+)([\S]*)",
                 m => {
@@ -130,18 +160,19 @@ namespace DoTuna
                     var fileName = threadIdToFileName.TryGetValue(threadId, out var f) ? f : threadId + ".html";
                     return $"<a href=\"{fileName}\" target=\"_blank\">{m.Value}</a>";
                 },
-                System.Text.RegularExpressions.RegexOptions.IgnoreCase
+                RegexOptions.IgnoreCase
             );
+        }
 
-            // 일반 링크 변환 (JS applyLink)
-            content = System.Text.RegularExpressions.Regex.Replace(
+        // 일반 링크 변환 (JS applyLink)
+        string ConvertGeneralLinks(string content)
+        {
+            return Regex.Replace(
                 content,
                 @"https?://((?!www\.youtube\.com/embed/|bbs.tunaground.net|tunaground.co)(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b[-a-zA-Z0-9가-힣()@:%_\+;.~#?&//=]*)",
                 m => $"<a href=\"{m.Value}\" target=\"_blank\">{m.Value}</a>",
-                System.Text.RegularExpressions.RegexOptions.IgnoreCase
+                RegexOptions.IgnoreCase
             );
-
-            return content;
         }
 
             var model = new {
