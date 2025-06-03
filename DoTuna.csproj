@@ -2,8 +2,8 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <RootNamespace>DoTuna</RootNamespace>
-    <AssemblyName>DoTuna</AssemblyName>
+    <RootNamespace>Dotuna</RootNamespace>
+    <AssemblyName>Dotuna</AssemblyName>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -26,10 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Templates/index.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -43,7 +39,6 @@
     <PackageReference Include="Fody" Version="6.9.2" PrivateAssets="all" />
     <PackageReference Include="Costura.Fody" Version="5.0.2" PrivateAssets="All" />
     <PackageReference Include="System.Text.Json" Version="6.0.0" />
-    <PackageReference Include="RazorLight" Version="2.0.0-rc.3" />
   </ItemGroup>
 
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

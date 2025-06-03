@@ -12,8 +12,8 @@ namespace DoTuna
         private IIndexRepository _indexRepository;
         private HashSet<JsonIndexDocument> _checked = new HashSet<JsonIndexDocument>();
 
-        private List<JsonIndexDocument>? _titleCache = null;
-        private List<JsonIndexDocument>? _authorCache = null;
+        private List<JsonIndexDocument> _titleCache = null;
+        private List<JsonIndexDocument> _authorCache = null;
         private string _titleFilter = string.Empty;
         private string _authorFilter = string.Empty;
 
