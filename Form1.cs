@@ -105,7 +105,13 @@ namespace DoTuna
                 return;
 
             var row = ThreadListGrid.Rows[e.RowIndex];
+            if (row == null || row.DataBoundItem == null)
+                return;
+
             if (!(row.DataBoundItem is JsonIndexDocument item))
+                return;
+
+            if (threadManager == null)
                 return;
 
             threadManager.Check(item, !(bool)row.Cells[e.ColumnIndex].Value!);
