@@ -65,5 +65,30 @@ namespace DoTuna
                 _checked.Remove(doc);
             }
         }
+        public void Check(JsonIndexDocument doc)
+        {
+            if (doc == null) return;
+
+            _checked.Add(doc);
+        }
+        public void Uncheck(JsonIndexDocument doc)
+        {
+            if (doc == null) return;
+
+            _checked.Remove(doc);
+        }
+        public void Toggle(JsonIndexDocument doc)
+        {
+            if (doc == null) return;
+
+            if (_checked.Contains(doc))
+            {
+                _checked.Remove(doc);
+            }
+            else
+            {
+                _checked.Add(doc);
+            }
+        }
     }
 }

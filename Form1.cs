@@ -115,11 +115,7 @@ namespace DoTuna
             var row = ThreadListGrid.Rows[e.RowIndex];
             if (!(row?.DataBoundItem is JsonIndexDocument item)) return;
 
-            var cell = row.Cells[e.ColumnIndex];
-            var value = cell?.Value;
-            bool isChecked = value is bool b && b;
-
-            threadManager.Check(item, !isChecked);
+            threadManager.Toggle(item);
         }
 
         private void OnTitleFilterChanged(object sender, EventArgs e)
@@ -139,14 +135,14 @@ namespace DoTuna
             {
                 foreach(JsonIndexDocument doc in threadManager.Filtered)
                 {
-                    threadManager.Check(doc, true);
+                    threadManager.Check(doc);
                 }
             }
             else
             {
                 foreach(JsonIndexDocument doc in threadManager.All)
                 {
-                    threadManager.Check(doc, false);
+                    threadManager.Uncheck(doc);
                 }
             }
             RefreshGrid();
