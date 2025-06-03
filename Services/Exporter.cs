@@ -24,7 +24,7 @@ namespace DoTuna
                 doc => doc.threadId.ToString(),
                 doc => doc.getTemplateName(TitleTemplate) + ".html"
             );
-            
+
             if (!Directory.Exists(ResultPath))
                 Directory.CreateDirectory(ResultPath);
 
@@ -92,11 +92,12 @@ namespace DoTuna
                 @"([a-z]*)&gt;([0-9]*)&gt;([0-9]*)-?([0-9]*)",
                 m => {
                     var threadId = m.Groups[2].Value == "" ? thread.threadId.ToString() : m.Groups[2].Value;
+                    var fileName = threadIdToFileName.TryGetValue(threadId, out var f) ? f : threadId + ".html";
                     var responseStart = m.Groups[3].Value;
                     if (string.IsNullOrEmpty(threadId) && string.IsNullOrEmpty(responseStart))
                         return m.Value;
-                    var inPageAnchor = $"response_{responseStart}";
-                    return $"<a href=\"#{inPageAnchor}\">{m.Value}</a>";
+                    var inPageAnchor = $"";
+                    return $"<a href=\"{fileName}#response_{responseStart}\">{m.Value}</a>";
                 },
                 System.Text.RegularExpressions.RegexOptions.IgnoreCase
             );
