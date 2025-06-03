@@ -110,7 +110,7 @@ namespace DoTuna
         {
             var row = ThreadListGrid.Rows[e.RowIndex];
             var item = (JsonIndexDocument)row.DataBoundItem;
-            threadManager.Check(item, !(bool)row.Cells[e.ColumnIndex].Value!);
+            threadManager.Check(item, !((bool)row.Cells[e.ColumnIndex]?.Value ?? false));
         }
 
         private void OnTitleFilterChanged(object sender, EventArgs e)
