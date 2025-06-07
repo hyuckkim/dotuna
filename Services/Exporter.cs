@@ -16,9 +16,10 @@ namespace DoTuna
         public string ResultPath { get; set; } = Path.Combine(Directory.GetCurrentDirectory(), "Result");
         public string TitleTemplate { get; set; } = "{id}";
 
+        private ThreadFileNameMap fileNameMap = null!;
         public async Task Build(List<JsonIndexDocument> threads, IProgress<string> progress)
         {
-            var fileNameMap = new ThreadFileNameMap(threads, TitleTemplate);
+            fileNameMap = new ThreadFileNameMap(threads, TitleTemplate);
             var imageCopier = new ImageCopier(SourcePath, ResultPath);
             var renderer = new ScribanRenderer(fileNameMap);
 
@@ -60,38 +61,10 @@ namespace DoTuna
             return await renderer.RenderIndexPageAsync(threads);
         }
 
-        public async Task<string> GenerateThreadPage(JsonThreadDocument data)
+        async Task<string> GenerateThreadPage(JsonThreadDocument data)
         {
-            var converter = new ContentConverter(fileNameMap);
-            var responses = data.responses.Select(res => new {
-                sequence = res.sequence.ToString(),
-                username = Escape(res.username),
-                user_id = Escape(res.userId),
-                created_at = Tuna(res.createdAt),
-                content = converter.ConvertContent(res.content, data, res),
-                thread_id = res.threadId.ToString(),
-                attachment = string.IsNullOrEmpty(res.attachment) ? "" : res.attachment
-            }).ToList();
-
             var renderer = new ScribanRenderer(fileNameMap);
-            return await renderer.RenderThreadPageAsync(data, responses);
-        }
-
-        static string Tuna(DateTime time)
-        {
-            return time.AddHours(9).ToString("yyyy-MM-dd '('ddd')' HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)
-                .Replace("Mon", "월")
-                .Replace("Tue", "화")
-                .Replace("Wed", "수")
-                .Replace("Thu", "목")
-                .Replace("Fri", "금")
-                .Replace("Sat", "토")
-                .Replace("Sun", "일");
-        }
-
-        static string Escape(string? s)
-        {
-            return System.Net.WebUtility.HtmlEncode(s ?? "");
+            return await renderer.RenderThreadPageAsync(data);
         }
     }
 }
