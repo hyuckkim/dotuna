@@ -16,13 +16,9 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
 
-    <Compile Include="Models/JsonIndexDocument.cs" />
-    <Compile Include="Models/JsonThreadDocument.cs" />
-    <Compile Include="Services/ThreadManager.cs" />
-    <Compile Include="Repositories/IIndexRepository.cs" />
-    <Compile Include="Repositories/IndexFileRepository.cs" />
-    <Compile Include="Services/Exporter.cs" />
-
+    <Compile Include="Models/*.cs" />
+    <Compile Include="Repositories/*.cs" />
+    <Compile Include="Services/*.cs" />
     <Compile Include="Properties/AssemblyInfo.cs" />
   </ItemGroup>
 
