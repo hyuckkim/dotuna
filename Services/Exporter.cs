@@ -26,6 +26,7 @@ namespace DoTuna
             );
 
             var imageCopier = new ImageCopier(SourcePath, ResultPath);
+            var renderer = new ScribanRenderer(_threadIdToFileName);
 
             if (!Directory.Exists(ResultPath))
                 Directory.CreateDirectory(ResultPath);
@@ -61,58 +62,25 @@ namespace DoTuna
 
         async Task<string> GenerateIndexPageAsync(List<JsonIndexDocument> threads)
         {
-            var assembly = typeof(Exporter).Assembly;
-            var stream = assembly.GetManifestResourceStream("DoTuna.Templates.index.html");
-            var reader = new StreamReader(stream, Encoding.UTF8);
-            var templateText = await reader.ReadToEndAsync();
-            reader.Dispose();
-            stream.Dispose();
-
-            var threadList = threads.Select(doc => new {
-                thread_id = doc.threadId,
-                thread_title = Escape(doc.title),
-                thread_username = Escape(doc.username),
-                file_name = Uri.EscapeDataString(_threadIdToFileName[doc.threadId.ToString()])
-            }).ToList();
-
-            var model = new { threads = threadList };
-            return Template.Parse(templateText).Render(model);
+            var renderer = new ScribanRenderer(_threadIdToFileName);
+            return await renderer.RenderIndexPageAsync(threads);
         }
 
         public async Task<string> GenerateThreadPage(JsonThreadDocument data)
         {
             var converter = new ContentConverter(_threadIdToFileName);
-            var responses = data.responses.Select(res => {
-                return new {
-                    sequence = res.sequence.ToString(),
-                    username = Escape(res.username),
-                    user_id = Escape(res.userId),
-                    created_at = Tuna(res.createdAt),
-                    content = converter.ConvertContent(res.content, data, res),
-                    thread_id = res.threadId.ToString(),
-                    attachment = string.IsNullOrEmpty(res.attachment) ? "" : res.attachment
-                };
+            var responses = data.responses.Select(res => new {
+                sequence = res.sequence.ToString(),
+                username = Escape(res.username),
+                user_id = Escape(res.userId),
+                created_at = Tuna(res.createdAt),
+                content = converter.ConvertContent(res.content, data, res),
+                thread_id = res.threadId.ToString(),
+                attachment = string.IsNullOrEmpty(res.attachment) ? "" : res.attachment
             }).ToList();
 
-            var model = new {
-                board_id = Escape(data.boardId),
-                thread_id = data.threadId.ToString(),
-                title = Escape(data.title),
-                username = Escape(data.username),
-                created_at = Tuna(data.createdAt),
-                updated_at = Tuna(data.updatedAt),
-                size = data.size.ToString(),
-                responses = responses
-            };
-
-            var assembly = typeof(Exporter).Assembly;
-            var stream = assembly.GetManifestResourceStream("DoTuna.Templates.thread.html");
-            var reader = new StreamReader(stream, Encoding.UTF8);
-            var templateText = await reader.ReadToEndAsync();
-            reader.Dispose();
-            stream.Dispose();
-
-            return Template.Parse(templateText).Render(model);
+            var renderer = new ScribanRenderer(_threadIdToFileName);
+            return await renderer.RenderThreadPageAsync(data, responses);
         }
 
         string Tuna(DateTime time)
