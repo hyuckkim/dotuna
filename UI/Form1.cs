@@ -38,11 +38,12 @@ namespace DoTuna
 
         private void OnGetThreadSourceFileClick(object sender, EventArgs e)
         {
-            Process.Start(new ProcessStartInfo
+            var url = "https://mega.nz/folder/COpUVSxY#AEbhRcjb2lzLQ0K9t0n9ng/folder/Pb43BLDK";
+            try
             {
-                FileName = "https://mega.nz/folder/COpUVSxY#AEbhRcjb2lzLQ0K9t0n9ng/folder/Pb43BLDK",
-                UseShellExecute = true
-            });
+                Clipboard.SetText(url);
+            }
+            catch (Exception ex) { }
         }
 
         private void Form1_DragEnter(object sender, DragEventArgs e)

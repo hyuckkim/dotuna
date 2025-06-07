@@ -90,7 +90,7 @@ namespace DoTuna
 
             this.GetThreadSourceFileButton = new Button
             {
-                Text = "스레드 원본 파일 받기",
+                Text = "아카이브 (클립보드에 복사)",
                 Width = 240,
                 Margin = new Padding(0, 0, 5, 0),
                 Padding = new Padding(10, 0, 10, 0)
