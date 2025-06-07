@@ -1,12 +1,11 @@
-﻿<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <TargetFramework>net481</TargetFramework>
     <RootNamespace>DoTuna</RootNamespace>
     <AssemblyName>DoTuna</AssemblyName>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
-    <RuntimeIdentifiers>win</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,7 +14,6 @@
     <Compile Include="UI/Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-
     <Compile Include="Models/*.cs" />
     <Compile Include="Repositories/*.cs" />
     <Compile Include="Services/*.cs" />
@@ -25,13 +23,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Templates/index.html" />
     <EmbeddedResource Include="Templates/thread.html" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Threading" />
-    <Reference Include="System.Threading.Tasks" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,5 +32,4 @@
     <PackageReference Include="Scriban" Version="5.9.0" />
   </ItemGroup>
 
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
