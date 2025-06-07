@@ -9,18 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Program.cs" />
-    <Compile Include="UI/Form1.cs" />
-    <Compile Include="UI/Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Models/*.cs" />
-    <Compile Include="Repositories/*.cs" />
-    <Compile Include="Services/*.cs" />
-    <Compile Include="Properties/AssemblyInfo.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Templates/index.html" />
     <EmbeddedResource Include="Templates/thread.html" />
   </ItemGroup>
