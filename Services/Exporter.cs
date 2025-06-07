@@ -16,12 +16,10 @@ namespace DoTuna
         public string ResultPath { get; set; } = Path.Combine(Directory.GetCurrentDirectory(), "Result");
         public string TitleTemplate { get; set; } = "{id}";
 
-        private List<string> _requireImg = new List<string>();
         private Dictionary<string, string> _threadIdToFileName = new Dictionary<string, string>();
 
         public async Task Build(List<JsonIndexDocument> threads, IProgress<string> progress)
         {
-            _requireImg = new List<string>();
             _threadIdToFileName = threads.ToDictionary(
                 doc => doc.threadId.ToString(),
                 doc => doc.getTemplateName(TitleTemplate) + ".html"
@@ -48,12 +46,15 @@ namespace DoTuna
                 var threadHtml = await GenerateThreadPage(content);
                 await Task.Run(() => File.WriteAllText(jsonPath, threadHtml));
 
+                CopyRequiredImages(doc
+                    .Select(res => res.attachment)
+                    .Where(img => !string.IsNullOrEmpty(img))
+                    .ToList()
+                );
                 Interlocked.Increment(ref completed);
                 progress?.Report($"({completed} of {threads.Count})");
             }
 
-            // 모든 thread/page 생성 후 이미지 복사
-            CopyRequiredImages();
         }
 
         async Task<string> GenerateIndexPageAsync(List<JsonIndexDocument> threads)
@@ -79,10 +80,6 @@ namespace DoTuna
         async Task<string> GenerateThreadPage(JsonThreadDocument data)
         {
             var responses = data.responses.Select(res => {
-                if (!string.IsNullOrEmpty(res.attachment))
-                {
-                    _requireImg.Add(res.attachment);
-                }
                 return new {
                     sequence = res.sequence.ToString(),
                     username = Escape(res.username),
@@ -206,14 +203,14 @@ namespace DoTuna
 
             return Template.Parse(templateText).Render(model);
         }
-        void CopyRequiredImages()
+        void CopyRequiredImages(List<string> requireImg)
         {
-            if (_requireImg.Count == 0) return;
+            if (requireImg.Count == 0) return;
             string dataDir = Path.Combine(ResultPath, "data");
             if (!Directory.Exists(dataDir))
                 Directory.CreateDirectory(dataDir);
 
-            foreach (var imgFile in _requireImg.Distinct())
+            foreach (var imgFile in requireImg.Distinct())
             {
                 var src = Path.Combine(SourcePath, "data", imgFile);
                 var dst = Path.Combine(dataDir, imgFile);
