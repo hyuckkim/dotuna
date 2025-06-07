@@ -1,6 +1,5 @@
 using System;
 using System.Text.RegularExpressions;
-using System;
 using System.Collections.Generic;
 
 namespace DoTuna
@@ -10,8 +9,7 @@ namespace DoTuna
         private Dictionary<string, string> _threadIdToFileName;
         public ContentConverter(Dictionary<string, string> threadIdToFileName)
         {
-            _getFileName = getFileName;
-            _getThreadId = getThreadId;
+            _threadIdToFileName = threadIdToFileName;
         }
 
         public string ConvertContent(string content, JsonThreadDocument thread, Response res)
