@@ -16,10 +16,9 @@ namespace DoTuna
         public string ResultPath { get; set; } = Path.Combine(Directory.GetCurrentDirectory(), "Result");
         public string TitleTemplate { get; set; } = "{id}";
 
-        private ThreadFileNameMap fileNameMap = null!;
         public async Task Build(List<JsonIndexDocument> threads, IProgress<string> progress)
         {
-            fileNameMap = new ThreadFileNameMap(threads, TitleTemplate);
+            var fileNameMap = new ThreadFileNameMap(threads, TitleTemplate);
             var imageCopier = new ImageCopier(SourcePath, ResultPath);
             var renderer = new ScribanRenderer(fileNameMap);
 
@@ -28,7 +27,7 @@ namespace DoTuna
             string indexPath = Path.Combine(ResultPath, "index.html");
 
             progress?.Report("(index.html 생성 중)");
-            var indexHtml = await GenerateIndexPageAsync(threads);
+            var indexHtml = await renderer.RenderIndexPageAsync(threads);
             await Task.Run(() => File.WriteAllText(indexPath, indexHtml));
             progress?.Report("(index.html 생성됨)");
 
@@ -41,7 +40,7 @@ namespace DoTuna
                 JsonThreadDocument content = await JsonThreadDocument.GetThreadAsync(threadPath);
 
                 string jsonPath = Path.Combine(ResultPath, fileNameMap[doc.threadId.ToString()]);
-                var threadHtml = await GenerateThreadPage(content);
+                var threadHtml = await renderer.RenderThreadPageAsync(content);
                 await Task.Run(() => File.WriteAllText(jsonPath, threadHtml));
 
                 imageCopier.CopyRequiredImages(content.responses
@@ -52,19 +51,6 @@ namespace DoTuna
                 Interlocked.Increment(ref completed);
                 progress?.Report($"({completed} of {threads.Count})");
             }
-
-        }
-
-        async Task<string> GenerateIndexPageAsync(List<JsonIndexDocument> threads)
-        {
-            var renderer = new ScribanRenderer(fileNameMap);
-            return await renderer.RenderIndexPageAsync(threads);
-        }
-
-        async Task<string> GenerateThreadPage(JsonThreadDocument data)
-        {
-            var renderer = new ScribanRenderer(fileNameMap);
-            return await renderer.RenderThreadPageAsync(data);
         }
     }
 }
