@@ -20,8 +20,8 @@ namespace DoTuna
         {
             var model = new { threads = threads.Select(doc => new {
                 thread_id = doc.threadId,
-                thread_title = Exporter.Escape(doc.title),
-                thread_username = Exporter.Escape(doc.username),
+                thread_title = Escape(doc.title),
+                thread_username = Escape(doc.username),
                 file_name = Uri.EscapeDataString(_fileNameMap.GetFileName(doc.threadId.ToString()))
             }).ToList() };
             return await RenderTemplateFromResourceAsync("DoTuna.Templates.index.html", model);
@@ -30,12 +30,12 @@ namespace DoTuna
         public async Task<string> RenderThreadPageAsync(JsonThreadDocument threadModel, object responsesModel)
         {
             var model = new {
-                board_id = Exporter.Escape(threadModel.boardId),
+                board_id = Escape(threadModel.boardId),
                 thread_id = threadModel.threadId.ToString(),
-                title = Exporter.Escape(threadModel.title),
-                username = Exporter.Escape(threadModel.username),
-                created_at = Exporter.Tuna(threadModel.createdAt),
-                updated_at = Exporter.Tuna(threadModel.updatedAt),
+                title = Escape(threadModel.title),
+                username = Escape(threadModel.username),
+                created_at = Tuna(threadModel.createdAt),
+                updated_at = Tuna(threadModel.updatedAt),
                 size = threadModel.size.ToString(),
                 responses = responsesModel
             };
@@ -49,6 +49,22 @@ namespace DoTuna
             using var reader = new StreamReader(stream, Encoding.UTF8);
             var templateText = await reader.ReadToEndAsync();
             return Template.Parse(templateText).Render(model);
+        }
+        static string Tuna(DateTime time)
+        {
+            return time.AddHours(9).ToString("yyyy-MM-dd '('ddd')' HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)
+                .Replace("Mon", "월")
+                .Replace("Tue", "화")
+                .Replace("Wed", "수")
+                .Replace("Thu", "목")
+                .Replace("Fri", "금")
+                .Replace("Sat", "토")
+                .Replace("Sun", "일");
+        }
+
+        static string Escape(string? s)
+        {
+            return System.Net.WebUtility.HtmlEncode(s ?? "");
         }
     }
 }

@@ -77,7 +77,7 @@ namespace DoTuna
             return await renderer.RenderThreadPageAsync(data, responses);
         }
 
-        string Tuna(DateTime time)
+        static string Tuna(DateTime time)
         {
             return time.AddHours(9).ToString("yyyy-MM-dd '('ddd')' HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture)
                 .Replace("Mon", "월")
