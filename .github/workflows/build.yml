@@ -31,4 +31,4 @@ jobs:
     - uses: actions/upload-artifact@v4
       with:
         name: Dotuna
-        path: ./bin/Release/Dotuna.exe
+        path: .bin\Release\net481\DoTuna.exe
