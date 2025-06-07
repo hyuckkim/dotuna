@@ -53,14 +53,12 @@ namespace DoTuna
 
         private void Form1_DragDrop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                var droppedFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-                if (droppedFiles.Length > 0 && Directory.Exists(droppedFiles[0]))
-                {
-                    _ = HandleFolderPath(droppedFiles[0]);
-                }
-            }
+            if (!(e.Data.GetDataPresent(DataFormats.FileDrop))) return;
+
+            var droppedFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (droppedFiles.FirstOrDefault(Directory.Exists) == null) return;
+
+            _ = HandleFolderPath(folderPath);
         }
 
         private async Task HandleFolderPath(string folderPath)
