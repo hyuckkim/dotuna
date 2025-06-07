@@ -16,17 +16,11 @@ namespace DoTuna
         public string ResultPath { get; set; } = Path.Combine(Directory.GetCurrentDirectory(), "Result");
         public string TitleTemplate { get; set; } = "{id}";
 
-        private Dictionary<string, string> _threadIdToFileName = new Dictionary<string, string>();
-
         public async Task Build(List<JsonIndexDocument> threads, IProgress<string> progress)
         {
-            _threadIdToFileName = threads.ToDictionary(
-                doc => doc.threadId.ToString(),
-                doc => doc.getTemplateName(TitleTemplate) + ".html"
-            );
-
+            var fileNameMap = new ThreadFileNameMap(threads, TitleTemplate);
             var imageCopier = new ImageCopier(SourcePath, ResultPath);
-            var renderer = new ScribanRenderer(_threadIdToFileName);
+            var renderer = new ScribanRenderer(fileNameMap);
 
             if (!Directory.Exists(ResultPath))
                 Directory.CreateDirectory(ResultPath);
@@ -45,7 +39,7 @@ namespace DoTuna
                 var threadPath = Path.Combine(SourcePath, $"{doc.threadId}.json");
                 JsonThreadDocument content = await JsonThreadDocument.GetThreadAsync(threadPath);
 
-                string jsonPath = Path.Combine(ResultPath, _threadIdToFileName[doc.threadId.ToString()]);
+                string jsonPath = Path.Combine(ResultPath, fileNameMap[doc.threadId.ToString()]);
                 var threadHtml = await GenerateThreadPage(content);
                 await Task.Run(() => File.WriteAllText(jsonPath, threadHtml));
 
@@ -62,13 +56,13 @@ namespace DoTuna
 
         async Task<string> GenerateIndexPageAsync(List<JsonIndexDocument> threads)
         {
-            var renderer = new ScribanRenderer(_threadIdToFileName);
+            var renderer = new ScribanRenderer(fileNameMap);
             return await renderer.RenderIndexPageAsync(threads);
         }
 
         public async Task<string> GenerateThreadPage(JsonThreadDocument data)
         {
-            var converter = new ContentConverter(_threadIdToFileName);
+            var converter = new ContentConverter(fileNameMap);
             var responses = data.responses.Select(res => new {
                 sequence = res.sequence.ToString(),
                 username = Escape(res.username),
@@ -79,7 +73,7 @@ namespace DoTuna
                 attachment = string.IsNullOrEmpty(res.attachment) ? "" : res.attachment
             }).ToList();
 
-            var renderer = new ScribanRenderer(_threadIdToFileName);
+            var renderer = new ScribanRenderer(fileNameMap);
             return await renderer.RenderThreadPageAsync(data, responses);
         }
 

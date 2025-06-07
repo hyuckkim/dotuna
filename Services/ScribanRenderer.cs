@@ -9,10 +9,10 @@ namespace DoTuna
 {
     public class ScribanRenderer
     {
-        private readonly Dictionary<string, string> _threadIdToFileName;
-        public ScribanRenderer(Dictionary<string, string> threadIdToFileName)
+        private readonly ThreadFileNameMap _fileNameMap;
+        public ScribanRenderer(ThreadFileNameMap fileNameMap)
         {
-            _threadIdToFileName = threadIdToFileName;
+            _fileNameMap = fileNameMap;
         }
 
         public async Task<string> RenderIndexPageAsync(List<JsonIndexDocument> threads)
@@ -21,7 +21,7 @@ namespace DoTuna
                 thread_id = doc.threadId,
                 thread_title = Exporter.Escape(doc.title),
                 thread_username = Exporter.Escape(doc.username),
-                file_name = Uri.EscapeDataString(_threadIdToFileName.TryGetValue(doc.threadId.ToString(), out var f) ? f : doc.threadId + ".html")
+                file_name = Uri.EscapeDataString(_fileNameMap.GetFileName(doc.threadId.ToString()))
             }).ToList() };
             return await RenderTemplateFromResourceAsync("DoTuna.Templates.index.html", model);
         }

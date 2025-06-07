@@ -6,10 +6,10 @@ namespace DoTuna
 {
     public class ContentConverter
     {
-        private Dictionary<string, string> _threadIdToFileName;
-        public ContentConverter(Dictionary<string, string> threadIdToFileName)
+        private readonly ThreadFileNameMap _fileNameMap;
+        public ContentConverter(ThreadFileNameMap fileNameMap)
         {
-            _threadIdToFileName = threadIdToFileName;
+            _fileNameMap = fileNameMap;
         }
 
         public string ConvertContent(string content, JsonThreadDocument thread, Response res)
@@ -93,6 +93,6 @@ namespace DoTuna
         }
 
         string GetFileName(string threadId) => Uri
-            .EscapeDataString(_threadIdToFileName.TryGetValue(threadId, out var f) ? f : threadId + ".html");
+            .EscapeDataString(_fileNameMap.GetFileName(threadId));
     }
 }
