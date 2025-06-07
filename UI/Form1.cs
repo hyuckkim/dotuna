@@ -116,17 +116,26 @@ namespace DoTuna
             if (!(row?.DataBoundItem is JsonIndexDocument item)) return;
 
             threadManager.Toggle(item);
+            SetCheckAllBox();
+        }
+        private void SetCheckAllBox() 
+        {
+            SelectAllCheckBox.CheckedChanged -= SelectAllCheckBoxChanged;
+            SelectAllCheckBox.Checked = threadManager.Filtered.All(doc => threadManager.IsChecked(doc));
+            SelectAllCheckBox.CheckedChanged += SelectAllCheckBoxChanged;
         }
 
         private void OnTitleFilterChanged(object sender, EventArgs e)
         {
             threadManager.TitleFilter = this.FilterTitleInputField.Text;
             RefreshGrid();
+            SetCheckAllBox();
         }
         private void OnAuthorFilterChanged(object sender, EventArgs e)
         {
             threadManager.AuthorFilter = this.FilterAuthorInputField.Text;
             RefreshGrid();
+            SetCheckAllBox();
         }
 
         private void SelectAllCheckBoxChanged(object sender, EventArgs e)
