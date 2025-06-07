@@ -25,6 +25,8 @@ namespace DoTuna
                 doc => doc.getTemplateName(TitleTemplate) + ".html"
             );
 
+            var imageCopier = new ImageCopier(SourcePath, ResultPath);
+
             if (!Directory.Exists(ResultPath))
                 Directory.CreateDirectory(ResultPath);
             string indexPath = Path.Combine(ResultPath, "index.html");
@@ -46,7 +48,7 @@ namespace DoTuna
                 var threadHtml = await GenerateThreadPage(content);
                 await Task.Run(() => File.WriteAllText(jsonPath, threadHtml));
 
-                CopyRequiredImages(content.responses
+                imageCopier.CopyRequiredImages(content.responses
                     .Select(res => res.attachment)
                     .Where(img => !string.IsNullOrEmpty(img))
                     .ToList()
@@ -111,23 +113,6 @@ namespace DoTuna
             stream.Dispose();
 
             return Template.Parse(templateText).Render(model);
-        }
-        void CopyRequiredImages(List<string> requireImg)
-        {
-            if (requireImg.Count == 0) return;
-            string dataDir = Path.Combine(ResultPath, "data");
-            if (!Directory.Exists(dataDir))
-                Directory.CreateDirectory(dataDir);
-
-            foreach (var imgFile in requireImg.Distinct())
-            {
-                var src = Path.Combine(SourcePath, "data", imgFile);
-                var dst = Path.Combine(dataDir, imgFile);
-                if (File.Exists(src))
-                {
-                    File.Copy(src, dst, true);
-                }
-            }
         }
 
         string Tuna(DateTime time)
