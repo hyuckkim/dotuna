@@ -56,7 +56,8 @@ namespace DoTuna
             if (!(e.Data.GetDataPresent(DataFormats.FileDrop))) return;
 
             var droppedFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-            if (droppedFiles.FirstOrDefault(Directory.Exists) == null) return;
+            var folderPath = droppedFiles.FirstOrDefault(Directory.Exists);
+            if (folderPath == null) return;
 
             _ = HandleFolderPath(folderPath);
         }
