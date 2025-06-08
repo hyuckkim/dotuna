@@ -53,6 +53,6 @@ jobs:
     - name: Build solution
       run: msbuild DoTuna.sln /p:Configuration=Release
     - name: Run tests
-      uses: microsoft/vstest-action@v1.0.0
+      uses: rusty-bender/vstest-action@main
       with:
         testAssembly: '**/DoTuna.Test.dll'
