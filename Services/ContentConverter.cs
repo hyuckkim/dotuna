@@ -64,7 +64,7 @@ namespace DoTuna
         {
             return Regex.Replace(
                 content,
-                @"https?://tunaground.co/card2?post/trace.php/([a-z]+)/([0-9]+)/([\S]*)",
+                @"https?://tunaground\.co/card2\?post/trace\.php/([a-z]+)/([0-9]+)/([\S]*)",
                 m => $"<a href=\"{GetFileName(m.Groups[2].Value)}#response_{m.Groups[3].Value}\" target=\"_blank\">{m.Value}</a>",
                 RegexOptions.IgnoreCase
             );
@@ -75,7 +75,7 @@ namespace DoTuna
         {
             return Regex.Replace(
                 content,
-                @"https?://tunaground.co/card2?post/trace.php\\?bbs=([a-z]+)&amp;card_number=([0-9]+)([\S]*)",
+                @"https?://tunaground\.co/card2\?post/trace\.php\\?bbs=([a-z]+)&amp;card_number=([0-9]+)([\S]*)",
                 m => $"<a href=\"{GetFileName(m.Groups[2].Value)}\" target=\"_blank\">{m.Value}</a>",
                 RegexOptions.IgnoreCase
             );
