@@ -24,15 +24,6 @@ namespace DoTuna
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-
-            this.TitleLabel = new Label
-            {
-                Text = "Dotuna: 스레드 추출하기",
-                Font = new Font("Segoe UI", 24F, FontStyle.Regular, GraphicsUnit.Point),
-                Location = new Point(0, 10),
-                AutoSize = true
-            };
-
             this.GetFolderButton = new Button
             {
                 Name = "GetFolderButton",
@@ -102,7 +93,6 @@ namespace DoTuna
             this.RunningButtonPanel = new Panel
             {
                 Dock = DockStyle.Bottom,
-                Height = 40,
                 Visible = false
             };
 
@@ -169,8 +159,8 @@ namespace DoTuna
             flowLayout.Controls.Add(this.SelectAllCheckBox);
             flowLayout.Controls.Add(this.DocumentPatternInputField);
 
-            this.RunningButtonPanel.Controls.Add(flowLayout);
             this.RunningButtonPanel.Controls.Add(ResultPathField);
+            this.RunningButtonPanel.Controls.Add(flowLayout);
         
             this.Text = "DoTuna";
             this.MinimumSize = new Size(450, 450);
