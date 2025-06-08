@@ -146,12 +146,11 @@ namespace DoTuna
                 "실제 값으로 대체됩니다.\n" +
                 "예: \"{title} - {name} ({created})\"");
 
-            // 가로를 가득 채우는 TextBox 추가
             this.ResultPathField = new TextBox
             {
                 Dock = DockStyle.Top,
-                Margin = new Padding(0, 0, 0, 5),
-                Width = 0 // FlowLayoutPanel에서 Dock=Top이면 Width는 무시됨
+                Margin = new Padding(0, -30, 0, 5),
+                Width = 0
             };
 
             var flowLayout = new FlowLayoutPanel
