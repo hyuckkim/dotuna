@@ -29,7 +29,7 @@ namespace DoTuna.Test
             "<a href=\"456.html#response_7\">&gt;456&gt;7</a>")]
         [InlineData( // tuna>456>7
             "tuna&gt;456&gt;7", 
-            "<a href=\"456.html#response_7\">&gt;456&gt;7</a>")]
+            "<a href=\"456.html#response_7\">tuna&gt;456&gt;7</a>")]
         
         // tunaground.net 링크 변환 테스트
         [InlineData(
