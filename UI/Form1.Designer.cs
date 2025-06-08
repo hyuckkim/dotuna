@@ -7,7 +7,6 @@ namespace DoTuna
     partial class Form1
     {
         private System.ComponentModel.IContainer components = null;
-        private Label TitleLabel;
         private Button GetFolderButton;
         private DataGridView ThreadListGrid;
         private Button GetThreadSourceFileButton;
@@ -166,8 +165,6 @@ namespace DoTuna
             this.MinimumSize = new Size(450, 450);
             this.ClientSize = new Size(800, 450);
 
-            this.Controls.Add(this.TitleLabel);
-
             var mainPanel = new Panel
             {
                 Dock = DockStyle.Fill,
@@ -180,8 +177,6 @@ namespace DoTuna
             this.Controls.Add(mainPanel);
             this.Controls.Add(this.ReadyButtonPanel);
             this.Controls.Add(this.RunningButtonPanel);
-
-            this.TitleLabel.SendToBack();
         }
 
         protected override void Dispose(bool disposing)
