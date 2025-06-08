@@ -43,7 +43,7 @@ namespace DoTuna
             {
                 Clipboard.SetText(url);
             }
-            catch (Exception ex) { }
+            catch (Exception) { }
         }
 
         private void Form1_DragEnter(object sender, DragEventArgs e)
