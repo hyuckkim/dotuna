@@ -22,4 +22,8 @@
     <PackageReference Include="Scriban" Version="5.9.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="DoTuna.Test/*.cs" />
+  </ItemGroup>
+
 </Project>
