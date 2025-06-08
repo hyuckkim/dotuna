@@ -106,6 +106,7 @@ namespace DoTuna
             ReadyButtonPanel.Visible = false;
             RunningButtonPanel.Visible = true;
             GetFolderButton.Visible = false;
+            ResultPathField.Text = exporter.ResultPath;
         }
 
         private void OnCheckBoxClick(object sender, DataGridViewCellEventArgs e)
@@ -190,6 +191,7 @@ namespace DoTuna
                 ExportFileButton.Text = message;
             });
 
+            exporter.ResultPath = ResultPathField.Text;
             exporter.TitleTemplate = this.DocumentPatternInputField.Text;
             await exporter.Build(
                 threadManager.Checked.ToList(),
