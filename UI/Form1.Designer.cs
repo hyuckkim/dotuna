@@ -168,7 +168,7 @@ namespace DoTuna
             var mainPanel = new Panel
             {
                 Dock = DockStyle.Fill,
-                Padding = new Padding(5, 50, 5, 50),
+                Padding = new Padding(5),
             };
 
             mainPanel.Controls.Add(this.GetFolderButton);
