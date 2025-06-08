@@ -13,7 +13,8 @@ namespace DoTuna
     public class Exporter
     {
         public string SourcePath { get; set; } = string.Empty;
-        public string ResultPath { get; set; } = Path.Combine(Directory.GetCurrentDirectory(), "Result");
+        public string ResultPath { get; set; } = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "result");
         public string TitleTemplate { get; set; } = "{id}";
 
         public async Task Build(List<JsonIndexDocument> threads, IProgress<string> progress)
