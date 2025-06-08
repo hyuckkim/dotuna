@@ -53,6 +53,6 @@ jobs:
     - name: Build solution
       run: msbuild DoTuna.sln /p:Configuration=Release
     - name: Run tests
-      uses: microsoft/vstest-action@v1
+      uses: microsoft-approved-actions/vstest@master
       with:
         testAssembly: '**/DoTuna.Test.dll'
