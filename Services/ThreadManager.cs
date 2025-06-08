@@ -19,6 +19,7 @@ namespace DoTuna
 
         public IEnumerable<JsonIndexDocument> All => _indexRepository.Get();
         public IEnumerable<JsonIndexDocument> Checked => _checked.OrderBy(x => x.threadId);
+        public bool IsChecked(JsonIndexDocument doc) => _checked.Contains(doc);
         public IEnumerable<JsonIndexDocument> Filtered {
             get {
                 if (_titleCache == null)

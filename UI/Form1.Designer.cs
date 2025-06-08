@@ -7,7 +7,6 @@ namespace DoTuna
     partial class Form1
     {
         private System.ComponentModel.IContainer components = null;
-        private Label TitleLabel;
         private Button GetFolderButton;
         private DataGridView ThreadListGrid;
         private Button GetThreadSourceFileButton;
@@ -19,19 +18,11 @@ namespace DoTuna
         private Panel RunningButtonPanel;
         private TextBox DocumentPatternInputField;
         private ToolTip PatternToolTip;
+        private TextBox ResultPathField;
 
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-
-            this.TitleLabel = new Label
-            {
-                Text = "Dotuna: 스레드 추출하기",
-                Font = new Font("Segoe UI", 24F, FontStyle.Regular, GraphicsUnit.Point),
-                Location = new Point(0, 10),
-                AutoSize = true
-            };
-
             this.GetFolderButton = new Button
             {
                 Name = "GetFolderButton",
@@ -90,7 +81,7 @@ namespace DoTuna
 
             this.GetThreadSourceFileButton = new Button
             {
-                Text = "스레드 원본 파일 받기",
+                Text = "아카이브 (클립보드에 복사)",
                 Width = 240,
                 Margin = new Padding(0, 0, 5, 0),
                 Padding = new Padding(10, 0, 10, 0)
@@ -101,7 +92,6 @@ namespace DoTuna
             this.RunningButtonPanel = new Panel
             {
                 Dock = DockStyle.Bottom,
-                Height = 40,
                 Visible = false
             };
 
@@ -144,10 +134,17 @@ namespace DoTuna
                 "{id}, {title}, {name}, {created}, {updated}, {size}가\n" +
                 "실제 값으로 대체됩니다.\n" +
                 "예: \"{title} - {name} ({created})\"");
-          
+
+            this.ResultPathField = new TextBox
+            {
+                Dock = DockStyle.Bottom,
+                Margin = new Padding(5),
+                Width = 0
+            };
+
             var flowLayout = new FlowLayoutPanel
             {
-                Dock = DockStyle.Fill,
+                Dock = DockStyle.Bottom,
                 AutoSize = true,
                 WrapContents = false,
                 FlowDirection = FlowDirection.LeftToRight,
@@ -161,18 +158,17 @@ namespace DoTuna
             flowLayout.Controls.Add(this.SelectAllCheckBox);
             flowLayout.Controls.Add(this.DocumentPatternInputField);
 
+            this.RunningButtonPanel.Controls.Add(ResultPathField);
             this.RunningButtonPanel.Controls.Add(flowLayout);
         
             this.Text = "DoTuna";
             this.MinimumSize = new Size(450, 450);
             this.ClientSize = new Size(800, 450);
 
-            this.Controls.Add(this.TitleLabel);
-
             var mainPanel = new Panel
             {
                 Dock = DockStyle.Fill,
-                Padding = new Padding(5, 50, 5, 50),
+                Padding = new Padding(5),
             };
 
             mainPanel.Controls.Add(this.GetFolderButton);
@@ -181,8 +177,6 @@ namespace DoTuna
             this.Controls.Add(mainPanel);
             this.Controls.Add(this.ReadyButtonPanel);
             this.Controls.Add(this.RunningButtonPanel);
-
-            this.TitleLabel.SendToBack();
         }
 
         protected override void Dispose(bool disposing)

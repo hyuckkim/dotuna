@@ -38,11 +38,12 @@ namespace DoTuna
 
         private void OnGetThreadSourceFileClick(object sender, EventArgs e)
         {
-            Process.Start(new ProcessStartInfo
+            var url = "https://mega.nz/folder/COpUVSxY#AEbhRcjb2lzLQ0K9t0n9ng/folder/Pb43BLDK";
+            try
             {
-                FileName = "https://mega.nz/folder/COpUVSxY#AEbhRcjb2lzLQ0K9t0n9ng/folder/Pb43BLDK",
-                UseShellExecute = true
-            });
+                Clipboard.SetText(url);
+            }
+            catch (Exception) { }
         }
 
         private void Form1_DragEnter(object sender, DragEventArgs e)
@@ -53,14 +54,13 @@ namespace DoTuna
 
         private void Form1_DragDrop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                var droppedFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-                if (droppedFiles.Length > 0 && Directory.Exists(droppedFiles[0]))
-                {
-                    _ = HandleFolderPath(droppedFiles[0]);
-                }
-            }
+            if (!(e.Data.GetDataPresent(DataFormats.FileDrop))) return;
+
+            var droppedFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
+            var folderPath = droppedFiles.FirstOrDefault(Directory.Exists);
+            if (folderPath == null) return;
+
+            _ = HandleFolderPath(folderPath);
         }
 
         private async Task HandleFolderPath(string folderPath)
@@ -106,6 +106,7 @@ namespace DoTuna
             ReadyButtonPanel.Visible = false;
             RunningButtonPanel.Visible = true;
             GetFolderButton.Visible = false;
+            ResultPathField.Text = exporter.ResultPath;
         }
 
         private void OnCheckBoxClick(object sender, DataGridViewCellEventArgs e)
@@ -116,17 +117,26 @@ namespace DoTuna
             if (!(row?.DataBoundItem is JsonIndexDocument item)) return;
 
             threadManager.Toggle(item);
+            SetCheckAllBox();
+        }
+        private void SetCheckAllBox() 
+        {
+            SelectAllCheckBox.CheckedChanged -= SelectAllCheckBoxChanged;
+            SelectAllCheckBox.Checked = threadManager.Filtered.All(doc => threadManager.IsChecked(doc));
+            SelectAllCheckBox.CheckedChanged += SelectAllCheckBoxChanged;
         }
 
         private void OnTitleFilterChanged(object sender, EventArgs e)
         {
             threadManager.TitleFilter = this.FilterTitleInputField.Text;
             RefreshGrid();
+            SetCheckAllBox();
         }
         private void OnAuthorFilterChanged(object sender, EventArgs e)
         {
             threadManager.AuthorFilter = this.FilterAuthorInputField.Text;
             RefreshGrid();
+            SetCheckAllBox();
         }
 
         private void SelectAllCheckBoxChanged(object sender, EventArgs e)
@@ -181,6 +191,7 @@ namespace DoTuna
                 ExportFileButton.Text = message;
             });
 
+            exporter.ResultPath = ResultPathField.Text;
             exporter.TitleTemplate = this.DocumentPatternInputField.Text;
             await exporter.Build(
                 threadManager.Checked.ToList(),
