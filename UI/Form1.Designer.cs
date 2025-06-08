@@ -19,6 +19,7 @@ namespace DoTuna
         private Panel RunningButtonPanel;
         private TextBox DocumentPatternInputField;
         private ToolTip PatternToolTip;
+        private TextBox ResultPathField;
 
         private void InitializeComponent()
         {
@@ -144,7 +145,15 @@ namespace DoTuna
                 "{id}, {title}, {name}, {created}, {updated}, {size}가\n" +
                 "실제 값으로 대체됩니다.\n" +
                 "예: \"{title} - {name} ({created})\"");
-          
+
+            // 가로를 가득 채우는 TextBox 추가
+            this.ResultPathField = new TextBox
+            {
+                Dock = DockStyle.Top,
+                Margin = new Padding(0, 0, 0, 5),
+                Width = 0 // FlowLayoutPanel에서 Dock=Top이면 Width는 무시됨
+            };
+
             var flowLayout = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill,
@@ -161,6 +170,7 @@ namespace DoTuna
             flowLayout.Controls.Add(this.SelectAllCheckBox);
             flowLayout.Controls.Add(this.DocumentPatternInputField);
 
+            this.RunningButtonPanel.Controls.Add(ResultPathField);
             this.RunningButtonPanel.Controls.Add(flowLayout);
         
             this.Text = "DoTuna";
