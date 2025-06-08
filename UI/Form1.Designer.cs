@@ -149,7 +149,7 @@ namespace DoTuna
             this.ResultPathField = new TextBox
             {
                 Dock = DockStyle.Bottom,
-                Margin = new Padding(0, -40, 0, 5),
+                Margin = new Padding(10, 0, 10, 40),
                 Width = 0
             };
 
