@@ -56,4 +56,3 @@ jobs:
       uses: microsoft/vstest-action@v1
       with:
         testAssembly: '**/DoTuna.Test.dll'
-      working-directory: ./bin/Release/net481/
