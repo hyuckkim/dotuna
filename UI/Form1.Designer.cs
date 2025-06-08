@@ -149,13 +149,13 @@ namespace DoTuna
             this.ResultPathField = new TextBox
             {
                 Dock = DockStyle.Bottom,
-                Margin = new Padding(10, 0, 10, 40),
+                Margin = new Padding(5),
                 Width = 0
             };
 
             var flowLayout = new FlowLayoutPanel
             {
-                Dock = DockStyle.Fill,
+                Dock = DockStyle.Bottom,
                 AutoSize = true,
                 WrapContents = false,
                 FlowDirection = FlowDirection.LeftToRight,
@@ -169,8 +169,8 @@ namespace DoTuna
             flowLayout.Controls.Add(this.SelectAllCheckBox);
             flowLayout.Controls.Add(this.DocumentPatternInputField);
 
-            this.RunningButtonPanel.Controls.Add(ResultPathField);
             this.RunningButtonPanel.Controls.Add(flowLayout);
+            this.RunningButtonPanel.Controls.Add(ResultPathField);
         
             this.Text = "DoTuna";
             this.MinimumSize = new Size(450, 450);
