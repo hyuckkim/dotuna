@@ -32,3 +32,28 @@ jobs:
       with:
         name: DoTuna
         path: bin\Release\net481\DoTuna.exe
+
+  test:
+    runs-on: windows-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v4
+    - name: Cache NuGet packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v1
+    - name: Restore NuGet packages
+      run: nuget restore DoTuna.sln
+    - uses: microsoft/setup-msbuild@v1.3
+    - name: Build solution
+      run: msbuild DoTuna.sln /p:Configuration=Release
+    - name: Run tests
+      uses: microsoft/vstest-action@v1
+      with:
+        testAssembly: '**/DoTuna.Test.dll'
+      working-directory: ./bin/Release/net481/
