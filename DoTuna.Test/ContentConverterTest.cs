@@ -20,6 +20,12 @@ namespace DoTuna.Test
         [InlineData(
             "&gt;&gt;7", 
             "<a href=\"123.html#response_7\">&gt;&gt;7</a>")]
+        [InlineData(
+            "&gt;456&gt;", 
+            "<a href=\"456.html#response_\">&gt;456&gt;</a>")]
+        [InlineData(
+            "&gt;456&gt;&gt;7", 
+            "<a href=\"456.html#response_7\">&gt;456&gt;&gt;7</a>")]
         public void ConvertContent_ReplacesLinks(string input, string expected)
         {
             var converter = GetConverter();
