@@ -9,6 +9,6 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.7" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="DoTuna.csproj" />
+    <ProjectReference Include="../DoTuna.csproj" />
   </ItemGroup>
 </Project>

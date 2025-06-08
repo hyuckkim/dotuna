@@ -4,7 +4,7 @@ VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoTuna", "DoTuna.csproj", "{C2B4E2F3-5A6B-4C8D-9E2A-3F1B2C4D5E6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoTuna.Test", "DoTuna.Test.csproj", "{A1B2C3D4-5678-4321-ABCD-1234567890AB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoTuna.Test", "DoTuna.Test/DoTuna.Test.csproj", "{A1B2C3D4-5678-4321-ABCD-1234567890AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
