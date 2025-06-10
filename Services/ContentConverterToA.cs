@@ -21,7 +21,8 @@ namespace DoTuna
         protected override string MakeAnchorTag(string threadId, string resNo, string text, bool isExternal)
         {
             var targetAttr = isExternal ? " target=\"_blank\"" : "";
-            return $"<a href=\"{GetFileName(threadId)}#response_{resNo}\"{targetAttr}>{text}</a>";
+            var anchor = string.IsNullOrEmpty(resNo) ? GetFileName(threadId) : $"{GetFileName(threadId)}#response_{resNo}";
+            return $"<a href=\"{anchor}\"{targetAttr}>{text}</a>";
         }
     } 
 }

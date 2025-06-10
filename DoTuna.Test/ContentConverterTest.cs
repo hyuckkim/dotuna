@@ -23,7 +23,7 @@ namespace DoTuna.Test
             "<a href=\"123.html#response_7\">&gt;&gt;7</a>")]
         [InlineData( // >456>
             "&gt;456&gt;", 
-            "<a href=\"456.html#response_\">&gt;456&gt;</a>")]
+            "<a href=\"456.html\">&gt;456&gt;</a>")]
         [InlineData( // >456>7
             "&gt;456&gt;7", 
             "<a href=\"456.html#response_7\">&gt;456&gt;7</a>")]
