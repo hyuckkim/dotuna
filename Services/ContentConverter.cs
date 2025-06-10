@@ -12,18 +12,6 @@ namespace DoTuna
             _fileNameMap = fileNameMap;
         }
 
-        public string ConvertContent(string content, JsonThreadDocument thread, Response res)
-        {
-            if (string.IsNullOrEmpty(content)) return string.Empty;
-
-            content = FixBr(content);
-            content = ConvertAnchors(content, thread);
-            content = ConvertTunagroundLinks(content);
-            content = ConvertCard2Links(content);
-            content = ConvertCard2QueryLinks(content);
-            content = ConvertGeneralLinks(content);
-            return content;
-        }
 
         // <br> 보정
         protected string FixBr(string content)
@@ -107,7 +95,7 @@ namespace DoTuna
         protected string GetFileName(string threadId) => Uri
             .EscapeDataString(_fileNameMap.GetFileName(threadId));
 
-        // 추상 메서드: 하위 클래스에서 구현
+        public abstract string ConvertContent(string content, JsonThreadDocument thread, Response res);
         protected abstract string MakeAnchorTag(string threadId, string resNo, string text, bool isExternal);
     }
 }
