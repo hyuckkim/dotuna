@@ -20,17 +20,17 @@ namespace DoTuna
         }
 
         // >>threadId>>n 앵커 변환
-        protected string ConvertAnchors(string content, JsonThreadDocument thread)
+        protected string ConvertAnchors(string content, int threadId)
         {
             return Regex.Replace(
                 content,
                 @"([a-z]*)&gt;([0-9]*)&gt;([0-9]*)-?([0-9]*)",
                 m => {
-                    var threadId = m.Groups[2].Value == "" ? thread.threadId.ToString() : m.Groups[2].Value;
+                    var id = m.Groups[2].Value == "" ? threadId.ToString() : m.Groups[2].Value;
                     var responseStart = m.Groups[3].Value;
-                    if (string.IsNullOrEmpty(threadId) && string.IsNullOrEmpty(responseStart))
+                    if (string.IsNullOrEmpty(id) && string.IsNullOrEmpty(responseStart))
                         return m.Value;
-                    return MakeAnchorTag(threadId, responseStart, m.Value, false);
+                    return MakeAnchorTag(id, responseStart, m.Value, false);
                 },
                 RegexOptions.IgnoreCase
             );
@@ -95,7 +95,7 @@ namespace DoTuna
         protected string GetFileName(string threadId) => Uri
             .EscapeDataString(_fileNameMap.GetFileName(threadId));
 
-        public abstract string ConvertContent(string content, JsonThreadDocument thread, Response res);
+        public abstract string ConvertContent(string content, int threadId);
         protected abstract string MakeAnchorTag(string threadId, string resNo, string text, bool isExternal);
     }
 }

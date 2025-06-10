@@ -6,12 +6,12 @@ namespace DoTuna
         {
         }
 
-        public override string ConvertContent(string content, JsonThreadDocument thread, Response res)
+        public override string ConvertContent(string content, int threadId)
         {
             if (string.IsNullOrEmpty(content)) return string.Empty;
 
             content = FixBr(content);
-            content = ConvertAnchors(content, thread);
+            content = ConvertAnchors(content, threadId);
             content = ConvertTunagroundLinks(content);
             content = ConvertCard2Links(content);
             content = ConvertCard2QueryLinks(content);

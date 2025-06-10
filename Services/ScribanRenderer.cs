@@ -51,7 +51,7 @@ namespace DoTuna
                 username = Escape(res.username),
                 user_id = Escape(res.userId),
                 created_at = Tuna(res.createdAt),
-                content = converter.ConvertContent(res.content, data, res),
+                content = converter.ConvertContent(res.content, data.threadId),
                 thread_id = res.threadId.ToString(),
                 attachment = string.IsNullOrEmpty(res.attachment) ? "" : res.attachment
             }).ToList<object>();
