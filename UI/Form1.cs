@@ -3,8 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Windows.Forms;
-using System.Diagnostics;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DoTuna

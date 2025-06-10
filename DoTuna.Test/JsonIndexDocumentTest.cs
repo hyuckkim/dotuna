@@ -48,7 +48,7 @@ namespace DoTuna.Test
             Assert.DoesNotContain("?", result);
             Assert.DoesNotContain("<", result);
             Assert.DoesNotContain(">", result);
-            Assert.True(result.Contains("Title_User"));
+            Assert.Contains("Title_User", result);
         }
 
         [Fact]
