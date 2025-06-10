@@ -37,7 +37,7 @@ namespace DoTuna.Test
             "https://testurl.com/123.html#response_456")]
         [InlineData(
             "https://bbs.tunaground.net/trace.php/tuna/789/101112",
-            "https://testurl.com/789.html#101112")]
+            "https://testurl.com/789.html#response_101112")]
         [InlineData(
             "여기 링크입니다: http://bbs.tunaground.net/trace.php/tuna/123/456 확인해보세요",
             "여기 링크입니다: https://testurl.com/123.html#response_456 확인해보세요")]
