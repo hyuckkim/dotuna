@@ -6,6 +6,6 @@ namespace DoTuna
     static class Program
     {
         [STAThread]
-        static void Main() => Application.Run(new Form1());
+        static void Main() => Application.Run(new MainForm());
     }
 }
