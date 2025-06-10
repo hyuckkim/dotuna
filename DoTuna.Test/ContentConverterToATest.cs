@@ -5,7 +5,7 @@ using DoTuna;
 
 namespace DoTuna.Test
 {
-    public class ContentConverterTest
+    public class ContentConverterToATest
     {
         private ContentConverter GetConverter()
         {
