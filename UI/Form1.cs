@@ -52,7 +52,7 @@ namespace DoTuna
 
         private void Form1_DragDrop(object sender, DragEventArgs e)
         {
-            if (!(e.Data.GetDataPresent(DataFormats.FileDrop))) return;
+            if (!e.Data.GetDataPresent(DataFormats.FileDrop)) return;
 
             var droppedFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
             var folderPath = droppedFiles.FirstOrDefault(Directory.Exists);
@@ -69,8 +69,10 @@ namespace DoTuna
                 await repository.OpenAsync(folderPath);
 
                 threadManager = new ThreadManager(repository);
-                exporter = new Exporter();
-                exporter.SourcePath = folderPath;
+                exporter = new Exporter
+                {
+                    SourcePath = folderPath
+                };
 
                 EnableExportUI();
                 RefreshGrid();
