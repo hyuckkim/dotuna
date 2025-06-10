@@ -45,7 +45,7 @@ namespace DoTuna
 
         private List<object> BuildResponses(JsonThreadDocument data)
         {
-            var converter = new ContentConverter(_fileNameMap);
+            var converter = new ContentConverterToA(_fileNameMap);
             return data.responses.Select(res => new {
                 sequence = res.sequence.ToString(),
                 username = Escape(res.username),

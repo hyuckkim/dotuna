@@ -13,7 +13,7 @@ namespace DoTuna.Test
                 new JsonIndexDocument { threadId = 123, title = "t", username = "u", createdAt = DateTime.Now, updatedAt = DateTime.Now, size = 1 }
             };
             var fileNameMap = new ThreadFileNameMap(threads, "{id}");
-            return new ContentConverter(fileNameMap);
+            return new ContentConverterToA(fileNameMap);
         }
 
         [Theory]
