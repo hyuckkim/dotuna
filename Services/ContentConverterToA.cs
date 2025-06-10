@@ -1,6 +1,6 @@
 namespace DoTuna
 {
-    public abstract class ContentConverterToA : ContentConverter
+    public class ContentConverterToA : ContentConverter
     {
         public ContentConverterToA(ThreadFileNameMap fileNameMap) : base(fileNameMap)
         {
