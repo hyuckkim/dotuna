@@ -23,6 +23,8 @@ namespace DoTuna
 
         public string getTemplateName(string template)
         {
+            if (string.IsNullOrEmpty(template)) return string.Empty;
+
             return template
                 .Replace("{id}", this.threadId.ToString())
                 .Replace("{title}", this.title)
