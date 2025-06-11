@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace DoTuna
 {
@@ -19,7 +19,7 @@ namespace DoTuna
             try
             {
                 var jsonText = File.ReadAllText(Path.Combine(path, "index.json"));
-                var deSerialized = JsonSerializer.Deserialize<List<JsonIndexDocument>>(jsonText);
+                var deSerialized = JsonConvert.DeserializeObject<List<JsonIndexDocument>>(jsonText);
 
                 _documents = deSerialized?.OrderBy(x => x.threadId).ToList()
                     ?? new List<JsonIndexDocument>();
@@ -29,6 +29,7 @@ namespace DoTuna
                 throw new JsonException($"Failed to parse JSON file: {e.Message}", e);
             }
         }
+
         public async Task OpenAsync(string path)
         {
             if (!Directory.Exists(path))
@@ -36,9 +37,10 @@ namespace DoTuna
 
             try
             {
-                using (var stream = File.OpenRead(Path.Combine(path, "index.json")))
+                using (var reader = new StreamReader(Path.Combine(path, "index.json")))
                 {
-                    var deSerialized = await JsonSerializer.DeserializeAsync<List<JsonIndexDocument>>(stream);
+                    var jsonText = await reader.ReadToEndAsync();
+                    var deSerialized = JsonConvert.DeserializeObject<List<JsonIndexDocument>>(jsonText);
 
                     _documents = deSerialized?.OrderBy(x => x.threadId).ToList()
                         ?? new List<JsonIndexDocument>();

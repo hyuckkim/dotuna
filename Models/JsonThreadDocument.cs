@@ -1,8 +1,8 @@
 using System;
 using System.IO;
-using System.Text.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace DoTuna
 {
@@ -39,7 +39,7 @@ namespace DoTuna
                 throw new FileNotFoundException($"Thread file not found: {path}");
 
             var jsonText = File.ReadAllText(path);
-            return JsonSerializer.Deserialize<JsonThreadDocument>(jsonText)
+            return JsonConvert.DeserializeObject<JsonThreadDocument>(jsonText)
                 ?? throw new JsonException($"Failed to parse thread JSON file: {path}");
         }
 
@@ -48,9 +48,10 @@ namespace DoTuna
             if (!File.Exists(path))
                 throw new FileNotFoundException($"Thread file not found: {path}");
 
-            using var stream = File.OpenRead(path);
-            var doc = await JsonSerializer.DeserializeAsync<JsonThreadDocument>(stream);
-            return doc ?? throw new JsonException($"Failed to parse thread JSON file: {path}");
+            using var reader = new StreamReader(path);
+            var jsonText = await reader.ReadToEndAsync();
+            return JsonConvert.DeserializeObject<JsonThreadDocument>(jsonText)
+                ?? throw new JsonException($"Failed to parse thread JSON file: {path}");
         }
     }
 }
