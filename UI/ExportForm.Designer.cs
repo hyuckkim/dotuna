@@ -9,7 +9,6 @@ namespace DoTuna
         private DataGridView ThreadListGrid;
         private Button GetThreadSourceFileButton;
         private Button ExportFileButton;
-        private Button OpenConverterButton;
         private TextBox FilterAuthorInputField;
         private TextBox FilterTitleInputField;
         private CheckBox SelectAllCheckBox;
@@ -87,15 +86,6 @@ namespace DoTuna
                 Padding = new Padding(10, 0, 10, 0)
             };
             this.ExportFileButton.Click += new EventHandler(this.ExportButtonClick);
-
-            this.OpenConverterButton = new Button
-            {
-                Text = "변환기",
-                Width = 120,
-                Margin = new Padding(0, 0, 5, 0),
-                Padding = new Padding(10, 0, 10, 0)
-            };
-            this.OpenConverterButton.Click += new EventHandler(this.OpenConverterButtonClick);
             
             // 필터 텍스트 박스
             this.FilterTitleInputField = new TextBox { Width = 200 };
@@ -135,7 +125,6 @@ namespace DoTuna
 
             // flowLayout에 컨트롤 추가
             flowLayout.Controls.Add(this.ExportFileButton);
-            flowLayout.Controls.Add(this.OpenConverterButton);
             flowLayout.Controls.Add(this.FilterTitleInputField);
             flowLayout.Controls.Add(this.FilterAuthorInputField);
             flowLayout.Controls.Add(this.SelectAllCheckBox);
