@@ -98,5 +98,14 @@ namespace DoTuna
         {
             GetFolderButton.Text = $"폴더 가져오기\n({message})";
         }
+        private void OnGetThreadSourceFileClick(object sender, EventArgs e)
+        {
+            var url = "https://mega.nz/folder/COpUVSxY#AEbhRcjb2lzLQ0K9t0n9ng/folder/Pb43BLDK";
+            try
+            {
+                Clipboard.SetText(url);
+            }
+            catch (Exception) { }
+        }
     }
 }

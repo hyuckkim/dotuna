@@ -22,18 +22,6 @@ namespace DoTuna
             SetCheckAllBox();
         }
 
-        // 이벤트 핸들러
-
-        private void OnGetThreadSourceFileClick(object sender, EventArgs e)
-        {
-            var url = "https://mega.nz/folder/COpUVSxY#AEbhRcjb2lzLQ0K9t0n9ng/folder/Pb43BLDK";
-            try
-            {
-                Clipboard.SetText(url);
-            }
-            catch (Exception) { }
-        }
-
         private void OnCheckBoxClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0)

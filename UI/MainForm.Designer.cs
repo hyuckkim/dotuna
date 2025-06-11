@@ -7,6 +7,7 @@ namespace DoTuna
     public partial class MainForm : Form
     {
         private Button GetFolderButton;
+        private Button GetThreadSourceFileButton;
 
         private void InitializeComponent()
         {
@@ -26,6 +27,15 @@ namespace DoTuna
                 Padding = new Padding(5)
             };
             mainPanel.Controls.Add(this.GetFolderButton);
+
+            this.GetThreadSourceFileButton = new Button
+            {
+                Name = "GetThreadSourceFileButton",
+                Text = "소스 파일 (클립보드에 복사)",
+                Dock = DockStyle.Bottom
+            };
+            this.GetThreadSourceFileButton.Click += new EventHandler(this.OnGetThreadSourceFileClick);
+            mainPanel.Controls.Add(this.GetThreadSourceFileButton);
 
             this.Text = "DoTuna - 폴더 선택";
             this.MinimumSize = new Size(450, 450);
