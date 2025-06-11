@@ -107,7 +107,12 @@ namespace DoTuna
             );
 
             ExportFileButton.Enabled = true;
-            ExportFileButton.Text = "내보내기";
+        }
+        private void OpenConverterButtonClick(object sender, EventArgs e)
+        {
+            var fileNameMap = new ThreadFileNameMap(threadManager.Checked.ToList(), DocumentPatternInputField.Text);
+            var converterForm = new ConverterForm(fileNameMap);
+            converterForm.Show();
         }
     }
 }

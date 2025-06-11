@@ -5,8 +5,10 @@ namespace DoTuna
 {
     public partial class ConverterForm : Form
     {
-        public ConverterForm()
+        readonly ContentConverterToText converter;
+        public ConverterForm(ThreadFileNameMap fileNameMap)
         {
+            converter = new ContentConverterToText(fileNameMap, "https://example.com");
             InitializeComponent();
 
             // 예시: 버튼이름이 btnConvert, btnClear라고 가정
@@ -20,7 +22,8 @@ namespace DoTuna
 
         private string ConvertInput(string input)
         {
-            return input.ToUpper();
+            converter.Url = txtAddress.Text.Trim();
+            return converter.ConvertContent(input, -1);
         }
     }
 }

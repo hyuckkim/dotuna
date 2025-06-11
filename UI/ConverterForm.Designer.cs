@@ -46,6 +46,7 @@ namespace DoTuna
             this.txtAddress.Name = "txtAddress";
             this.txtAddress.Size = new System.Drawing.Size(260, 23);
             this.txtAddress.TabIndex = 1;
+            this.txtAddress.Text = "https://example.com";
             // 
             // btnConvert
             // 
