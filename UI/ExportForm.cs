@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DoTuna
@@ -106,6 +107,12 @@ namespace DoTuna
             );
 
             ExportFileButton.Enabled = true;
+        }
+        private void OpenConverterButtonClick(object sender, EventArgs e)
+        {
+            var fileNameMap = new ThreadFileNameMap(threadManager.Checked.ToList(), DocumentPatternInputField.Text);
+            var converterForm = new ConverterForm(fileNameMap);
+            converterForm.Show();
         }
     }
 }
