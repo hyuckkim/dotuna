@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -89,6 +90,8 @@ namespace DoTuna
 
         private async void ExportButtonClick(object sender, EventArgs e)
         {
+            if (!ValidateBeforeExport())
+                return;
             ExportFileButton.Enabled = false;
 
             var progress = new Progress<string>(message =>
@@ -115,6 +118,38 @@ namespace DoTuna
             var fileNameMap = new ThreadFileNameMap(threadManager.Checked.ToList(), DocumentPatternInputField.Text);
             var converterForm = new ConverterForm(fileNameMap);
             converterForm.Show();
+        }
+        private bool ValidateBeforeExport()
+        {
+            if (!threadManager.Checked.Any())
+            {
+                var result = MessageBox.Show("선택된 항목이 없습니다. 계속하시겠습니까?", "경고", MessageBoxButtons.YesNo);
+                if (result != DialogResult.Yes)
+                    return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(ResultPathField.Text))
+            {
+                MessageBox.Show("결과 경로가 비어 있습니다.", "경고", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(DocumentPatternInputField.Text))
+            {
+                var result = MessageBox.Show("제목 템플릿이 비어 있습니다. 기본값으로 계속하시겠습니까?", "알림", MessageBoxButtons.YesNo);
+                if (result != DialogResult.Yes)
+                    return false;
+                DocumentPatternInputField.Text = "{id}";
+            }
+
+            if (Directory.Exists(ResultPathField.Text) && Directory.EnumerateFiles(ResultPathField.Text).Any())
+            {
+                var result = MessageBox.Show("결과 경로에 기존 파일이 있습니다. 덮어쓰시겠습니까?", "확인", MessageBoxButtons.YesNo);
+                if (result != DialogResult.Yes)
+                    return false;
+            }
+
+            return true;
         }
     }
 }
