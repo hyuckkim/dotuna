@@ -36,6 +36,7 @@ namespace DoTuna
             this.btnConvert.Dock = DockStyle.Right;
             this.btnConvert.Name = "btnConvert";
             this.btnConvert.Text = "변환!";
+            this.btnConvert.Click += BtnConvert_Click;
 
             this.panelBottom.Controls.Add(this.txtAddress);
             this.panelBottom.Controls.Add(this.btnConvert);
