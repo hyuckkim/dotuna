@@ -96,8 +96,9 @@ namespace DoTuna.Test
 
             // 예상 결과:
             // title 10.. → "ABCDEFGHIJ.." (앞 10자 + 생략 "..")
+            // 구분자 _
             // name _6   → "_ONMLK"       (뒤 6자 + 접두 "_")
-            string expected = "ABCDEFGHIJ.._ONMLK";
+            string expected = "ABCDEFGHIJ..__ONMLK";
 
             Assert.Equal(expected, result);
         }
