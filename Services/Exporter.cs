@@ -48,12 +48,12 @@ namespace DoTuna
             await Task.Run(() => File.WriteAllText(indexPath, indexHtml));
             _progress?.Report("(index.html 생성됨)");
         }
-        private async Task GenerateAllThreads(int maxDegreeOfParallelism = 4)
+        private async Task GenerateAllThreads()
         {
             int completed = 0;
             ReportCount(0);
 
-            var semaphore = new SemaphoreSlim(maxDegreeOfParallelism);
+            var semaphore = new SemaphoreSlim(Environment.ProcessorCount * 2);
 
             var tasks = _threads.Select(async doc =>
             {
