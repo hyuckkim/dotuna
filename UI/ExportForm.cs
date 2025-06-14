@@ -17,7 +17,6 @@ namespace DoTuna
             this.exporter = exporter;
             ResultPathField.Text = exporter.ResultPath;
 
-            // ExportForm 전용 초기화 작업 (예: 그리드 내용 갱신)
             RefreshGrid();
             SetCheckAllBox();
         }
@@ -73,8 +72,12 @@ namespace DoTuna
                 }
             }
             RefreshGrid();
+        }
 
-            // 그리드의 체크박스 상태를 업데이트
+        private void RefreshGrid()
+        {
+            ThreadListGrid.DataSource = threadManager.Filtered.ToList();
+            ThreadListGrid.Refresh();
             foreach (DataGridViewRow row in ThreadListGrid.Rows)
             {
                 if (row.DataBoundItem is JsonIndexDocument doc)
@@ -82,12 +85,6 @@ namespace DoTuna
                     row.Cells["IsCheck"].Value = threadManager.IsChecked(doc);
                 }
             }
-        }
-
-        private void RefreshGrid()
-        {
-            ThreadListGrid.DataSource = threadManager.Filtered.ToList();
-            ThreadListGrid.Refresh();
         }
 
         private async void ExportButtonClick(object sender, EventArgs e)
