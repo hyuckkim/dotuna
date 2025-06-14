@@ -122,7 +122,11 @@ namespace DoTuna
             this.PatternToolTip.SetToolTip(this.DocumentPatternInputField,
                 "각 문서의 제목입니다.\n" +
                 "{id}, {title}, {name}, {created}, {updated}, {size}가\n" +
-                "실제 값으로 대체됩니다.\n" +
+                "실제 값으로 대체됩니다.\n\n" +
+                "글자 자르기:\n" +
+                "{title 10..}  → 앞 10글자만 사용하고 잘리면 '..' 추가\n" +
+                "{name _20}    → 뒤 20글자만 사용하고 잘리면 '_' 추가\n" +
+                "{user 10_10}  → 앞 10글자, 뒤 10글자 사용\n\n" +
                 "예: \"{title} - {name} ({created})\"");
 
             // 내보내기 결과 경로 텍스트 필드
