@@ -72,7 +72,6 @@ namespace DoTuna
                 // 내보내기 UI용 폼을 생성해 전환 (UI 요소 Visible을 토글하는 대신 분리)
                 var exportForm = new ExportForm(threadManager, exporter);
                 exportForm.Show();
-                this.Close();
             }
             catch (DirectoryNotFoundException)
             {
