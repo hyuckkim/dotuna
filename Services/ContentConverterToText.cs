@@ -8,6 +8,8 @@ namespace DoTuna
         public ContentConverterToText(ThreadFileNameMap fileNameMap, string url) : base(fileNameMap)
         {
             Url = url;
+            if (Url.EndsWith("/"))
+                Url = Url.TrimEnd('/');
         }
 
         public override string ConvertContent(string content, int threadId)
