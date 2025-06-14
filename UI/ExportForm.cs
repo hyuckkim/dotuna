@@ -98,12 +98,17 @@ namespace DoTuna
 
             exporter.ResultPath = ResultPathField.Text;
             exporter.TitleTemplate = DocumentPatternInputField.Text;
-            await exporter.Build(
-                threadManager.Checked.ToList(),
-                progress
-            );
-
-            ExportFileButton.Enabled = true;
+            try
+            {
+                await exporter.Build(
+                    threadManager.Checked.ToList(),
+                    progress
+                );
+            }
+            finally
+            {
+                ExportFileButton.Enabled = true;
+            }
         }
         private void OpenConverterButtonClick(object sender, EventArgs e)
         {
