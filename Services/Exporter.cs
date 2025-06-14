@@ -51,13 +51,16 @@ namespace DoTuna
             int completed = 0;
             ReportCount(0);
 
-            foreach (var doc in _threads)
+            var tasks = _threads.Select(async doc =>
             {
                 await GenerateThread(doc);
                 Interlocked.Increment(ref completed);
                 ReportCount(completed);
-            }
+            });
+
+            await Task.WhenAll(tasks);
         }
+        
         private async Task GenerateThread(JsonIndexDocument doc)
         {
             string threadPath = Path.Combine(SourcePath, $"{doc.threadId}.json");
