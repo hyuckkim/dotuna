@@ -14,7 +14,6 @@ namespace DoTuna
             Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "result");
         public string TitleTemplate { get; set; } = "{id}";
 
-        private SynchronizationContext _syncContext = null!;
         private IProgress<string>? _progress;
         private ThreadFileNameMap _fileNameMap = null!;
         private ScribanRenderer _renderer = null!;
@@ -23,7 +22,6 @@ namespace DoTuna
 
         public async Task Build(List<JsonIndexDocument> threads, IProgress<string> progress)
         {
-            _syncContext = SynchronizationContext.Current;
             _progress = progress;
             _threads = threads;
             _fileNameMap = new ThreadFileNameMap(threads, TitleTemplate);
@@ -63,7 +61,6 @@ namespace DoTuna
                     await GenerateThread(doc);
                     Interlocked.Increment(ref completed);
 
-                    // UI 스레드에서 호출하기 위해 Invoke 사용 (WinForms 기준)
                     ReportCount(completed);
                 }
                 finally
@@ -93,14 +90,7 @@ namespace DoTuna
 
         private void ReportCount(int count)
         {
-            if (_syncContext != null)
-            {
-                _syncContext.Post(_ => _progress?.Report($"({count} of {_threads.Count})"), null);
-            }
-            else
-            {
-                _progress?.Report($"({count} of {_threads.Count})");
-            }
+              _progress?.Report($"({count} of {_threads.Count})");
         }
     }
 }
