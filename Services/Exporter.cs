@@ -46,32 +46,38 @@ namespace DoTuna
             await Task.Run(() => File.WriteAllText(indexPath, indexHtml));
             _progress?.Report("(index.html 생성됨)");
         }
-        private async Task GenerateAllThreads()
-        {
-            int completed = 0;
-            ReportCount(0);
+       private async Task GenerateAllThreads()
+      {
+          int completed = 0;
+          ReportCount(0);
 
-            var semaphore = new SemaphoreSlim(Environment.ProcessorCount * 2);
+          var semaphore = new SemaphoreSlim(Environment.ProcessorCount * 2);
 
-            var tasks = _threads.Select(async doc =>
-            {
-                await semaphore.WaitAsync();
-                try
-                {
-                    await GenerateThread(doc);
-                    Interlocked.Increment(ref completed);
+          var tasks = new List<Task>();
 
-                    ReportCount(completed);
-                }
-                finally
-                {
-                    semaphore.Release();
-                }
-            });
+          foreach (var doc in _threads)
+          {
+              await semaphore.WaitAsync();
 
-            await Task.WhenAll(tasks);
-        }
-        
+              var task = Task.Run(async () =>
+              {
+                  try
+                  {
+                      await GenerateThread(doc);
+                      Interlocked.Increment(ref completed);
+                      ReportCount(completed);
+                  }
+                  finally
+                  {
+                      semaphore.Release();
+                  }
+              });
+
+              tasks.Add(task);
+          }
+
+          await Task.WhenAll(tasks);
+        } 
         private async Task GenerateThread(JsonIndexDocument doc)
         {
             string threadPath = Path.Combine(SourcePath, $"{doc.threadId}.json");
