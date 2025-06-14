@@ -141,6 +141,13 @@ namespace DoTuna
                     return false;
                 DocumentPatternInputField.Text = "{id}";
             }
+            
+            var fileNameMap = new ThreadFileNameMap(threadManager.Checked.ToList(), DocumentPatternInputField.Text);
+            if (fileNameMap.Size != threadManager.Checked.Count())
+            {
+                MessageBox.Show("제목 템플릿이 잘못되어 생성할 파일 이름이 중복됩니다.", "경고", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
 
             if (Directory.Exists(ResultPathField.Text) && Directory.EnumerateFiles(ResultPathField.Text).Any())
             {
