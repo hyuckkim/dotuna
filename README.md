@@ -16,6 +16,7 @@ index.html에 문서 목록이 정리되어 있고, 나머지 파일들은 {id}.
  - 레스 번호를 누르면 그 레스로 가는 링크에 연결됩니다.
 
 ## 별 의미는 없는 링크글
+https://bbs2.tunaground.net/trace/tuna/4394  
 https://gall.dcinside.com/aa/16858
 
 ## 실행 사진

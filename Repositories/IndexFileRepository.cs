@@ -35,16 +35,20 @@ namespace DoTuna
             if (!Directory.Exists(path))
                 throw new DirectoryNotFoundException($"Directory not found: {path}");
 
+            var filePath = Path.Combine(path, "index.json");
+
             try
             {
-                using (var reader = new StreamReader(Path.Combine(path, "index.json")))
+                string jsonText;
+                using (var reader = new StreamReader(filePath))
                 {
-                    var jsonText = await reader.ReadToEndAsync();
-                    var deSerialized = JsonConvert.DeserializeObject<List<JsonIndexDocument>>(jsonText);
-
-                    _documents = deSerialized?.OrderBy(x => x.threadId).ToList()
-                        ?? new List<JsonIndexDocument>();
+                    jsonText = await reader.ReadToEndAsync();
                 }
+
+                var deSerialized = await Task.Run(() =>
+                    JsonConvert.DeserializeObject<List<JsonIndexDocument>>(jsonText));
+
+                _documents = deSerialized ?? new List<JsonIndexDocument>();
             }
             catch (JsonException e)
             {

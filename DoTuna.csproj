@@ -1,4 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net48</TargetFramework>
@@ -8,6 +9,7 @@
     <Nullable>enable</Nullable>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,14 +18,56 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Fody" Version="6.9.2" PrivateAssets="all" />
-    <PackageReference Include="Costura.Fody" Version="5.0.2" PrivateAssets="All" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Scriban" Version="5.9.0" />
+    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.43" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="DoTuna.Test/*.cs" />
   </ItemGroup>
+
+  <Target Name="ILRepack" AfterTargets="Build">
+    <!-- 병합할 어셈블리 목록 -->
+    <ItemGroup>
+      <InputAssemblies Include="$(OutputPath)DoTuna.exe" />
+      <InputAssemblies Include="$(OutputPath)Newtonsoft.Json.dll" />
+      <InputAssemblies Include="$(OutputPath)Scriban.dll" />
+      <InputAssemblies Include="$(OutputPath)System.Runtime.CompilerServices.Unsafe.dll" />
+      <InputAssemblies Include="$(OutputPath)System.Threading.Tasks.Extensions.dll" />
+    </ItemGroup>
+
+    <!-- 병합 실행 -->
+    <ILRepack
+      ToolPath="$(NuGetPackageRoot)ilrepack.lib.msbuild.task\2.0.43\tools\net472"
+      OutputFile="$(OutputPath)DoTuna.Merged.exe"
+      InputAssemblies="@(InputAssemblies)"
+      Internalize="true"
+      DebugInfo="true"
+      Parallel="true"
+      TargetKind="Exe"
+      XmlDocumentation="false"
+      Libs="$(OutputPath)"
+      Verbose="true" />
+
+    <!-- 기존 파일 덮어쓰기 -->
+    <Copy SourceFiles="$(OutputPath)DoTuna.Merged.exe"
+          DestinationFiles="$(OutputPath)DoTuna.exe"
+          OverwriteReadOnlyFiles="true" />
+
+    <!-- 병합된 .Merged.exe 삭제 -->
+    <Delete Files="$(OutputPath)DoTuna.Merged.exe" />
+
+    <!-- 원본 DLL 파일 삭제 -->
+    <ItemGroup>
+      <MergedDlls Include="
+        $(OutputPath)Newtonsoft.Json.dll;
+        $(OutputPath)Scriban.dll;
+        $(OutputPath)System.Runtime.CompilerServices.Unsafe.dll;
+        $(OutputPath)System.Threading.Tasks.Extensions.dll" />
+    </ItemGroup>
+
+    <Delete Files="@(MergedDlls)" />
+  </Target>
 
 </Project>

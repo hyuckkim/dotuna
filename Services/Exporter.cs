@@ -14,40 +14,92 @@ namespace DoTuna
             Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "result");
         public string TitleTemplate { get; set; } = "{id}";
 
+        private SynchronizationContext _syncContext = null!;
+        private IProgress<string>? _progress;
+        private ThreadFileNameMap _fileNameMap = null!;
+        private ScribanRenderer _renderer = null!;
+        private List<JsonIndexDocument> _threads = null!;
+        private ImageCopier _imageCopier = null!;
+
         public async Task Build(List<JsonIndexDocument> threads, IProgress<string> progress)
         {
-            var fileNameMap = new ThreadFileNameMap(threads, TitleTemplate);
-            var imageCopier = new ImageCopier(SourcePath, ResultPath);
-            var renderer = new ScribanRenderer(fileNameMap);
+            _syncContext = SynchronizationContext.Current;
+            _progress = progress;
+            _threads = threads;
+            _fileNameMap = new ThreadFileNameMap(threads, TitleTemplate);
+            _renderer = new ScribanRenderer(_fileNameMap);
+            _imageCopier = new ImageCopier(SourcePath, ResultPath);
 
+            EnsurePath();
+            await GenerateIndex();
+            await GenerateAllThreads();
+        }
+        private void EnsurePath()
+        {
             if (!Directory.Exists(ResultPath))
                 Directory.CreateDirectory(ResultPath);
+        }
+        private async Task GenerateIndex()
+        {
             string indexPath = Path.Combine(ResultPath, "index.html");
 
-            progress?.Report("(index.html 생성 중)");
-            var indexHtml = await renderer.RenderIndexPageAsync(threads);
+            _progress?.Report("(index.html 생성 중)");
+            var indexHtml = await _renderer.RenderIndexPageAsync(_threads);
             await Task.Run(() => File.WriteAllText(indexPath, indexHtml));
-            progress?.Report("(index.html 생성됨)");
-
+            _progress?.Report("(index.html 생성됨)");
+        }
+        private async Task GenerateAllThreads()
+        {
             int completed = 0;
-            progress?.Report($"({completed} of {threads.Count})");
+            ReportCount(0);
 
-            foreach (var doc in threads)
+            var semaphore = new SemaphoreSlim(Environment.ProcessorCount * 2);
+
+            var tasks = _threads.Select(async doc =>
             {
-                var threadPath = Path.Combine(SourcePath, $"{doc.threadId}.json");
-                JsonThreadDocument content = await JsonThreadDocument.GetThreadAsync(threadPath);
+                await semaphore.WaitAsync();
+                try
+                {
+                    await GenerateThread(doc);
+                    Interlocked.Increment(ref completed);
 
-                string jsonPath = Path.Combine(ResultPath, fileNameMap[doc.threadId.ToString()]);
-                var threadHtml = await renderer.RenderThreadPageAsync(content);
-                await Task.Run(() => File.WriteAllText(jsonPath, threadHtml));
+                    // UI 스레드에서 호출하기 위해 Invoke 사용 (WinForms 기준)
+                    ReportCount(completed);
+                }
+                finally
+                {
+                    semaphore.Release();
+                }
+            });
 
-                imageCopier.CopyRequiredImages(content.responses
-                    .Select(res => res.attachment)
-                    .Where(img => !string.IsNullOrEmpty(img))
-                    .ToList()
-                );
-                Interlocked.Increment(ref completed);
-                progress?.Report($"({completed} of {threads.Count})");
+            await Task.WhenAll(tasks);
+        }
+        
+        private async Task GenerateThread(JsonIndexDocument doc)
+        {
+            string threadPath = Path.Combine(SourcePath, $"{doc.threadId}.json");
+            JsonThreadDocument content = await JsonThreadDocument.GetThreadAsync(threadPath);
+
+            string jsonPath = Path.Combine(ResultPath, _fileNameMap[doc.threadId.ToString()]);
+            var threadHtml = await _renderer.RenderThreadPageAsync(content);
+            await Task.Run(() => File.WriteAllText(jsonPath, threadHtml));
+
+            _imageCopier.CopyRequiredImages(content.responses
+                .Select(res => res.attachment)
+                .Where(img => !string.IsNullOrEmpty(img))
+                .ToList()
+            );
+        }
+
+        private void ReportCount(int count)
+        {
+            if (_syncContext != null)
+            {
+                _syncContext.Post(_ => _progress?.Report($"({count} of {_threads.Count})"), null);
+            }
+            else
+            {
+                _progress?.Report($"({count} of {_threads.Count})");
             }
         }
     }

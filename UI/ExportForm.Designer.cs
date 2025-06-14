@@ -9,6 +9,7 @@ namespace DoTuna
         private DataGridView ThreadListGrid;
         private Button GetThreadSourceFileButton;
         private Button ExportFileButton;
+        private Button OpenConverterButton;
         private TextBox FilterAuthorInputField;
         private TextBox FilterTitleInputField;
         private CheckBox SelectAllCheckBox;
@@ -86,6 +87,15 @@ namespace DoTuna
                 Padding = new Padding(10, 0, 10, 0)
             };
             this.ExportFileButton.Click += new EventHandler(this.ExportButtonClick);
+
+            this.OpenConverterButton = new Button
+            {
+                Text = "변환기",
+                Width = 120,
+                Margin = new Padding(0, 0, 5, 0),
+                Padding = new Padding(10, 0, 10, 0)
+            };
+            this.OpenConverterButton.Click += new EventHandler(this.OpenConverterButtonClick);
             
             // 필터 텍스트 박스
             this.FilterTitleInputField = new TextBox { Width = 200 };
@@ -112,7 +122,11 @@ namespace DoTuna
             this.PatternToolTip.SetToolTip(this.DocumentPatternInputField,
                 "각 문서의 제목입니다.\n" +
                 "{id}, {title}, {name}, {created}, {updated}, {size}가\n" +
-                "실제 값으로 대체됩니다.\n" +
+                "실제 값으로 대체됩니다.\n\n" +
+                "글자 자르기:\n" +
+                "{title 10..}  → 앞 10글자만 사용하고 잘리면 '..' 추가\n" +
+                "{name _20}    → 뒤 20글자만 사용하고 잘리면 '_' 추가\n" +
+                "{user 10_10}  → 앞 10글자, 뒤 10글자 사용\n\n" +
                 "예: \"{title} - {name} ({created})\"");
 
             // 내보내기 결과 경로 텍스트 필드
@@ -125,6 +139,7 @@ namespace DoTuna
 
             // flowLayout에 컨트롤 추가
             flowLayout.Controls.Add(this.ExportFileButton);
+            flowLayout.Controls.Add(this.OpenConverterButton);
             flowLayout.Controls.Add(this.FilterTitleInputField);
             flowLayout.Controls.Add(this.FilterAuthorInputField);
             flowLayout.Controls.Add(this.SelectAllCheckBox);

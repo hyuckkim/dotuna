@@ -30,6 +30,18 @@ namespace DoTuna.Test
         [InlineData( // tuna>456>7
             "tuna&gt;456&gt;7", 
             "https://testurl.com/456.html#response_7")]
+        [InlineData( // >>7
+            ">>7", 
+            "https://testurl.com/123.html#response_7")]
+        [InlineData( // >456>
+            ">456>", 
+            "https://testurl.com/456.html")]
+        [InlineData( // >456>7
+            ">456>7", 
+            "https://testurl.com/456.html#response_7")]
+        [InlineData( // tuna>456>7
+            "tuna>456>7", 
+            "https://testurl.com/456.html#response_7")]
         
         // tunaground.net 링크 변환 테스트
         [InlineData(

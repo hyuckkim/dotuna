@@ -6,6 +6,7 @@ namespace DoTuna
     public class ThreadFileNameMap
     {
         private readonly Dictionary<string, string> _map;
+        public int Size { get => _map.Values.Distinct().Count(); }
 
         public ThreadFileNameMap(IEnumerable<JsonIndexDocument> threads, string titleTemplate)
         {

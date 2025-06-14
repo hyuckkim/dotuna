@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace DoTuna
 {
@@ -18,11 +18,12 @@ namespace DoTuna
         public void CopyRequiredImages(List<string> requireImg)
         {
             if (requireImg.Count == 0) return;
+
             string dataDir = Path.Combine(_resultPath, "data");
             if (!Directory.Exists(dataDir))
                 Directory.CreateDirectory(dataDir);
 
-            foreach (var imgFile in requireImg.Distinct())
+            Parallel.ForEach(requireImg, imgFile =>
             {
                 var src = Path.Combine(_sourcePath, "data", imgFile);
                 var dst = Path.Combine(dataDir, imgFile);
@@ -30,7 +31,7 @@ namespace DoTuna
                 {
                     File.Copy(src, dst, true);
                 }
-            }
+            });
         }
     }
 }

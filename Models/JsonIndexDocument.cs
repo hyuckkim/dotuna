@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace DoTuna
@@ -24,14 +25,18 @@ namespace DoTuna
         public string getTemplateName(string template)
         {
             if (string.IsNullOrEmpty(template)) return string.Empty;
+            var values = new Dictionary<string, string>
+            {
+                { "id", this.threadId.ToString() },
+                { "title", this.title },
+                { "name", this.username },
+                { "created", this.createdAt.ToString("yyyy-MM-dd") },
+                { "updated", this.updatedAt.ToString("yyyy-MM-dd") },
+                { "size", this.size.ToString() }
+            };
 
-            return template
-                .Replace("{id}", this.threadId.ToString())
-                .Replace("{title}", this.title)
-                .Replace("{name}", this.username)
-                .Replace("{created}", this.createdAt.ToString("yyyy-MM-dd"))
-                .Replace("{updated}", this.updatedAt.ToString("yyyy-MM-dd"))
-                .Replace("{size}", this.size.ToString())
+            return TemplateFormatter
+                .Format(template, values)
                 .ReplaceInvalidFileNameChars()
                 .Truncate(200);
         }
