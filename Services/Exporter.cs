@@ -14,6 +14,7 @@ namespace DoTuna
             Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "result");
         public string TitleTemplate { get; set; } = "{id}";
 
+        private SynchronizationContext _syncContext = null!;
         private IProgress<string>? _progress;
         private ThreadFileNameMap _fileNameMap = null!;
         private ScribanRenderer _renderer = null!;
@@ -22,6 +23,7 @@ namespace DoTuna
 
         public async Task Build(List<JsonIndexDocument> threads, IProgress<string> progress)
         {
+            _syncContext = SynchronizationContext.Current;
             _progress = progress;
             _threads = threads;
             _fileNameMap = new ThreadFileNameMap(threads, TitleTemplate);
@@ -46,16 +48,28 @@ namespace DoTuna
             await Task.Run(() => File.WriteAllText(indexPath, indexHtml));
             _progress?.Report("(index.html 생성됨)");
         }
-        private async Task GenerateAllThreads()
+        private async Task GenerateAllThreads(int maxDegreeOfParallelism = 4)
         {
             int completed = 0;
             ReportCount(0);
 
+            var semaphore = new SemaphoreSlim(maxDegreeOfParallelism);
+
             var tasks = _threads.Select(async doc =>
             {
-                await GenerateThread(doc);
-                Interlocked.Increment(ref completed);
-                ReportCount(completed);
+                await semaphore.WaitAsync();
+                try
+                {
+                    await GenerateThread(doc);
+                    Interlocked.Increment(ref completed);
+
+                    // UI 스레드에서 호출하기 위해 Invoke 사용 (WinForms 기준)
+                    ReportCount(completed);
+                }
+                finally
+                {
+                    semaphore.Release();
+                }
             });
 
             await Task.WhenAll(tasks);
@@ -79,7 +93,14 @@ namespace DoTuna
 
         private void ReportCount(int count)
         {
-            _progress?.Report($"({count} of {_threads.Count})");
+            if (_syncContext != null)
+            {
+                _syncContext.Post(_ => _progress?.Report($"({count} of {_threads.Count})"), null);
+            }
+            else
+            {
+                _progress?.Report($"({count} of {_threads.Count})");
+            }
         }
     }
 }
