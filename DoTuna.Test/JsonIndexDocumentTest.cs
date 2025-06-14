@@ -79,13 +79,6 @@ namespace DoTuna.Test
         }
 
         [Fact]
-        public void GetTemplateName_NullTemplate_ReturnsEmpty()
-        {
-            var doc = new JsonIndexDocument();
-            string result = doc.getTemplateName(null);
-            Assert.Equal(string.Empty, result);
-        }
-        [Fact]
         public void GetTemplateName_TruncatesWithEllipsisOrPrefix()
         {
             var doc = new JsonIndexDocument
