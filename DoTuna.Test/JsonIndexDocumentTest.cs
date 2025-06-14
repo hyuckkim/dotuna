@@ -85,5 +85,52 @@ namespace DoTuna.Test
             string result = doc.getTemplateName(null);
             Assert.Equal(string.Empty, result);
         }
+        [Fact]
+        public void GetTemplateName_TruncatesWithEllipsisOrPrefix()
+        {
+            var doc = new JsonIndexDocument
+            {
+                threadId = 1,
+                title = "ABCDEFGHIJKLMNO",     // 15자
+                username = "ZXYWVUTSRQPONMLK", // 16자
+                createdAt = new DateTime(2024, 6, 1),
+                updatedAt = new DateTime(2024, 6, 1),
+                size = 0
+            };
+
+            string template = "{title 10..}_{name _6}";
+            string result = doc.getTemplateName(template);
+
+            // 예상 결과:
+            // title 10.. → "ABCDEFGHIJ.." (앞 10자 + 생략 "..")
+            // name _6   → "_ONMLK"       (뒤 6자 + 접두 "_")
+            string expected = "ABCDEFGHIJ.._ONMLK";
+
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void GetTemplateName_TruncatesWithDoubleSideOmit()
+        {
+            var doc = new JsonIndexDocument
+            {
+                threadId = 1,
+                title = "ABCDEFGHIJKLMNOPQRSTUVWXYZ", // 26자
+                username = "UserNameExample",             // 15자
+                createdAt = new DateTime(2024, 6, 1),
+                updatedAt = new DateTime(2024, 6, 1),
+                size = 0
+            };
+
+            string template = "{title 5__5}_{name 4..4}";
+            string result = doc.getTemplateName(template);
+
+            // 예상 결과:
+            // title 5__5 → "ABCDE__VWXYZ" (앞5자 + "__" + 뒤5자)
+            // name 4..4  → "User..mple"  (앞4자 + ".." + 뒤4자)
+            string expected = "ABCDE__VWXYZ_User..mple";
+
+            Assert.Equal(expected, result);
+        }
     }
 }
