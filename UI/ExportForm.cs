@@ -26,11 +26,7 @@ namespace DoTuna
             if (e.RowIndex < 0 || e.ColumnIndex < 0)
                 return;
 
-            var row = ThreadListGrid.Rows[e.RowIndex];
-            if (!(row?.DataBoundItem is JsonIndexDocument item))
-                return;
-
-            threadManager.Toggle(item);
+            threadManager.Toggle(threadManager.Filtered.ElementAt(e.RowIndex));
             SetCheckAllBox();
         }
 
@@ -39,8 +35,8 @@ namespace DoTuna
             if (e.RowIndex < 0 || e.ColumnIndex < 0)
                 return;
 
-            var row = ThreadListGrid.Rows[e.RowIndex];
-            if (!(row?.DataBoundItem is JsonIndexDocument doc))
+            var doc = threadManager.Filtered.ElementAt(e.RowIndex);
+            if (doc == null)
                 return;
 
             switch (ThreadListGrid.Columns[e.ColumnIndex].Name)
