@@ -45,6 +45,7 @@ namespace DoTuna
                 HeaderText = "스레드 이름",
                 DataPropertyName = "title",
                 ReadOnly = true,
+                Name = "ThreadName",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             };
 
@@ -53,6 +54,7 @@ namespace DoTuna
                 HeaderText = "유저 이름",
                 DataPropertyName = "username",
                 ReadOnly = true,
+                Name = "UserName",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             };
             var colCheck = new DataGridViewCheckBoxColumn
