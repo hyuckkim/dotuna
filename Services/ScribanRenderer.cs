@@ -18,12 +18,20 @@ namespace DoTuna
 
         public async Task<string> RenderIndexPageAsync(List<JsonIndexDocument> threads)
         {
-            var model = new { threads = threads.Select(doc => new {
-                thread_id = doc.threadId,
-                thread_title = Escape(doc.title),
-                thread_username = Escape(doc.username),
-                file_name = Uri.EscapeDataString(_fileNameMap.GetFileName(doc.threadId.ToString()))
-            }).ToList() };
+            int pageCount = (threads.Count + 99) / 100;  // 페이지당 100개씩 가정
+
+            var model = new
+            {
+                threads = threads.Select(doc => new
+                {
+                    thread_id = doc.threadId,
+                    thread_title = Escape(doc.title),
+                    thread_username = Escape(doc.username),
+                    file_name = Uri.EscapeDataString(_fileNameMap.GetFileName(doc.threadId.ToString()))
+                }).ToList(),
+                page_count = pageCount
+            };
+
             return await RenderTemplateFromResourceAsync("DoTuna.Templates.index.html", model);
         }
 

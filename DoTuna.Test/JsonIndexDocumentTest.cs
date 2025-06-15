@@ -21,7 +21,7 @@ namespace DoTuna.Test
 
             string template = "{id}_{title}_{name}_{created}_{updated}_{size}";
             string expected = "42_TestTitle_TestUser_2024-06-01_2024-06-02_123";
-            string result = doc.getTemplateName(template);
+            string result = ThreadFileNameMap.GetTemplateName(doc, template);
 
             Assert.Equal(expected, result);
         }
@@ -40,7 +40,7 @@ namespace DoTuna.Test
             };
 
             string template = "{title}_{name}";
-            string result = doc.getTemplateName(template);
+            string result = ThreadFileNameMap.GetTemplateName(doc, template);
 
             Assert.DoesNotContain(":", result);
             Assert.DoesNotContain("*", result);
@@ -65,7 +65,7 @@ namespace DoTuna.Test
             };
 
             string template = "{title}";
-            string result = doc.getTemplateName(template);
+            string result = ThreadFileNameMap.GetTemplateName(doc, template);
 
             Assert.True(result.Length <= 200);
         }
@@ -74,7 +74,7 @@ namespace DoTuna.Test
         public void GetTemplateName_EmptyTemplate_ReturnsEmpty()
         {
             var doc = new JsonIndexDocument();
-            string result = doc.getTemplateName("");
+            string result = ThreadFileNameMap.GetTemplateName(doc, "");
             Assert.Equal(string.Empty, result);
         }
 
@@ -92,7 +92,7 @@ namespace DoTuna.Test
             };
 
             string template = "{title 10..}_{name _6}";
-            string result = doc.getTemplateName(template);
+            string result = ThreadFileNameMap.GetTemplateName(doc, template);
 
             // 예상 결과:
             // title 10.. → "ABCDEFGHIJ.." (앞 10자 + 생략 "..")
@@ -117,7 +117,7 @@ namespace DoTuna.Test
             };
 
             string template = "{title 5__5}_{name 4..4}";
-            string result = doc.getTemplateName(template);
+            string result = ThreadFileNameMap.GetTemplateName(doc, template);
 
             // 예상 결과:
             // title 5__5 → "ABCDE__VWXYZ" (앞5자 + "__" + 뒤5자)

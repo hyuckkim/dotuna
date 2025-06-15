@@ -34,14 +34,18 @@ namespace DoTuna
                 Visible = true,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 MultiSelect = false,
-                AutoGenerateColumns = false
+                AutoGenerateColumns = false,
+                VirtualMode = true,
             };
+            this.ThreadListGrid.CellValueNeeded += new DataGridViewCellValueEventHandler(ThreadListGrid_CellValueNeeded);
+
             // 데이터 그리드 컬럼 추가
             var colThreadName = new DataGridViewTextBoxColumn
             {
                 HeaderText = "스레드 이름",
                 DataPropertyName = "title",
                 ReadOnly = true,
+                Name = "ThreadName",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             };
 
@@ -50,6 +54,7 @@ namespace DoTuna
                 HeaderText = "유저 이름",
                 DataPropertyName = "username",
                 ReadOnly = true,
+                Name = "UserName",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             };
             var colCheck = new DataGridViewCheckBoxColumn

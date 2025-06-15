@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DoTuna
@@ -24,15 +23,34 @@ namespace DoTuna
 
         private void OnCheckBoxClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+            if (e.RowIndex < 0 || e.RowIndex >= threadManager.Filtered.Count())
                 return;
 
-            var row = ThreadListGrid.Rows[e.RowIndex];
-            if (!(row?.DataBoundItem is JsonIndexDocument item))
-                return;
-
-            threadManager.Toggle(item);
+            threadManager.Toggle(threadManager.Filtered.ElementAt(e.RowIndex));
             SetCheckAllBox();
+        }
+
+        private void ThreadListGrid_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.RowIndex >= threadManager.Filtered.Count())
+                return;
+
+            var doc = threadManager.Filtered.ElementAt(e.RowIndex);
+            if (doc == null)
+                return;
+
+            switch (ThreadListGrid.Columns[e.ColumnIndex].Name)
+            {
+                case "IsCheck":
+                    e.Value = threadManager.IsChecked(doc);
+                    break;
+                case "ThreadName":
+                    e.Value = doc.title;
+                    break;
+                case "UserName":
+                    e.Value = doc.username;
+                    break;
+            }
         }
 
         private void SetCheckAllBox()
@@ -72,20 +90,13 @@ namespace DoTuna
                     threadManager.Uncheck(doc);
                 }
             }
-            RefreshGrid();
+            ThreadListGrid.Invalidate();
         }
 
         private void RefreshGrid()
         {
-            ThreadListGrid.DataSource = threadManager.Filtered.ToList();
-            ThreadListGrid.Refresh();
-            foreach (DataGridViewRow row in ThreadListGrid.Rows)
-            {
-                if (row.DataBoundItem is JsonIndexDocument doc)
-                {
-                    row.Cells["IsCheck"].Value = threadManager.IsChecked(doc);
-                }
-            }
+            ThreadListGrid.RowCount = threadManager.Filtered.Count();
+            ThreadListGrid.Invalidate();
         }
 
         private async void ExportButtonClick(object sender, EventArgs e)
