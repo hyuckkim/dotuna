@@ -34,8 +34,11 @@ namespace DoTuna
                 Visible = true,
                 SelectionMode = DataGridViewSelectionMode.FullRowSelect,
                 MultiSelect = false,
-                AutoGenerateColumns = false
+                AutoGenerateColumns = false,
+                VirtualMode = true,
             };
+            this.ThreadListGrid.CellValueNeeded += new DataGridViewCellValueEventHandler(ThreadListGrid_CellValueNeeded);
+
             // 데이터 그리드 컬럼 추가
             var colThreadName = new DataGridViewTextBoxColumn
             {
