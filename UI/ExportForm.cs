@@ -23,7 +23,7 @@ namespace DoTuna
 
         private void OnCheckBoxClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+            if (e.RowIndex < 0 || e.RowIndex >= threadManager.Filtered.Count())
                 return;
 
             threadManager.Toggle(threadManager.Filtered.ElementAt(e.RowIndex));
@@ -32,7 +32,7 @@ namespace DoTuna
 
         private void ThreadListGrid_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
-            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+            if (e.RowIndex < 0 || e.RowIndex >= threadManager.Filtered.Count())
                 return;
 
             var doc = threadManager.Filtered.ElementAt(e.RowIndex);
