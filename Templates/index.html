@@ -23,7 +23,18 @@
         <input class="search_container" type="text" placeholder="검색" oninput="Build()">
     </nav>
     <div class="pagination" id="pagination"></div>
-    <div id="thread_list"></div>
+    <div id="thread_list">
+    {{ for doc in threads limit:100 }}
+    <div><ul>
+        <li class="thread_id">{{ doc.thread_id }}</li>
+        <li class="thread_title">
+        <a href="{{ doc.file_name }}" target="_blank">{{ doc.thread_title }}</a>
+        </li>
+        <li class="thread_username">{{ doc.thread_username }}</li>
+    </ul></div>
+    {{ end }}
+    </div>
+
     <script>
     const data = [
         {{ for doc in threads }}
@@ -55,7 +66,6 @@
     };
     const sv = () => document.querySelector(".search_container").value;
     const filtered = () => data.filter((item) => item.thread_title.includes(sv()) || item.thread_username.includes(sv()));
-    Build();
     </script>
 </body>
 </html>
