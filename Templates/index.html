@@ -23,7 +23,7 @@
         <input class="search_container" type="text" placeholder="검색" oninput="Build()">
     </nav>
     <div id="pagination">
-    {{ for i in 0..(threads.size / 100) - 1 }}
+    {{ for i in 0..(threads.size / 100) | int }}
         <button class="btn_pg" onclick="Build({{ i }})">{{ i + 1 }}</button>
     {{ end }}
     </div>
