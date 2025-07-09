@@ -35,9 +35,10 @@ namespace DoTuna
             });
         }
 
-        public string Href(string fileName)
+        public async Task<string> Href(string fileName)
         {
-            return Path.Combine("data", Uri.EscapeDataString(fileName));
+            if (Setting.Instance.SingleHTML) return Path.Combine("data", Uri.EscapeDataString(fileName));
+            else return Path.Combine("data", Uri.EscapeDataString(fileName));
         }
     }
 }

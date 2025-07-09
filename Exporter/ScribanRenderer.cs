@@ -53,18 +53,25 @@ namespace DoTuna
             return await RenderTemplateFromResourceAsync("DoTuna.Templates.thread.html", model);
         }
 
-        private List<object> BuildResponses(JsonThreadDocument data)
+        private async Task<List<object>> BuildResponses(JsonThreadDocument data)
         {
             var converter = new ContentConverterToA(_fileNameMap);
-            return data.responses.Select(res => new {
+            Task<object>[] tasks = data.responses.Select(res => BuildRes(res, data.threadId)).ToArray();
+            var results = await Task.WhenAll(tasks);
+            return results.ToList();
+        }
+        private async Task<object> BuildRes(Response res, int threadId)
+        {
+            var converter = new ContentConverterToA(_fileNameMap);
+            return new {
                 sequence = res.sequence.ToString(),
                 username = Escape(res.username),
                 user_id = Escape(res.userId),
                 created_at = Tuna(res.createdAt),
-                content = converter.ConvertContent(res.content, data.threadId),
+                content = converter.ConvertContent(res.content, threadId),
                 thread_id = res.threadId.ToString(),
-                attachment = string.IsNullOrEmpty(res.attachment) ? "" : _imageProvider.Href(res.attachment),
-            }).ToList<object>();
+                attachment = string.IsNullOrEmpty(res.attachment) ? "" : await _imageProvider.Href(res.attachment),
+            };
         }
 
         private async Task<string> RenderTemplateFromResourceAsync(string resourceName, object model)
