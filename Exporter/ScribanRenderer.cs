@@ -11,8 +11,10 @@ namespace DoTuna
     public class ScribanRenderer
     {
         private readonly ThreadFileNameMap _fileNameMap;
-        public ScribanRenderer(ThreadFileNameMap fileNameMap)
+        private readonly ImageProvider _imageProvider;
+        public ScribanRenderer(ThreadFileNameMap fileNameMap, ImageProvider imageProvider)
         {
+            _imageProvider = imageProvider;
             _fileNameMap = fileNameMap;
         }
 
@@ -61,7 +63,7 @@ namespace DoTuna
                 created_at = Tuna(res.createdAt),
                 content = converter.ConvertContent(res.content, data.threadId),
                 thread_id = res.threadId.ToString(),
-                attachment = string.IsNullOrEmpty(res.attachment) ? "" : res.attachment
+                attachment = string.IsNullOrEmpty(res.attachment) ? "" : _imageProvider.Href(res.attachment),
             }).ToList<object>();
         }
 

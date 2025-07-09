@@ -17,15 +17,15 @@ namespace DoTuna
         private ThreadFileNameMap _fileNameMap = null!;
         private ScribanRenderer _renderer = null!;
         private List<JsonIndexDocument> _threads = null!;
-        private ImageCopier _imageCopier = null!;
+        private ImageProvider _imageProvider = null!;
 
         public async Task Build(List<JsonIndexDocument> threads, IProgress<string> progress)
         {
             _progress = progress;
             _threads = threads;
             _fileNameMap = new ThreadFileNameMap(threads);
-            _renderer = new ScribanRenderer(_fileNameMap);
-            _imageCopier = new ImageCopier(SourcePath, ResultPath);
+            _imageProvider = new ImageProvider(SourcePath, ResultPath);
+            _renderer = new ScribanRenderer(_fileNameMap, _imageProvider);
 
             EnsurePath();
             await GenerateIndex();
@@ -45,38 +45,38 @@ namespace DoTuna
             await Task.Run(() => File.WriteAllText(indexPath, indexHtml));
             _progress?.Report("(index.html 생성됨)");
         }
-       private async Task GenerateAllThreads()
-      {
-          int completed = 0;
-          ReportCount(0);
+        private async Task GenerateAllThreads()
+        {
+            int completed = 0;
+            ReportCount(0);
 
-          var semaphore = new SemaphoreSlim(Environment.ProcessorCount * 2);
+            var semaphore = new SemaphoreSlim(Environment.ProcessorCount * 2);
 
-          var tasks = new List<Task>();
+            var tasks = new List<Task>();
 
-          foreach (var doc in _threads)
-          {
-              await semaphore.WaitAsync();
+            foreach (var doc in _threads)
+            {
+                await semaphore.WaitAsync();
 
-              var task = Task.Run(async () =>
-              {
-                  try
-                  {
-                      await GenerateThread(doc);
-                      Interlocked.Increment(ref completed);
-                      ReportCount(completed);
-                  }
-                  finally
-                  {
-                      semaphore.Release();
-                  }
-              });
+                var task = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await GenerateThread(doc);
+                        Interlocked.Increment(ref completed);
+                        ReportCount(completed);
+                    }
+                    finally
+                    {
+                        semaphore.Release();
+                    }
+                });
 
-              tasks.Add(task);
-          }
+                tasks.Add(task);
+            }
 
-          await Task.WhenAll(tasks);
-        } 
+            await Task.WhenAll(tasks);
+        }
         private async Task GenerateThread(JsonIndexDocument doc)
         {
             string threadPath = Path.Combine(SourcePath, $"{doc.threadId}.json");
@@ -86,7 +86,7 @@ namespace DoTuna
             var threadHtml = await _renderer.RenderThreadPageAsync(content);
             await Task.Run(() => File.WriteAllText(jsonPath, threadHtml));
 
-            _imageCopier.CopyRequiredImages(content.responses
+            _imageProvider.CopyRequiredImages(content.responses
                 .Select(res => res.attachment)
                 .Where(img => !string.IsNullOrEmpty(img))
                 .ToList()
@@ -95,7 +95,7 @@ namespace DoTuna
 
         private void ReportCount(int count)
         {
-              _progress?.Report($"({count} of {_threads.Count})");
+            _progress?.Report($"({count} of {_threads.Count})");
         }
     }
 }

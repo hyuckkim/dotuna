@@ -1,15 +1,16 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace DoTuna
 {
-    public class ImageCopier
+    public class ImageProvider
     {
         private readonly string _sourcePath;
         private readonly string _resultPath;
 
-        public ImageCopier(string sourcePath, string resultPath)
+        public ImageProvider(string sourcePath, string resultPath)
         {
             _sourcePath = sourcePath;
             _resultPath = resultPath;
@@ -32,6 +33,11 @@ namespace DoTuna
                     File.Copy(src, dst, true);
                 }
             });
+        }
+
+        public string Href(string fileName)
+        {
+            return Path.Combine("data", Uri.EscapeDataString(fileName));
         }
     }
 }
