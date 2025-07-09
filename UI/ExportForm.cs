@@ -111,7 +111,7 @@ namespace DoTuna
             });
 
             exporter.ResultPath = ResultPathField.Text;
-            exporter.TitleTemplate = DocumentPatternInputField.Text;
+            exporter.TitleTemplate = Setting.Instance.Pattern;
             try
             {
                 await exporter.Build(
@@ -126,7 +126,7 @@ namespace DoTuna
         }
         private void OpenConverterButtonClick(object sender, EventArgs e)
         {
-            var fileNameMap = new ThreadFileNameMap(threadManager.Checked.ToList(), DocumentPatternInputField.Text);
+            var fileNameMap = new ThreadFileNameMap(threadManager.Checked.ToList(), Setting.Instance.Pattern);
             var converterForm = new ConverterForm(fileNameMap);
             converterForm.ShowDialog();
         }
@@ -145,15 +145,15 @@ namespace DoTuna
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(DocumentPatternInputField.Text))
+            if (string.IsNullOrWhiteSpace(Setting.Instance.Pattern))
             {
                 var result = MessageBox.Show("제목 템플릿이 비어 있습니다. 기본값으로 계속하시겠습니까?", "알림", MessageBoxButtons.YesNo);
                 if (result != DialogResult.Yes)
                     return false;
-                DocumentPatternInputField.Text = "{id}";
+                Setting.Instance.Pattern = "{id}";
             }
             
-            var fileNameMap = new ThreadFileNameMap(threadManager.Checked.ToList(), DocumentPatternInputField.Text);
+            var fileNameMap = new ThreadFileNameMap(threadManager.Checked.ToList(), Setting.Instance.Pattern);
             if (fileNameMap.Size != threadManager.Checked.Count())
             {
                 MessageBox.Show("제목 템플릿이 잘못되어 생성할 파일 이름이 중복됩니다.", "경고", MessageBoxButtons.OK, MessageBoxIcon.Warning);

@@ -13,9 +13,7 @@ namespace DoTuna
         private TextBox FilterAuthorInputField;
         private TextBox FilterTitleInputField;
         private CheckBox SelectAllCheckBox;
-        private TextBox DocumentPatternInputField;
         private TextBox ResultPathField;
-        private ToolTip PatternToolTip;
         private Button SettingButton;
         
         private void InitializeComponent()
@@ -109,33 +107,11 @@ namespace DoTuna
             this.SettingButton = new Button
             {
                 Text = "설정",
-                Width = 120,
+                Width = 80,
                 Margin = new Padding(0, 0, 5, 0),
                 Padding = new Padding(10, 0, 10, 0)
             };
             this.SettingButton.Click += new EventHandler(this.OnSettingButtonClick);
-            
-            // 문서 패턴 입력 필드 및 툴팁
-            this.DocumentPatternInputField = new TextBox
-            {
-                Width = 200,
-                Text = "{id}",
-            };
-            this.PatternToolTip = new ToolTip
-            {
-                AutoPopDelay = 10000,
-                InitialDelay = 500,
-                ReshowDelay = 100,
-            };
-            this.PatternToolTip.SetToolTip(this.DocumentPatternInputField,
-                "각 문서의 제목입니다.\n" +
-                "{id}, {title}, {name}, {created}, {updated}, {size}가\n" +
-                "실제 값으로 대체됩니다.\n\n" +
-                "글자 자르기:\n" +
-                "{title 10..}  → 앞 10글자만 사용하고 잘리면 '..' 추가\n" +
-                "{name _20}    → 뒤 20글자만 사용하고 잘리면 '_' 추가\n" +
-                "{user 10_10}  → 앞 10글자, 뒤 10글자 사용\n\n" +
-                "예: \"{title} - {name} ({created})\"");
 
             // 내보내기 결과 경로 텍스트 필드
             this.ResultPathField = new TextBox
@@ -152,7 +128,6 @@ namespace DoTuna
             flowLayout.Controls.Add(this.FilterAuthorInputField);
             flowLayout.Controls.Add(this.SelectAllCheckBox);
             flowLayout.Controls.Add(this.SettingButton);
-            flowLayout.Controls.Add(this.DocumentPatternInputField);
 
             // 메인 패널 설정
             var mainPanel = new Panel
@@ -163,7 +138,7 @@ namespace DoTuna
             mainPanel.Controls.Add(this.ThreadListGrid);
 
             this.Text = "DoTuna - 내보내기";
-            this.MinimumSize = new Size(450, 450);
+            this.MinimumSize = new Size(900, 450);
             this.ClientSize = new Size(800, 450);
 
             // 폼에 패널과 하단 컨트롤 추가

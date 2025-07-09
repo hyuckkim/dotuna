@@ -7,21 +7,45 @@ namespace DoTuna
         public void InitializeComponent()
         {
             this.Text = "DoTuna - 설정";
-            FlowLayoutPanel panel = new FlowLayoutPanel();
-            panel.FlowDirection = FlowDirection.TopDown; // 위에서 아래로
-            panel.WrapContents = false;                  // 줄 바꿈 방지
-            panel.Dock = DockStyle.Fill;                 // 전체 채우기
-
-            TextBox patternTextBox = new TextBox();
-            patternTextBox.Text = Setting.Instance.Pattern;
-            patternTextBox.Width = 300;
-            patternTextBox.TextChanged += (sender, e) =>
+            var table = new TableLayoutPanel
             {
-                Setting.Instance.Pattern = patternTextBox.Text;
+                RowCount = 1,
+                ColumnCount = 2,
+                AutoSize = true,
+                Dock = DockStyle.Top,
+                Padding = new Padding(10),
             };
-            panel.Controls.Add(patternTextBox);
 
-            this.Controls.Add(panel);
+            table.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize)); // Label
+            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); // TextBox
+
+            var label = new Label { Text = "패턴", Anchor = AnchorStyles.Left, AutoSize = true };
+            var textbox = new TextBox { Text = "{id}", Width = 300 };
+            textbox.TextChanged += (sender, e) =>
+            {
+                Setting.Instance.Pattern = textbox.Text;
+            };
+
+            table.Controls.Add(label, 0, 0);
+            table.Controls.Add(textbox, 1, 0);
+
+            var patternToolTip = new ToolTip
+            {
+                AutoPopDelay = 10000,
+                InitialDelay = 500,
+                ReshowDelay = 100,
+            };
+            patternToolTip.SetToolTip(textbox,
+                "각 문서의 제목입니다.\n" +
+                "{id}, {title}, {name}, {created}, {updated}, {size}가\n" +
+                "실제 값으로 대체됩니다.\n\n" +
+                "글자 자르기:\n" +
+                "{title 10..}  → 앞 10글자만 사용하고 잘리면 '..' 추가\n" +
+                "{name _20}    → 뒤 20글자만 사용하고 잘리면 '_' 추가\n" +
+                "{user 10_10}  → 앞 10글자, 뒤 10글자 사용\n\n" +
+                "예: \"{title} - {name} ({created})\"");
+
+            this.Controls.Add(table);
         }
     }
 }
