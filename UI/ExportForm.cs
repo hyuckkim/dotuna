@@ -169,5 +169,11 @@ namespace DoTuna
 
             return true;
         }
+
+        private void OnSettingButtonClick(object sender, EventArgs e)
+        {
+            var settingForm = new SettingForm();
+            settingForm.ShowDialog();
+        }
     }
 }

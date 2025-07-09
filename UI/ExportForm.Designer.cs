@@ -16,13 +16,7 @@ namespace DoTuna
         private TextBox DocumentPatternInputField;
         private TextBox ResultPathField;
         private ToolTip PatternToolTip;
-
-        public ExportForm(string resultPath)
-        {
-            InitializeComponent();
-            // 폼 생성 시 export 경로 전달
-            ResultPathField.Text = resultPath;
-        }
+        private Button SettingButton;
         
         private void InitializeComponent()
         {
@@ -111,6 +105,15 @@ namespace DoTuna
             // 체크박스
             this.SelectAllCheckBox = new CheckBox { Text = "전체 선택" };
             this.SelectAllCheckBox.CheckedChanged += new EventHandler(this.SelectAllCheckBoxChanged);
+
+            this.SettingButton = new Button
+            {
+                Text = "설정",
+                Width = 120,
+                Margin = new Padding(0, 0, 5, 0),
+                Padding = new Padding(10, 0, 10, 0)
+            };
+            this.SettingButton.Click += new EventHandler(this.OnSettingButtonClick);
             
             // 문서 패턴 입력 필드 및 툴팁
             this.DocumentPatternInputField = new TextBox
@@ -148,6 +151,7 @@ namespace DoTuna
             flowLayout.Controls.Add(this.FilterTitleInputField);
             flowLayout.Controls.Add(this.FilterAuthorInputField);
             flowLayout.Controls.Add(this.SelectAllCheckBox);
+            flowLayout.Controls.Add(this.SettingButton);
             flowLayout.Controls.Add(this.DocumentPatternInputField);
 
             // 메인 패널 설정
