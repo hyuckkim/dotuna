@@ -11,7 +11,7 @@ namespace DoTuna
 
         private Setting()
         {
-            
+
         }
     }
 }
