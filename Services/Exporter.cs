@@ -12,7 +12,6 @@ namespace DoTuna
         public string SourcePath { get; set; } = string.Empty;
         public string ResultPath { get; set; } = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "result");
-        public string TitleTemplate { get; set; } = "{id}";
 
         private IProgress<string>? _progress;
         private ThreadFileNameMap _fileNameMap = null!;
@@ -24,7 +23,7 @@ namespace DoTuna
         {
             _progress = progress;
             _threads = threads;
-            _fileNameMap = new ThreadFileNameMap(threads, TitleTemplate);
+            _fileNameMap = new ThreadFileNameMap(threads);
             _renderer = new ScribanRenderer(_fileNameMap);
             _imageCopier = new ImageCopier(SourcePath, ResultPath);
 
