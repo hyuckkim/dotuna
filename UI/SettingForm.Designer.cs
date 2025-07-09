@@ -20,7 +20,7 @@ namespace DoTuna
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); // TextBox
 
             var label = new Label { Text = "패턴", Anchor = AnchorStyles.Left, AutoSize = true };
-            var textbox = new TextBox { Text = "{id}", Width = 300 };
+            var textbox = new TextBox { Text = Setting.Instance.Pattern, Width = 300 };
             textbox.TextChanged += (sender, e) =>
             {
                 Setting.Instance.Pattern = textbox.Text;
