@@ -6,11 +6,12 @@ namespace DoTuna
 
         public static Setting Instance => _instance;
 
-        public string Pattern { get; set; }
+        public string Pattern { get; set; } = "{id}";
+        public bool SingleHTML { get; set; } = false;
 
         private Setting()
         {
-            Pattern = "{id}";
+            
         }
     }
 }

@@ -16,9 +16,15 @@ namespace DoTuna
                 Padding = new Padding(10),
             };
 
-            table.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize)); // Label
-            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); // TextBox
+            table.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
 
+            ControlPattern(table);
+            ControlSingleHTML(table);
+            this.Controls.Add(table);
+        }
+        void ControlPattern(TableLayoutPanel table)
+        {
             var label = new Label { Text = "패턴", Anchor = AnchorStyles.Left, AutoSize = true };
             var textbox = new TextBox { Text = Setting.Instance.Pattern, Width = 300 };
             textbox.TextChanged += (sender, e) =>
@@ -44,8 +50,22 @@ namespace DoTuna
                 "{name _20}    → 뒤 20글자만 사용하고 잘리면 '_' 추가\n" +
                 "{user 10_10}  → 앞 10글자, 뒤 10글자 사용\n\n" +
                 "예: \"{title} - {name} ({created})\"");
+        }
+        void ControlSingleHTML(TableLayoutPanel table)
+        {
+            var label = new Label { Text = "단일 HTML", Anchor = AnchorStyles.Left, AutoSize = true };
+            var checkbox = new CheckBox
+            {
+                Checked = Setting.Instance.SingleHTML,
+                AutoSize = true
+            };
+            checkbox.CheckedChanged += (sender, e) =>
+            {
+                Setting.Instance.SingleHTML = checkbox.Checked;
+            };
 
-            this.Controls.Add(table);
+            table.Controls.Add(label, 0, 1);
+            table.Controls.Add(checkbox, 1, 1);
         }
     }
 }
