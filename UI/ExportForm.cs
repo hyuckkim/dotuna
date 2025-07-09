@@ -128,7 +128,7 @@ namespace DoTuna
         {
             var fileNameMap = new ThreadFileNameMap(threadManager.Checked.ToList(), DocumentPatternInputField.Text);
             var converterForm = new ConverterForm(fileNameMap);
-            converterForm.Show();
+            converterForm.ShowDialog();
         }
         private bool ValidateBeforeExport()
         {
