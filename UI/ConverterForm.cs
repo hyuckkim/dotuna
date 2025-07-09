@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace DoTuna
@@ -6,8 +7,9 @@ namespace DoTuna
     public partial class ConverterForm : Form
     {
         readonly ContentConverterToText converter;
-        public ConverterForm(ThreadFileNameMap fileNameMap)
+        public ConverterForm(IEnumerable<JsonIndexDocument> files)
         {
+            var fileNameMap = new ThreadFileNameMap(files);
             converter = new ContentConverterToText(fileNameMap, "https://example.com");
             InitializeComponent();
         }
