@@ -7,7 +7,6 @@ namespace DoTuna
     public partial class ExportForm : Form
     {
         private DataGridView ThreadListGrid;
-        private Button GetThreadSourceFileButton;
         private Button ExportFileButton;
         private Button OpenConverterButton;
         private TextBox FilterAuthorInputField;
