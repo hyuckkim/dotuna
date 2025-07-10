@@ -37,8 +37,30 @@ namespace DoTuna
 
         public async Task<string> Href(string fileName)
         {
-            if (Setting.Instance.SingleHTML) return Path.Combine("data", Uri.EscapeDataString(fileName));
+            if (Setting.Instance.SingleHTML) return await GetDataHref(fileName);
             else return Path.Combine("data", Uri.EscapeDataString(fileName));
+        }
+
+        private static async Task<string> GetDataHref(string fileName)
+        {
+            byte[] imageBytes = await Task.Run(() => File.ReadAllBytes(fileName));
+            string mimeType = GetMimeType(fileName);
+            string base64Image = Convert.ToBase64String(imageBytes);
+            return $"data:{mimeType};base64,{base64Image}";
+        }
+        private static string GetMimeType(string filePath)
+        {
+            string ext = Path.GetExtension(filePath).ToLower();
+            return ext switch
+            {
+                ".jpg" => "image/jpeg",
+                ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".gif" => "image/gif",
+                ".bmp" => "image/bmp",
+                ".webp" => "image/webp",
+                _ => "application/octet-stream"
+            };
         }
     }
 }

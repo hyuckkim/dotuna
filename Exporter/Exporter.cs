@@ -86,7 +86,7 @@ namespace DoTuna
             var threadHtml = await _renderer.RenderThreadPageAsync(content);
             await Task.Run(() => File.WriteAllText(jsonPath, threadHtml));
 
-            _imageProvider.CopyRequiredImages(content.responses
+            if (!Setting.Instance.SingleHTML) _imageProvider.CopyRequiredImages(content.responses
                 .Select(res => res.attachment)
                 .Where(img => !string.IsNullOrEmpty(img))
                 .ToList()
