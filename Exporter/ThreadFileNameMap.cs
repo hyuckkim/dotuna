@@ -1,17 +1,37 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System;
 
 namespace DoTuna
 {
     public class ThreadFileName
     {
         public string ThreadId { get; }
-        public string FileName { get; }
+        public string[] FileNameSegments { get; }
+        public string FileName => string.Join("/", FileNameSegments);
         public ThreadFileName(JsonIndexDocument doc, string pattern)
         {
             ThreadId = doc.threadId.ToString();
-            FileName = ThreadFileNameMap.GetTemplateName(doc, pattern) + ".html";
+            var fileName = ThreadFileNameMap.GetTemplateName(doc, pattern) + ".html";
+            FileNameSegments = fileName.Split('/');
+        }
+        public string GetRelativePathTo(ThreadFileName target)
+        {
+            var from = this.FileNameSegments;
+            var to = target.FileNameSegments;
+            int len = Math.Min(from.Length, to.Length);
+            int common = 0;
+            while (common < len && from[common] == to[common]) common++;
+            var up = Enumerable.Repeat("..", from.Length - common - 1); // -1: 파일명 제외
+            var down = to.Skip(common);
+            var rel = up.Concat(down);
+            return string.Join("/", rel);
+        }
+        public string GetRelativePathToRoot()
+        {
+            if (FileNameSegments.Length <= 1) return "";
+            return string.Join("/", Enumerable.Repeat("..", FileNameSegments.Length - 1));
         }
     }
 
@@ -40,8 +60,6 @@ namespace DoTuna
         }
 
         public string this[string threadId] => GetFileName(threadId);
-
-        public IReadOnlyDictionary<string, ThreadFileName> AsDictionary() => _map;
         public static string GetTemplateName(JsonIndexDocument doc, string template)
         {
             if (string.IsNullOrEmpty(template)) return string.Empty;

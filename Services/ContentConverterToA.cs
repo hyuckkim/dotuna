@@ -2,8 +2,10 @@ namespace DoTuna
 {
     public class ContentConverterToA : ContentConverter
     {
-        public ContentConverterToA(ThreadFileNameMap fileNameMap) : base(fileNameMap)
+        private readonly ThreadFileName _origin;
+        public ContentConverterToA(ThreadFileNameMap fileNameMap, ThreadFileName origin) : base(fileNameMap)
         {
+            _origin = origin;
         }
 
         public override string ConvertContent(string content, int threadId)
@@ -21,7 +23,8 @@ namespace DoTuna
         protected override string MakeAnchorTag(string threadId, string resNo, string text, bool isExternal)
         {
             var targetAttr = isExternal ? " target=\"_blank\"" : "";
-            var anchor = string.IsNullOrEmpty(resNo) ? GetFileName(threadId) : $"{GetFileName(threadId)}#response_{resNo}";
+            var relativePath = _origin.GetRelativePathTo(_fileNameMap.Get(threadId));
+            var anchor = string.IsNullOrEmpty(resNo) ? relativePath : $"{relativePath}#response_{resNo}";
             return $"<a href=\"{anchor}\"{targetAttr}>{text}</a>";
         }
     } 
