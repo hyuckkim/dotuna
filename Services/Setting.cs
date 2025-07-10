@@ -8,6 +8,7 @@ namespace DoTuna
 
         public string Pattern { get; set; } = "{id}";
         public bool SingleHTML { get; set; } = false;
+        public bool UseCssFile { get; set; } = false;
 
         private Setting()
         {

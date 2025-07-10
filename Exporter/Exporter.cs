@@ -29,6 +29,7 @@ namespace DoTuna
 
             EnsurePath();
             await GenerateIndex();
+            if (Setting.Instance.UseCssFile) await GenerateCss();
             await GenerateAllThreads();
         }
         private void EnsurePath()
@@ -44,6 +45,15 @@ namespace DoTuna
             var indexHtml = await _renderer.RenderIndexPageAsync(_threads);
             await Task.Run(() => File.WriteAllText(indexPath, indexHtml));
             _progress?.Report("(index.html 생성됨)");
+        }
+        private async Task GenerateCss()
+        {
+            string CssPath = Path.Combine(ResultPath, "thread.css");
+            
+            _progress?.Report("(thread.css 생성 중)");
+            string cssContent = CssManager.Instance.GetContent();
+            await Task.Run(() => File.WriteAllText(CssPath, cssContent));
+            _progress?.Report("(thread.css 생성됨)");
         }
         private async Task GenerateAllThreads()
         {
