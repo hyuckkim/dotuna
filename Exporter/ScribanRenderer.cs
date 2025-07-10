@@ -39,7 +39,7 @@ namespace DoTuna
 
         public async Task<string> RenderThreadPageAsync(JsonThreadDocument threadModel)
         {
-            var responses = BuildResponses(threadModel);
+            var responses = await BuildResponses(threadModel);
             var model = new {
                 board_id = Escape(threadModel.boardId),
                 thread_id = threadModel.threadId.ToString(),
