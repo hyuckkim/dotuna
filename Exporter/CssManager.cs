@@ -24,7 +24,7 @@ namespace DoTuna
         {
             if (Setting.Instance.UseCssFile)
             {
-                return "<link rel=\"stylesheet\" href=\"style.css\">";
+                return "<link rel=\"stylesheet\" href=\"thread.css\">";
             }
             else
             {

@@ -15,7 +15,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Templates/index.html" />
     <EmbeddedResource Include="Templates/thread.html" />
-    <EmbeddedResource Include="Templates/style.css" />
+    <EmbeddedResource Include="Templates/archive.css" />
   </ItemGroup>
 
   <ItemGroup>
