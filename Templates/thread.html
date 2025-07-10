@@ -41,7 +41,7 @@
                     </div>
                     <div class="response_body">
                         {{ if res.attachment != "" }}
-                        <div><img src="data/{{ res.attachment }}" alt="{{ res.attachment }}" /></div>
+                        <div><img src="{{ res.attachment }}" alt="{{ res.attachment }}" /></div>
                         {{ end }}
                         {{ res.content }}
                     </div>
