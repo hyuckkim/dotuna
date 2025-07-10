@@ -13,8 +13,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Templates/thread.html" />
     <EmbeddedResource Include="Templates/index.html" />
     <EmbeddedResource Include="Templates/thread.html" />
+    <EmbeddedResource Include="Templates/thread.css" />
   </ItemGroup>
 
   <ItemGroup>

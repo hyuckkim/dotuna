@@ -12,10 +12,16 @@ namespace DoTuna
     {
         private readonly ThreadFileNameMap _fileNameMap;
         private readonly ImageProvider _imageProvider;
+        private readonly string _css;
         public ScribanRenderer(ThreadFileNameMap fileNameMap, ImageProvider imageProvider)
         {
             _imageProvider = imageProvider;
             _fileNameMap = fileNameMap;
+
+            var assembly = typeof(ScribanRenderer).Assembly;
+            using var stream = assembly.GetManifestResourceStream("DoTuna.Templates.thread.css");
+            using var reader = new StreamReader(stream, Encoding.UTF8);
+            _css = reader.ReadToEnd();
         }
 
         public async Task<string> RenderIndexPageAsync(List<JsonIndexDocument> threads)
@@ -40,7 +46,8 @@ namespace DoTuna
         public async Task<string> RenderThreadPageAsync(JsonThreadDocument threadModel)
         {
             var responses = await BuildResponses(threadModel);
-            var model = new {
+            var model = new
+            {
                 board_id = Escape(threadModel.boardId),
                 thread_id = threadModel.threadId.ToString(),
                 title = Escape(threadModel.title),
@@ -48,8 +55,9 @@ namespace DoTuna
                 created_at = Tuna(threadModel.createdAt),
                 updated_at = Tuna(threadModel.updatedAt),
                 size = threadModel.size.ToString(),
-                responses = responses
-            };
+                responses = responses,
+                css = "<style>" + _css + "</style>"
+            };  // TODO: <link rel="stylesheet" href="thread.css">
             return await RenderTemplateFromResourceAsync("DoTuna.Templates.thread.html", model);
         }
 
