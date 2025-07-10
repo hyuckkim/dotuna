@@ -19,7 +19,7 @@ namespace DoTuna
             _fileNameMap = fileNameMap;
 
             var assembly = typeof(ScribanRenderer).Assembly;
-            using var stream = assembly.GetManifestResourceStream("DoTuna.Templates.thread.css");
+            using var stream = assembly.GetManifestResourceStream("DoTuna.Templates.style.css");
             using var reader = new StreamReader(stream, Encoding.UTF8);
             _css = reader.ReadToEnd();
         }
