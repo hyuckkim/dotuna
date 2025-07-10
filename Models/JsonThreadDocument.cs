@@ -45,11 +45,7 @@ namespace DoTuna
 
         public static async Task<JsonThreadDocument> GetThreadAsync(string path)
         {
-            if (!File.Exists(path))
-                throw new FileNotFoundException($"Thread file not found: {path}");
-
-            using var reader = new StreamReader(path);
-            var jsonText = await reader.ReadToEndAsync();
+            var jsonText = await FileHelper.ReadAllTextAsync(path);
             return JsonConvert.DeserializeObject<JsonThreadDocument>(jsonText)
                 ?? throw new JsonException($"Failed to parse thread JSON file: {path}");
         }

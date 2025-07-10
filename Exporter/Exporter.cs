@@ -43,7 +43,7 @@ namespace DoTuna
 
             _progress?.Report("(index.html 생성 중)");
             var indexHtml = await _renderer.RenderIndexPageAsync(_threads);
-            await Task.Run(() => File.WriteAllText(indexPath, indexHtml));
+            await FileHelper.WriteAllTextAsync(indexPath, indexHtml);
             _progress?.Report("(index.html 생성됨)");
         }
         private async Task GenerateCss()
@@ -52,7 +52,7 @@ namespace DoTuna
             
             _progress?.Report("(thread.css 생성 중)");
             string cssContent = CssManager.Instance.GetContent();
-            await Task.Run(() => File.WriteAllText(CssPath, cssContent));
+            await FileHelper.WriteAllTextAsync(CssPath, cssContent);
             _progress?.Report("(thread.css 생성됨)");
         }
         private async Task GenerateAllThreads()
@@ -94,7 +94,7 @@ namespace DoTuna
 
             string jsonPath = Path.Combine(ResultPath, _fileNameMap[doc.threadId.ToString()]);
             var threadHtml = await _renderer.RenderThreadPageAsync(content);
-            await Task.Run(() => File.WriteAllText(jsonPath, threadHtml));
+            await FileHelper.WriteAllTextAsync(jsonPath, threadHtml);
 
             if (!Setting.Instance.SingleHTML) _imageProvider.CopyRequiredImages(content.responses
                 .Select(res => res.attachment)

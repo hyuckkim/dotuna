@@ -47,7 +47,7 @@ namespace DoTuna
             if (!File.Exists(filePath))
                 return Uri.EscapeDataString(fileName);
 
-            byte[] imageBytes = await Task.Run(() => File.ReadAllBytes(filePath));
+            byte[] imageBytes = await FileHelper.ReadAllByteAsync(filePath);
             string mimeType = GetMimeType(fileName);
             string base64Image = Convert.ToBase64String(imageBytes);
             return $"data:{mimeType};base64,{base64Image}";
