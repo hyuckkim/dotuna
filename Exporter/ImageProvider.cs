@@ -41,9 +41,9 @@ namespace DoTuna
             else return Path.Combine("data", Uri.EscapeDataString(fileName));
         }
 
-        private static async Task<string> GetDataHref(string fileName)
+        private async Task<string> GetDataHref(string fileName)
         {
-            byte[] imageBytes = await Task.Run(() => File.ReadAllBytes(fileName));
+            byte[] imageBytes = await Task.Run(() => File.ReadAllBytes(Path.Combine(_sourcePath, fileName)));
             string mimeType = GetMimeType(fileName);
             string base64Image = Convert.ToBase64String(imageBytes);
             return $"data:{mimeType};base64,{base64Image}";
