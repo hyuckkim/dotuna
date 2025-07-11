@@ -33,7 +33,7 @@ namespace DoTuna
                     file_name = FileHelper.EncodeToHref(_fileNameMap.GetFileName(doc.threadId))
                 }).ToList(),
                 page_count = pageCount,
-                preload = false
+                preload = Setting.Instance.PreloadIndex
             };
 
             return await RenderTemplateFromResourceAsync("DoTuna.Templates.index.html", model);
