@@ -18,7 +18,17 @@ namespace DoTuna
         public static async Task WriteAllTextAsync(string path, string content)
         {
             if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(content)) return;
+            var directory = Path.GetDirectoryName(path);
+            if (!string.IsNullOrEmpty(directory))
+            {
+                EnsurePath(directory);
+            }
             await Task.Run(() => File.WriteAllText(path, content));
+        }
+        public static void EnsurePath(string path)
+        {
+            if (!Directory.Exists(path))
+            Directory.CreateDirectory(path);
         }
     }
 }

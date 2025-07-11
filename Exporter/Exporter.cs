@@ -27,15 +27,10 @@ namespace DoTuna
             _imageProvider = new ImageProvider(SourcePath, ResultPath);
             _renderer = new ScribanRenderer(_fileNameMap, _imageProvider);
 
-            EnsurePath();
+            FileHelper.EnsurePath(ResultPath);
             await GenerateIndex();
             if (Setting.Instance.UseCssFile) await GenerateCss();
             await GenerateAllThreads();
-        }
-        private void EnsurePath()
-        {
-            if (!Directory.Exists(ResultPath))
-                Directory.CreateDirectory(ResultPath);
         }
         private async Task GenerateIndex()
         {
