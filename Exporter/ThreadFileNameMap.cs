@@ -5,11 +5,29 @@ using System;
 
 namespace DoTuna
 {
+    public static class EnumerableExtensions
+    {
+        public static IEnumerable<T> SkipLastOne<T>(this IEnumerable<T> source)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            using (var e = source.GetEnumerator())
+            {
+                if (!e.MoveNext()) yield break;
+                var prev = e.Current;
+                while (e.MoveNext())
+                {
+                    yield return prev;
+                    prev = e.Current;
+                }
+            }
+        }
+    }
     public class ThreadFileName
     {
         public int ThreadId { get; }
         public string[] FileNameSegments { get; }
         public string FileName => string.Join("/", FileNameSegments);
+        public string PathName => string.Join("/", FileNameSegments.SkipLastOne());
         public ThreadFileName(JsonIndexDocument doc, string pattern)
         {
             ThreadId = doc.threadId;

@@ -16,13 +16,12 @@ namespace DoTuna
             _resultPath = resultPath;
         }
 
-        public void CopyRequiredImages(List<string> requireImg)
+        public void CopyRequiredImages(List<string> requireImg, ThreadFileName thread)
         {
             if (requireImg.Count == 0) return;
 
-            string dataDir = Path.Combine(_resultPath, "data");
-            if (!Directory.Exists(dataDir))
-                Directory.CreateDirectory(dataDir);
+            string dataDir = Path.Combine(_resultPath, thread.PathName, "data");
+            FileHelper.EnsurePath(dataDir);
 
             Parallel.ForEach(requireImg, imgFile =>
             {

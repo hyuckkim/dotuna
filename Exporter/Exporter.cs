@@ -92,9 +92,10 @@ namespace DoTuna
             await FileHelper.WriteAllTextAsync(jsonPath, threadHtml);
 
             if (!Setting.Instance.SingleHTML) _imageProvider.CopyRequiredImages(content.responses
+                .Where(res => !string.IsNullOrEmpty(res.attachment))
                 .Select(res => res.attachment)
-                .Where(img => !string.IsNullOrEmpty(img))
-                .ToList()
+                .ToList(),
+                _fileNameMap.Get(doc.threadId)
             );
         }
 
