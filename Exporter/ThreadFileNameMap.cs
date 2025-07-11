@@ -162,7 +162,9 @@ namespace DoTuna
             if (string.IsNullOrEmpty(input))
                 return string.Empty;
 
-            var invalidChars = Path.GetInvalidFileNameChars();
+            var invalidChars = Path.GetInvalidFileNameChars()
+                .Where(c => c != '/' && c != '\\') // Allow slashes for relative paths
+                .ToArray();
             foreach (var c in invalidChars)
             {
                 input = input.Replace(c.ToString(), "");
