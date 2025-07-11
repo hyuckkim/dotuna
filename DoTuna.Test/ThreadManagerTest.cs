@@ -15,7 +15,7 @@ namespace DoTuna.Test
             public List<JsonIndexDocument> Get() => _docs;
         }
 
-        private JsonIndexDocument Doc(string title, string username, int id) => new JsonIndexDocument {
+        private JsonIndexDocument Doc(string title, string username, ulong id) => new JsonIndexDocument {
             title = title, username = username, threadId = id, createdAt = DateTime.Now, updatedAt = DateTime.Now, size = 1
         };
 
@@ -30,7 +30,7 @@ namespace DoTuna.Test
             mgr.AuthorFilter = "bar";
             var filtered = mgr.Filtered.ToList();
             Assert.Single(filtered);
-            Assert.Equal(1, filtered[0].threadId);
+            Assert.Equal(1UL, filtered[0].threadId);
         }
 
         [Fact]
@@ -58,8 +58,8 @@ namespace DoTuna.Test
             mgr.Check(d1);
             mgr.Check(d2);
             var checkedList = mgr.Checked.ToList();
-            Assert.Equal(1, checkedList[0].threadId);
-            Assert.Equal(2, checkedList[1].threadId);
+            Assert.Equal(1UL, checkedList[0].threadId);
+            Assert.Equal(2UL, checkedList[1].threadId);
         }
     }
 }
