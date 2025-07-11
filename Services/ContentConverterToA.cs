@@ -20,7 +20,7 @@ namespace DoTuna
             content = ConvertGeneralLinks(content);
             return content;
         }
-        protected override string MakeAnchorTag(string threadId, string resNo, string text, bool isExternal)
+        protected override string MakeAnchorTag(int threadId, string resNo, string text, bool isExternal)
         {
             var targetAttr = isExternal ? " target=\"_blank\"" : "";
             var relativePath = _origin.GetRelativePathTo(_fileNameMap.Get(threadId));

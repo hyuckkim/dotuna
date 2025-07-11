@@ -29,7 +29,7 @@ namespace DoTuna
                     var responseStart = m.Groups[3].Value;
                     if (string.IsNullOrEmpty(id) && string.IsNullOrEmpty(responseStart))
                         return m.Value;
-                    return MakeAnchorTag(id, responseStart, m.Value, false);
+                    return MakeAnchorTag(int.Parse(id), responseStart, m.Value, false);
                 },
                 RegexOptions.IgnoreCase
             );
@@ -44,7 +44,7 @@ namespace DoTuna
                 m => {
                     var threadId = m.Groups[2].Value;
                     var resNo = m.Groups[3].Value;
-                    return MakeAnchorTag(threadId, resNo, m.Value, true);
+                    return MakeAnchorTag(int.Parse(threadId), resNo, m.Value, true);
                 },
                 RegexOptions.IgnoreCase
             );
@@ -59,7 +59,7 @@ namespace DoTuna
                 m => {
                     var threadId = m.Groups[2].Value;
                     var resNo = m.Groups[3].Value;
-                    return MakeAnchorTag(threadId, resNo, m.Value, true);
+                    return MakeAnchorTag(int.Parse(threadId), resNo, m.Value, true);
                 },
                 RegexOptions.IgnoreCase
             );
@@ -74,7 +74,7 @@ namespace DoTuna
                 m => {
                     var threadId = m.Groups[2].Value;
                     // resNo가 없는 경우 빈 문자열 전달
-                    return MakeAnchorTag(threadId, "", m.Value, true);
+                    return MakeAnchorTag(int.Parse(threadId), "", m.Value, true);
                 },
                 RegexOptions.IgnoreCase
             );
@@ -91,10 +91,10 @@ namespace DoTuna
             );
         }
 
-        protected string GetFileName(string threadId) => Uri
+        protected string GetFileName(int threadId) => Uri
             .EscapeDataString(_fileNameMap.GetFileName(threadId));
 
         public abstract string ConvertContent(string content, int threadId);
-        protected abstract string MakeAnchorTag(string threadId, string resNo, string text, bool isExternal);
+        protected abstract string MakeAnchorTag(int threadId, string resNo, string text, bool isExternal);
     }
 }
