@@ -24,9 +24,10 @@ namespace DoTuna
                 if (string.IsNullOrEmpty(value))
                     return "";
 
+                string safeValue = string.Concat(value.Split(System.IO.Path.GetInvalidFileNameChars()));
                 return string.IsNullOrEmpty(option)
-                    ? value
-                    : ApplyTruncateWithOmit(value, option);
+                    ? safeValue
+                    : ApplyTruncateWithOmit(safeValue, option);
             });
         }
 
