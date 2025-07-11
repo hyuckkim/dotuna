@@ -63,7 +63,7 @@ namespace DoTuna
             var results = await Task.WhenAll(tasks);
             return results.ToList();
         }
-        private async Task<object> BuildRes(Response res, int threadId)
+        private async Task<object> BuildRes(Response res, ulong threadId)
         {
             var converter = new ContentConverterToA(_fileNameMap, _fileNameMap.Get(threadId));
             return new {

@@ -22,7 +22,7 @@ namespace DoTuna
         private string ConvertInput(string input)
         {
             converter.Url = txtAddress.Text.Trim();
-            return converter.ConvertContent(input, -1);
+            return converter.ConvertContent(input, 0UL);
         }
     }
 }
