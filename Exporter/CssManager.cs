@@ -20,11 +20,11 @@ namespace DoTuna
             return reader.ReadToEnd();
         }
 
-        public string GetLink()
+        public string GetLink(ThreadFileName thread)
         {
             if (Setting.Instance.UseCssFile)
             {
-                return "<link rel=\"stylesheet\" href=\"thread.css\">";
+                return $"<link rel=\"stylesheet\" href=\"{Path.Combine(thread.GetRelativePathToRoot(), "thread.css")}\">";
             }
             else
             {

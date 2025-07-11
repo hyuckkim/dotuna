@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Scriban;
 
@@ -37,20 +38,20 @@ namespace DoTuna
             return await RenderTemplateFromResourceAsync("DoTuna.Templates.index.html", model);
         }
 
-        public async Task<string> RenderThreadPageAsync(JsonThreadDocument threadModel)
+        public async Task<string> RenderThreadPageAsync(JsonThreadDocument thread)
         {
-            var responses = await BuildResponses(threadModel);
+            var responses = await BuildResponses(thread);
             var model = new
             {
-                board_id = Escape(threadModel.boardId),
-                thread_id = threadModel.threadId.ToString(),
-                title = Escape(threadModel.title),
-                username = Escape(threadModel.username),
-                created_at = Tuna(threadModel.createdAt),
-                updated_at = Tuna(threadModel.updatedAt),
-                size = threadModel.size.ToString(),
+                board_id = Escape(thread.boardId),
+                thread_id = thread.threadId.ToString(),
+                title = Escape(thread.title),
+                username = Escape(thread.username),
+                created_at = Tuna(thread.createdAt),
+                updated_at = Tuna(thread.updatedAt),
+                size = thread.size.ToString(),
                 responses = responses,
-                css = CssManager.Instance.GetLink()
+                css = CssManager.Instance.GetLink(_fileNameMap.Get(thread.threadId))
             };
             return await RenderTemplateFromResourceAsync("DoTuna.Templates.thread.html", model);
         }
