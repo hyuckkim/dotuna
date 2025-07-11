@@ -29,7 +29,7 @@ namespace DoTuna
                     thread_id = doc.threadId,
                     thread_title = Escape(doc.title),
                     thread_username = Escape(doc.username),
-                    file_name = Uri.EscapeDataString(_fileNameMap.GetFileName(doc.threadId.ToString()))
+                    file_name = Uri.EscapeDataString(_fileNameMap.GetFileName(doc.threadId))
                 }).ToList(),
                 page_count = pageCount
             };
@@ -57,14 +57,14 @@ namespace DoTuna
 
         private async Task<List<object>> BuildResponses(JsonThreadDocument data)
         {
-            var converter = new ContentConverterToA(_fileNameMap, _fileNameMap.Get(data.threadId.ToString()));
+            var converter = new ContentConverterToA(_fileNameMap, _fileNameMap.Get(data.threadId));
             Task<object>[] tasks = data.responses.Select(res => BuildRes(res, data.threadId)).ToArray();
             var results = await Task.WhenAll(tasks);
             return results.ToList();
         }
         private async Task<object> BuildRes(Response res, int threadId)
         {
-            var converter = new ContentConverterToA(_fileNameMap, _fileNameMap.Get(threadId.ToString()));
+            var converter = new ContentConverterToA(_fileNameMap, _fileNameMap.Get(threadId));
             return new {
                 sequence = res.sequence.ToString(),
                 username = Escape(res.username),

@@ -92,7 +92,7 @@ namespace DoTuna
             string threadPath = Path.Combine(SourcePath, $"{doc.threadId}.json");
             JsonThreadDocument content = await JsonThreadDocument.GetThreadAsync(threadPath);
 
-            string jsonPath = Path.Combine(ResultPath, _fileNameMap[doc.threadId.ToString()]);
+            string jsonPath = Path.Combine(ResultPath, _fileNameMap[doc.threadId]);
             var threadHtml = await _renderer.RenderThreadPageAsync(content);
             await FileHelper.WriteAllTextAsync(jsonPath, threadHtml);
 

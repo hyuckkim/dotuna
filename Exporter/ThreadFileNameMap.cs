@@ -7,12 +7,12 @@ namespace DoTuna
 {
     public class ThreadFileName
     {
-        public string ThreadId { get; }
+        public int ThreadId { get; }
         public string[] FileNameSegments { get; }
         public string FileName => string.Join("/", FileNameSegments);
         public ThreadFileName(JsonIndexDocument doc, string pattern)
         {
-            ThreadId = doc.threadId.ToString();
+            ThreadId = doc.threadId;
             var fileName = ThreadFileNameMap.GetTemplateName(doc, pattern) + ".html";
             FileNameSegments = fileName.Split('/');
         }
@@ -37,29 +37,29 @@ namespace DoTuna
 
     public class ThreadFileNameMap
     {
-        private readonly Dictionary<string, ThreadFileName> _map;
+        private readonly Dictionary<int, ThreadFileName> _map;
         public int FileNameCount { get => _map.Values.Select(x => x.FileName).Distinct().Count(); }
 
         public ThreadFileNameMap(IEnumerable<JsonIndexDocument> threads)
         {
             _map = threads.ToDictionary(
-                doc => doc.threadId.ToString(),
+                doc => doc.threadId,
                 doc => new ThreadFileName(doc, Setting.Instance.Pattern)
             );
         }
 
-        public string GetFileName(string threadId)
+        public string GetFileName(int threadId)
         {
             return _map.TryGetValue(threadId, out var f) ? f.FileName : threadId + ".html";
         }
 
-        public ThreadFileName Get(string threadId)
+        public ThreadFileName Get(int threadId)
         {
             return _map.TryGetValue(threadId, out var f) ? f : new ThreadFileName(
-                new JsonIndexDocument { threadId = int.Parse(threadId) }, Setting.Instance.Pattern);
+                new JsonIndexDocument { threadId = threadId }, Setting.Instance.Pattern);
         }
 
-        public string this[string threadId] => GetFileName(threadId);
+        public string this[int threadId] => GetFileName(threadId);
         public static string GetTemplateName(JsonIndexDocument doc, string template)
         {
             if (string.IsNullOrEmpty(template)) return string.Empty;
