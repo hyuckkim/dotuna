@@ -11,7 +11,7 @@ namespace DoTuna.Test
         {
             var doc = new JsonIndexDocument
             {
-                threadId = 42,
+                threadId = 42UL,
                 title = "TestTitle",
                 username = "TestUser",
                 createdAt = new DateTime(2024, 6, 1),
@@ -31,7 +31,7 @@ namespace DoTuna.Test
         {
             var doc = new JsonIndexDocument
             {
-                threadId = 1,
+                threadId = 1UL,
                 title = "Ti:t*le|?",
                 username = "User<>",
                 createdAt = DateTime.Now,
@@ -56,7 +56,7 @@ namespace DoTuna.Test
         {
             var doc = new JsonIndexDocument
             {
-                threadId = 1,
+                threadId = 1UL,
                 title = new string('A', 300),
                 username = "User",
                 createdAt = DateTime.Now,
@@ -83,7 +83,7 @@ namespace DoTuna.Test
         {
             var doc = new JsonIndexDocument
             {
-                threadId = 1,
+                threadId = 1UL,
                 title = "ABCDEFGHIJKLMNO",     // 15자
                 username = "ZXYWVUTSRQPONMLK", // 16자
                 createdAt = new DateTime(2024, 6, 1),
@@ -108,7 +108,7 @@ namespace DoTuna.Test
         {
             var doc = new JsonIndexDocument
             {
-                threadId = 1,
+                threadId = 1UL,
                 title = "ABCDEFGHIJKLMNOPQRSTUVWXYZ", // 26자
                 username = "UserNameExample",             // 15자
                 createdAt = new DateTime(2024, 6, 1),

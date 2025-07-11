@@ -10,10 +10,10 @@ namespace DoTuna.Test
         private ContentConverter GetConverter()
         {
             var threads = new List<JsonIndexDocument> {
-                new JsonIndexDocument { threadId = 123, title = "t", username = "u", createdAt = DateTime.Now, updatedAt = DateTime.Now, size = 1 }
+                new JsonIndexDocument { threadId = 123UL, title = "t", username = "u", createdAt = DateTime.Now, updatedAt = DateTime.Now, size = 1 }
             };
             var fileNameMap = new ThreadFileNameMap(threads);
-            return new ContentConverterToA(fileNameMap, fileNameMap.Get(123));
+            return new ContentConverterToA(fileNameMap, fileNameMap.Get(123UL));
         }
 
         [Theory]
@@ -75,8 +75,8 @@ namespace DoTuna.Test
         public void ConvertContent_ReplacesLinks(string input, string expected)
         {
             var converter = GetConverter();
-            var thread = new JsonThreadDocument { threadId = 123 };
-            var res = new Response { threadId = 123 };
+            var thread = new JsonThreadDocument { threadId = 123UL };
+            var res = new Response { threadId = 123UL };
             var output = converter.ConvertContent(input, thread.threadId);
             Assert.Contains(expected, output);
         }

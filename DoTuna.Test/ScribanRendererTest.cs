@@ -15,7 +15,7 @@ namespace DoTuna.Test
             var threads = new List<JsonIndexDocument>
             {
                 new JsonIndexDocument {
-                    threadId = 1,
+                    threadId = 1UL,
                     title = "테스트 제목",
                     username = "테스터",
                     createdAt = DateTime.Now,
@@ -42,7 +42,7 @@ namespace DoTuna.Test
             var thread = new JsonThreadDocument
             {
                 boardId = "b",
-                threadId = 1,
+                threadId = 1UL,
                 title = "스레드 제목",
                 username = "작성자",
                 createdAt = new DateTime(2024, 6, 8, 12, 0, 0),
@@ -51,7 +51,7 @@ namespace DoTuna.Test
                 responses = new List<Response>
                 {
                     new Response {
-                        threadId = 1,
+                        threadId = 1UL,
                         sequence = 1,
                         username = "댓글러",
                         userId = "user1",
@@ -63,7 +63,7 @@ namespace DoTuna.Test
             };
             var threads = new List<JsonIndexDocument> {
                 new JsonIndexDocument {
-                    threadId = 1,
+                    threadId = 1UL,
                     title = "스레드 제목",
                     username = "작성자",
                     createdAt = thread.createdAt,
@@ -90,7 +90,7 @@ namespace DoTuna.Test
             var thread = new JsonThreadDocument
             {
             boardId = "b",
-            threadId = 2,
+            threadId = 2UL,
             title = "첨부 테스트",
             username = "이미지작성자",
             createdAt = new DateTime(2024, 6, 8, 14, 0, 0),
@@ -99,7 +99,7 @@ namespace DoTuna.Test
             responses = new List<Response>
             {
                 new Response {
-                threadId = 2,
+                threadId = 2UL,
                 sequence = 1,
                 username = "이미지댓글러",
                 userId = "user2",
@@ -111,7 +111,7 @@ namespace DoTuna.Test
             };
             var threads = new List<JsonIndexDocument> {
             new JsonIndexDocument {
-                threadId = 2,
+                threadId = 2UL,
                 title = "첨부 테스트",
                 username = "이미지작성자",
                 createdAt = thread.createdAt,

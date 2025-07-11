@@ -24,7 +24,7 @@ namespace DoTuna
     }
     public class ThreadFileName : IEquatable<ThreadFileName>
     {
-        public int ThreadId { get; }
+        public ulong ThreadId { get; }
         public string[] FileNameSegments { get; }
         public string FileName => string.Join("/", FileNameSegments);
         public string PathName => string.Join("/", FileNameSegments.SkipLastOne());
@@ -36,7 +36,7 @@ namespace DoTuna
             FileNameSegments = fileName.Split('/');
         }
 
-        public ThreadFileName(int threadId, string[] fileNameSegments)
+        public ThreadFileName(ulong threadId, string[] fileNameSegments)
         {
             ThreadId = threadId;
             FileNameSegments = fileNameSegments ?? throw new ArgumentNullException(nameof(fileNameSegments));
@@ -89,7 +89,7 @@ namespace DoTuna
         {
             unchecked
             {
-                int hash = ThreadId;
+                int hash = ThreadId.GetHashCode();
                 foreach (var segment in FileNameSegments)
                 {
                     hash = (hash * 397) ^ (segment != null ? segment.GetHashCode() : 0);
@@ -113,7 +113,7 @@ namespace DoTuna
 
     public class ThreadFileNameMap
     {
-        private readonly Dictionary<int, ThreadFileName> _map;
+        private readonly Dictionary<ulong, ThreadFileName> _map;
         public int FileNameCount { get => _map.Values.Select(x => x.FileName).Distinct().Count(); }
 
         public ThreadFileNameMap(IEnumerable<JsonIndexDocument> threads)
@@ -124,18 +124,18 @@ namespace DoTuna
             );
         }
 
-        public string GetFileName(int threadId)
+        public string GetFileName(ulong threadId)
         {
             return _map.TryGetValue(threadId, out var f) ? f.FileName : threadId + ".html";
         }
 
-        public ThreadFileName Get(int threadId)
+        public ThreadFileName Get(ulong threadId)
         {
             return _map.TryGetValue(threadId, out var f) ? f : new ThreadFileName(
                 new JsonIndexDocument { threadId = threadId }, Setting.Instance.Pattern);
         }
 
-        public string this[int threadId] => GetFileName(threadId);
+        public string this[ulong threadId] => GetFileName(threadId);
         public static string GetTemplateName(JsonIndexDocument doc, string template)
         {
             if (string.IsNullOrEmpty(template)) return string.Empty;

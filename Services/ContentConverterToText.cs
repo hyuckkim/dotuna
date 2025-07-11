@@ -12,7 +12,7 @@ namespace DoTuna
                 Url = Url.TrimEnd('/');
         }
 
-        public override string ConvertContent(string content, int threadId)
+        public override string ConvertContent(string content, ulong threadId)
         {
             if (string.IsNullOrEmpty(content)) return string.Empty;
 
@@ -27,7 +27,7 @@ namespace DoTuna
         }
         
         // >>threadId>>n 앵커 변환 (&gt;가 아니라 > 확인)
-        protected string ConvertRawAnchors(string content, int threadId)
+        protected string ConvertRawAnchors(string content, ulong threadId)
         {
             return Regex.Replace(
                 content,
@@ -37,7 +37,7 @@ namespace DoTuna
                     var responseStart = m.Groups[3].Value;
                     if (string.IsNullOrEmpty(id) && string.IsNullOrEmpty(responseStart))
                         return m.Value;
-                    return MakeAnchorTag(int.Parse(id), responseStart, m.Value, false);
+                    return MakeAnchorTag(ulong.Parse(id), responseStart, m.Value, false);
                 },
                 RegexOptions.IgnoreCase
             );
@@ -51,12 +51,12 @@ namespace DoTuna
                 m => {
                     var threadId = m.Groups[2].Value;
                     // resNo가 없는 경우 빈 문자열 전달
-                    return MakeAnchorTag(int.Parse(threadId), "", m.Value, true);
+                    return MakeAnchorTag(ulong.Parse(threadId), "", m.Value, true);
                 },
                 RegexOptions.IgnoreCase
             );
         }
-        protected override string MakeAnchorTag(int threadId, string resNo, string text, bool isExternal)
+        protected override string MakeAnchorTag(ulong threadId, string resNo, string text, bool isExternal)
         {
             var anchor = string.IsNullOrEmpty(resNo) ? GetFileName(threadId) : $"{GetFileName(threadId)}#response_{resNo}";
             return $"{Url}/{anchor}";

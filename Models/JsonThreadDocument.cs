@@ -9,7 +9,7 @@ namespace DoTuna
     public class Response
     {
 #pragma warning disable IDE1006 // Naming Styles: Json has camelCase but c# is PascalCase
-        public int threadId { get; set; } = 0;
+        public ulong threadId { get; set; } = 0;
         public int sequence { get; set; } = 0;
         public string username { get; set; } = "";
         public string userId { get; set; } = "";
@@ -24,7 +24,7 @@ namespace DoTuna
 #pragma warning disable IDE1006 // Naming Styles: Json has camelCase but c# is PascalCase
         public string version { get; set; } = "";
         public string boardId { get; set; } = "";
-        public int threadId { get; set; } = 0;
+        public ulong threadId { get; set; } = 0;
         public string title { get; set; } = "";
         public string username { get; set; } = "";
         public DateTime createdAt { get; set; } = new DateTime(0);
