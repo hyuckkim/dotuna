@@ -51,7 +51,7 @@ namespace DoTuna
                 size = threadModel.size.ToString(),
                 responses = responses,
                 css = CssManager.Instance.GetLink()
-            };  // TODO: <link rel="stylesheet" href="thread.css">
+            };
             return await RenderTemplateFromResourceAsync("DoTuna.Templates.thread.html", model);
         }
 
