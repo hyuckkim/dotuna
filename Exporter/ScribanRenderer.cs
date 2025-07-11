@@ -30,7 +30,7 @@ namespace DoTuna
                     thread_id = doc.threadId,
                     thread_title = Escape(doc.title),
                     thread_username = Escape(doc.username),
-                    file_name = Uri.EscapeDataString(_fileNameMap.GetFileName(doc.threadId))
+                    file_name = _fileNameMap.GetFileName(doc.threadId)
                 }).ToList(),
                 page_count = pageCount
             };
