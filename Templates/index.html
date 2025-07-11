@@ -23,19 +23,23 @@
         <input class="search_container" type="text" placeholder="검색" oninput="Build()">
     </nav>
     <div id="pagination">
-    {{ for i in 0..(page_count - 1) }}
-    <button onclick="Build({{ i }})">{{ i + 1 }}</button>
+    {{ if preload }}
+        {{ for i in 0..(page_count - 1) }}
+        <button onclick="Build({{ i }})">{{ i + 1 }}</button>
+        {{ end }}
     {{ end }}
     </div>
     <div id="thread_list">
-    {{ for doc in threads limit:100 }}
-    <div><ul>
-        <li class="thread_id">{{ doc.thread_id }}</li>
-        <li class="thread_title">
-        <a href="{{ doc.file_name }}" target="_blank">{{ doc.thread_title }}</a>
-        </li>
-        <li class="thread_username">{{ doc.thread_username }}</li>
-    </ul></div>
+    {{ if preload }}
+        {{ for doc in threads limit:100 }}
+        <div><ul>
+            <li class="thread_id">{{ doc.thread_id }}</li>
+            <li class="thread_title">
+            <a href="{{ doc.file_name }}" target="_blank">{{ doc.thread_title }}</a>
+            </li>
+            <li class="thread_username">{{ doc.thread_username }}</li>
+        </ul></div>
+        {{ end }}
     {{ end }}
     </div>
 
@@ -70,6 +74,9 @@
     };
     const sv = () => document.querySelector(".search_container").value;
     const filtered = () => data.filter((item) => item.thread_title.includes(sv()) || item.thread_username.includes(sv()));
+    {{ if !preload }}
+        Build();
+    {{ end }}
     </script>
 </body>
 </html>
