@@ -15,20 +15,20 @@
         </div>
         <div class="thread_body">
             <ul class="response_list">
-                {{ for res in responses }}
+                {{- for res in responses -}}
                 <li class="response" id="response_{{ res.sequence }}">
                     <div class="response_header">
                         <p><b><a href="#response_{{ res.sequence }}"> {{ res.sequence }} </a></b> {{ res.username }} ({{ res.user_id }})</p>
                         <p>{{ res.created_at }}</p>
                     </div>
                     <div class="response_body">
-                        {{ if res.attachment != "" }}
+                        {{- if res.attachment != "" -}}
                         <div><img src="{{ res.attachment }}" alt="{{ res.attachment }}" /></div>
-                        {{ end }}
+                        {{- end -}}
                         {{ res.content }}
                     </div>
                 </li>
-                {{ end }}
+                {{- end -}}
             </ul>
         </div>
     </article>

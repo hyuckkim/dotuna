@@ -23,15 +23,15 @@
         <input class="search_container" type="text" placeholder="검색" oninput="Build()">
     </nav>
     <div id="pagination">
-    {{ if preload }}
-        {{ for i in 0..(page_count - 1) }}
+    {{- if preload -}}
+        {{- for i in 0..(page_count - 1) -}}
         <button onclick="Build({{ i }})">{{ i + 1 }}</button>
-        {{ end }}
-    {{ end }}
+        {{- end -}}
+    {{- end -}}
     </div>
     <div id="thread_list">
-    {{ if preload }}
-        {{ for doc in threads limit:100 }}
+    {{- if preload -}}
+        {{- for doc in threads limit:100 -}}
         <div><ul>
             <li class="thread_id">{{ doc.thread_id }}</li>
             <li class="thread_title">
@@ -39,20 +39,20 @@
             </li>
             <li class="thread_username">{{ doc.thread_username }}</li>
         </ul></div>
-        {{ end }}
-    {{ end }}
+        {{- end -}}
+    {{- end -}}
     </div>
 
     <script>
     const data = [
-        {{ for doc in threads }}
+        {{- for doc in threads -}}
         {
             thread_id: "{{ doc.thread_id }}",
             thread_title: "{{ doc.thread_title }}",
             thread_username: "{{ doc.thread_username }}",
             file_name: "{{ doc.file_name }}"
         },
-        {{ end }}
+        {{- end -}}
     ];
     window.Build = (pI = 0) => {
         let pagination = '';
