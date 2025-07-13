@@ -151,8 +151,7 @@ namespace DoTuna
                 Setting.Instance.Pattern = "{id}";
             }
             
-            var fileNameMap = new ThreadFileNameMap(threadManager.Checked);
-            if (fileNameMap.FileNameCount != threadManager.Checked.Count())
+            if (!new ThreadFileNameMap(threadManager.Checked).IsUnique)
             {
                 MessageBox.Show("제목 템플릿이 잘못되어 생성할 파일 이름이 중복됩니다.", "경고", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;

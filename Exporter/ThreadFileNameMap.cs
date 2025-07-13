@@ -8,7 +8,7 @@ namespace DoTuna
     public class ThreadFileNameMap
     {
         private readonly Dictionary<ulong, ThreadFileName> _map;
-        public int FileNameCount { get => _map.Values.Select(x => x.FileName).Distinct().Count(); }
+        public bool IsUnique { get => _map.Values.Select(x => x.FileName).Distinct().Count() == _map.Count; }
 
         public ThreadFileNameMap(IEnumerable<JsonIndexDocument> threads)
         {
