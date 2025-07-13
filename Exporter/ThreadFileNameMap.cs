@@ -30,24 +30,6 @@ namespace DoTuna
         }
 
         public string this[ulong threadId] => GetFileName(threadId);
-        public static string GetTemplateName(JsonIndexDocument doc, string template)
-        {
-            if (string.IsNullOrEmpty(template)) return string.Empty;
-            var values = new Dictionary<string, string>
-            {
-                { "id", doc.threadId.ToString() },
-                { "title", doc.title },
-                { "name", doc.username },
-                { "created", doc.createdAt.ToString("yyyy-MM-dd") },
-                { "updated", doc.updatedAt.ToString("yyyy-MM-dd") },
-                { "size", doc.size.ToString() }
-            };
-
-            return TemplateFormatter
-                .Format(template, values)
-                .ReplaceInvalidFileNameChars()
-                .Truncate(200);
-        }
     }
     internal static class StringExtensions
     {

@@ -31,8 +31,7 @@ namespace DoTuna
         public ThreadFileName(JsonIndexDocument doc, string pattern)
         {
             ThreadId = doc.threadId;
-            var fileName = ThreadFileNameMap.GetTemplateName(doc, pattern) + ".html";
-            FileNameSegments = fileName.Split('/');
+            FileNameSegments = (GetTemplateName(doc, pattern) + ".html").Split('/');
         }
 
         public ThreadFileName(ulong threadId, string[] fileNameSegments)
@@ -61,6 +60,30 @@ namespace DoTuna
             if (FileNameSegments.Length <= 1) return "";
             return string.Join("/", Enumerable.Repeat("..", FileNameSegments.Length - 1));
         }
+
+        public static string GetTemplateName(JsonIndexDocument doc, string template)
+        {
+            if (string.IsNullOrEmpty(template)) return string.Empty;
+            var values = new Dictionary<string, string>
+            {
+                { "id", doc.threadId.ToString() },
+                { "title", doc.title },
+                { "name", doc.username },
+                { "created", doc.createdAt.ToString("yyyy-MM-dd") },
+                { "updated", doc.updatedAt.ToString("yyyy-MM-dd") },
+                { "size", doc.size.ToString() }
+            };
+
+            return TemplateFormatter
+                .Format(template, values)
+                .ReplaceInvalidFileNameChars()
+                .Truncate(200);
+        }
+
+
+
+
+
 
         public override bool Equals(object obj)
         {
