@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,6 +8,22 @@ namespace DoTuna
 {
     public static class FileHelper
     {
+        private static readonly Dictionary<string, object> _pathLocks = new Dictionary<string, object>();
+        private static readonly object _lockDictLock = new object();
+
+        private static object GetLockForPath(string path)
+        {
+            lock (_lockDictLock)
+            {
+                if (!_pathLocks.TryGetValue(path, out var lockObj))
+                {
+                    lockObj = new object();
+                    _pathLocks[path] = lockObj;
+                }
+                return lockObj;
+            }
+        }
+
         public static async Task<string> ReadAllTextAsync(string path)
         {
             if (!File.Exists(path)) return string.Empty;
@@ -20,13 +37,24 @@ namespace DoTuna
         public static async Task WriteAllTextAsync(string path, string content)
         {
             if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(content)) return;
+
             var directory = Path.GetDirectoryName(path);
             if (!string.IsNullOrEmpty(directory))
             {
                 EnsurePath(directory);
             }
-            await Task.Run(() => File.WriteAllText(path, content));
+
+            var pathLock = GetLockForPath(path);
+
+            await Task.Run(() =>
+            {
+                lock (pathLock)
+                {
+                    File.WriteAllText(path, content);
+                }
+            });
         }
+
         public static void EnsurePath(string path)
         {
             if (!Directory.Exists(path))
