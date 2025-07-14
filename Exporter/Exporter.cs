@@ -38,11 +38,15 @@ namespace DoTuna
             var existData = await IndexParser.ParseIndex(indexPath);
 
             _progress?.Report("(index.html 생성 중)");
-            var indexHtml = await _renderer.RenderIndexPageAsync(
-                _threads
-                    .Select(doc => HtmlIndexDocument.FromJson(doc, _fileNameMap))
-                    .Union(existData).ToList()
-            );
+            var newDocs = _threads.Select(doc => HtmlIndexDocument.FromJson(doc, _fileNameMap)).ToList();
+            var existingDocs = existData.ToList();
+
+            var fileNameSet = new HashSet<string>(newDocs.Select(d => d.file_name));
+            var filteredExistDocs = existingDocs.Where(d => !fileNameSet.Contains(d.file_name));
+
+            var mergedList = newDocs.Concat(filteredExistDocs).ToList();
+
+            var indexHtml = await _renderer.RenderIndexPageAsync(mergedList);
             await FileHelper.WriteAllTextAsync(indexPath, indexHtml);
             _progress?.Report("(index.html 생성됨)");
         }
