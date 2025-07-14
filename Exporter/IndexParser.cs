@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -24,16 +23,24 @@ namespace DoTuna
 
             string dataContent = match.Groups[1].Value;
 
-            // 2. JS 객체 표기법 → JSON 변환
-            // 속성명에 따옴표 추가 (key: -> "key":)
+            // 1. 속성명에 큰따옴표 씌우기 (key: -> "key":)
             string jsonContent = Regex.Replace(dataContent, @"(\w+):", @"""$1"":");
 
-            // 배열의 마지막에 쉼표 있을 경우 제거
+            // 2. 문자열 값 안전하게 escape 처리
+            // 문자열 값은 "..."로 되어 있다고 가정
+            jsonContent = Regex.Replace(jsonContent, @"""([^""]*?)""", m => {
+                string s = m.Value; // ex: "some "text" here"
+                // 내부 큰따옴표는 \"로, 역슬래시는 \\로, 줄바꿈은 \n으로 변환
+                string inner = s.Substring(1, s.Length - 2);
+                inner = inner.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\r", "").Replace("\n", "\\n");
+                return $"\"{inner}\"";
+            });
+
+            // 3. 마지막 쉼표 제거
             jsonContent = "[" + jsonContent.Trim().TrimEnd(',') + "]";
 
-            // 3. JSON 파싱
+            // 4. JSON 파싱
             return JsonConvert.DeserializeObject<List<HtmlIndexDocument>>(jsonContent) ?? new List<HtmlIndexDocument>();
-
         }
     }
 }
