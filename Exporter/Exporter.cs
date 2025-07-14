@@ -55,7 +55,7 @@ namespace DoTuna
             int completed = 0;
             ReportCount(0);
 
-            var semaphore = new SemaphoreSlim(Environment.ProcessorCount * 2);
+            var semaphore = new SemaphoreSlim(Setting.Instance.ThreadCount);
 
             var tasks = new List<Task>();
 

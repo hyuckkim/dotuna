@@ -40,8 +40,9 @@ namespace DoTuna
         (Control, Control) AddSettingControl(string labelText, string value, Action<string> setter)
         {
             var label = new Label { Text = labelText, Anchor = AnchorStyles.Left, AutoSize = true };
-            var textbox = new TextBox { Text = value, Width = 300 };
+            var textbox = new TextBox { Text = value, Dock = DockStyle.Fill };
             textbox.TextChanged += (sender, e) => setter(textbox.Text);
+
             _table.Controls.Add(label, 0, _settingRow);
             _table.Controls.Add(textbox, 1, _settingRow);
             _settingRow++;
@@ -52,10 +53,30 @@ namespace DoTuna
             var label = new Label { Text = labelText, Anchor = AnchorStyles.Left, AutoSize = true };
             var checkbox = new CheckBox { Checked = value, AutoSize = true };
             checkbox.CheckedChanged += (sender, e) => setter(checkbox.Checked);
+
             _table.Controls.Add(label, 0, _settingRow);
             _table.Controls.Add(checkbox, 1, _settingRow);
             _settingRow++;
             return (label, checkbox);
+        }
+
+        class NumericProp
+        {
+            public int min = 0;
+            public int max = 1000000;
+        }
+        (Control, Control) AddSettingControl(string labelText, int value, Action<int> setter, NumericProp prop = null)
+        {
+            if (prop == null) prop = new NumericProp();
+
+            var label = new Label { Text = labelText, Anchor = AnchorStyles.Left, AutoSize = true };
+            var numericUpDown = new NumericUpDown { Value = value, Minimum = prop.min, Maximum = prop.max, Dock = DockStyle.Fill };
+            numericUpDown.ValueChanged += (sender, e) => setter((int)numericUpDown.Value);
+
+            _table.Controls.Add(label, 0, _settingRow);
+            _table.Controls.Add(numericUpDown, 1, _settingRow);
+            _settingRow++;
+            return (label, numericUpDown);
         }
         void AddTooltip((Control a, Control b) controls, string text)
         {

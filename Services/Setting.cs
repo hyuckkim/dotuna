@@ -1,3 +1,5 @@
+using System;
+
 namespace DoTuna
 {
     public class Setting
@@ -10,6 +12,7 @@ namespace DoTuna
         public bool SingleHTML { get; set; } = false;
         public bool UseCssFile { get; set; } = false;
         public bool PreloadIndex { get; set; } = false;
+        public int ThreadCount { get; set; } = Environment.ProcessorCount * 2;
 
         private Setting()
         {

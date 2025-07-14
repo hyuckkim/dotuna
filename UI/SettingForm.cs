@@ -37,6 +37,14 @@ namespace DoTuna
                 "생성하지 않으면 인덱스 페이지를 열 때마다 로컬 함수가 동작해 페이지를 생성합니다.\n" +
                 "생성하면 인덱스 페이지의 용량이 아주 조금 커집니다."
             );
+            AddTooltip(
+                AddSettingControl("생성 스레드 수", Setting.Instance.ThreadCount, v => Setting.Instance.ThreadCount = v, new NumericProp { min = 1, max = 64 }),
+                "스레드를 생성할 때 사용할 스레드의 개수입니다.\n" +
+                "기본값은 CPU 코어 수의 2배입니다.\n" +
+                "스레드가 많을수록 빠르게 생성되지만, CPU 사용량이 증가합니다.\n" +
+                "너무 많은 스레드를 생성하면 오히려 느려질 수 있습니다.\n" +
+                "최대 64개까지 설정할 수 있습니다."
+            );
         }
     }
 }
