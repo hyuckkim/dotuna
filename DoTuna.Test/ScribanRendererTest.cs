@@ -27,7 +27,7 @@ namespace DoTuna.Test
             var renderer = new ScribanRenderer(fileNameMap, new ImageProvider("sourcePath", "resultPath"));
 
             // Act
-            var html = await renderer.RenderIndexPageAsync(threads);
+            var html = await renderer.RenderIndexPageAsync(threads.ConvertAll(doc => HtmlIndexDocument.FromJson(doc, fileNameMap)));
 
             // Assert
             Assert.Contains("<html", html);
