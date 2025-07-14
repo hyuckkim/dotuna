@@ -18,19 +18,13 @@ namespace DoTuna
             _fileNameMap = fileNameMap;
         }
 
-        public async Task<string> RenderIndexPageAsync(List<JsonIndexDocument> threads)
+        public async Task<string> RenderIndexPageAsync(List<HtmlIndexDocument> threads)
         {
             int pageCount = (threads.Count + 99) / 100;  // 페이지당 100개씩 가정
 
             var model = new
             {
-                threads = threads.Select(doc => new
-                {
-                    thread_id = doc.threadId,
-                    thread_title = Escape(doc.title),
-                    thread_username = Escape(doc.username),
-                    file_name = FileHelper.EncodeToHref(_fileNameMap.GetFileName(doc.threadId))
-                }).ToList(),
+                threads = threads,
                 page_count = pageCount,
                 preload = Setting.Instance.PreloadIndex
             };
@@ -97,7 +91,7 @@ namespace DoTuna
                 .Replace("Sun", "일");
         }
 
-        static string Escape(string? s)
+        public static string Escape(string? s)
         {
             return System.Net.WebUtility.HtmlEncode(s ?? "");
         }

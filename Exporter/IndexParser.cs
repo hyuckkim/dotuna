@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -10,6 +11,10 @@ namespace DoTuna
     {
         public static async Task<List<HtmlIndexDocument>> ParseIndex(string path)
         {
+            if (string.IsNullOrEmpty(path) || !File.Exists(path))
+            {
+                return new List<HtmlIndexDocument>();
+            }
             var html = await FileHelper.ReadAllTextAsync(path);
             var match = Regex.Match(html, @"const data = \[(.*?)\];", RegexOptions.Singleline);
             if (!match.Success)

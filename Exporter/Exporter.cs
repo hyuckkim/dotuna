@@ -35,16 +35,29 @@ namespace DoTuna
         private async Task GenerateIndex()
         {
             string indexPath = Path.Combine(ResultPath, "index.html");
+            var existData = await IndexParser.ParseIndex(indexPath);
 
             _progress?.Report("(index.html 생성 중)");
-            var indexHtml = await _renderer.RenderIndexPageAsync(_threads);
+            var indexHtml = await _renderer.RenderIndexPageAsync(
+                _threads.Select(doc => GenerateHtmlIndexDocument(doc)).Union(existData).ToList()
+            );
             await FileHelper.WriteAllTextAsync(indexPath, indexHtml);
             _progress?.Report("(index.html 생성됨)");
+        }
+        HtmlIndexDocument GenerateHtmlIndexDocument(JsonIndexDocument doc)
+        {
+            return new HtmlIndexDocument
+            {
+                thread_id = doc.threadId.ToString(),
+                thread_title = ScribanRenderer.Escape(doc.title),
+                thread_username = ScribanRenderer.Escape(doc.username),
+                file_name = FileHelper.EncodeToHref(_fileNameMap.GetFileName(doc.threadId))
+            };
         }
         private async Task GenerateCss()
         {
             string CssPath = Path.Combine(ResultPath, "thread.css");
-            
+
             _progress?.Report("(thread.css 생성 중)");
             string cssContent = CssManager.Instance.GetContent();
             await FileHelper.WriteAllTextAsync(CssPath, cssContent);
