@@ -44,9 +44,8 @@ namespace DoTuna
             textbox.TextChanged += (sender, e) => setter(textbox.Text);
             _table.Controls.Add(label, 0, _settingRow);
             _table.Controls.Add(textbox, 1, _settingRow);
-            _tip.SetToolTip(label, tooltip);
-            _tip.SetToolTip(textbox, tooltip);
             _settingRow++;
+            AddTooltip((label, textbox), tooltip);
         }
         void AddSettingControl(string labelText, bool value, Action<bool> setter, string tooltip)
         {
@@ -55,9 +54,13 @@ namespace DoTuna
             checkbox.CheckedChanged += (sender, e) => setter(checkbox.Checked);
             _table.Controls.Add(label, 0, _settingRow);
             _table.Controls.Add(checkbox, 1, _settingRow);
-            _tip.SetToolTip(label, tooltip);
-            _tip.SetToolTip(checkbox, tooltip);
             _settingRow++;
+            AddTooltip((label, checkbox), tooltip);
+        }
+        void AddTooltip((Control a, Control b) controls, string text)
+        {
+            _tip.SetToolTip(controls.a, text);
+            _tip.SetToolTip(controls.b, text);
         }
     }
 }
