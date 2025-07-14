@@ -159,7 +159,11 @@ namespace DoTuna
 
             if (Directory.Exists(ResultPathField.Text) && Directory.EnumerateFiles(ResultPathField.Text).Any())
             {
-                var result = MessageBox.Show("결과 경로에 기존 파일이 있습니다. 덮어쓰시겠습니까?", "확인", MessageBoxButtons.YesNo);
+                var result = MessageBox.Show("결과 경로에 기존 파일이 있습니다. " + (
+                    File.Exists(Path.Combine(ResultPathField.Text, "index.html"))
+                    ? "합치시겠습니까?"
+                    : "덮어쓰시겠습니까?"
+                    ), "확인", MessageBoxButtons.YesNo);
                 if (result != DialogResult.Yes)
                     return false;
             }
