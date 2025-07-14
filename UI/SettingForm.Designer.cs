@@ -37,7 +37,7 @@ namespace DoTuna
         }
 
         // _settingRow는 자동 증가
-        void AddSettingControl(string labelText, string value, Action<string> setter, string tooltip)
+        (Control, Control) AddSettingControl(string labelText, string value, Action<string> setter)
         {
             var label = new Label { Text = labelText, Anchor = AnchorStyles.Left, AutoSize = true };
             var textbox = new TextBox { Text = value, Width = 300 };
@@ -45,9 +45,9 @@ namespace DoTuna
             _table.Controls.Add(label, 0, _settingRow);
             _table.Controls.Add(textbox, 1, _settingRow);
             _settingRow++;
-            AddTooltip((label, textbox), tooltip);
+            return (label, textbox);
         }
-        void AddSettingControl(string labelText, bool value, Action<bool> setter, string tooltip)
+        (Control, Control) AddSettingControl(string labelText, bool value, Action<bool> setter)
         {
             var label = new Label { Text = labelText, Anchor = AnchorStyles.Left, AutoSize = true };
             var checkbox = new CheckBox { Checked = value, AutoSize = true };
@@ -55,7 +55,7 @@ namespace DoTuna
             _table.Controls.Add(label, 0, _settingRow);
             _table.Controls.Add(checkbox, 1, _settingRow);
             _settingRow++;
-            AddTooltip((label, checkbox), tooltip);
+            return (label, checkbox);
         }
         void AddTooltip((Control a, Control b) controls, string text)
         {
