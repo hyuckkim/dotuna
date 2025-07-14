@@ -6,6 +6,7 @@ namespace DoTuna
     public partial class SettingForm : Form
     {
         private TableLayoutPanel _table;
+        private ToolTip tip = new ToolTip { AutoPopDelay = 10000, InitialDelay = 500, ReshowDelay = 100 };
         private int _settingRow;
         public void InitializeComponent()
         {
@@ -43,7 +44,7 @@ namespace DoTuna
             textbox.TextChanged += (sender, e) => setter(textbox.Text);
             _table.Controls.Add(label, 0, _settingRow);
             _table.Controls.Add(textbox, 1, _settingRow);
-            var tip = new ToolTip { AutoPopDelay = 10000, InitialDelay = 500, ReshowDelay = 100 };
+            tip.SetToolTip(label, tooltip);
             tip.SetToolTip(textbox, tooltip);
             _settingRow++;
         }
@@ -54,7 +55,7 @@ namespace DoTuna
             checkbox.CheckedChanged += (sender, e) => setter(checkbox.Checked);
             _table.Controls.Add(label, 0, _settingRow);
             _table.Controls.Add(checkbox, 1, _settingRow);
-            var tip = new ToolTip { AutoPopDelay = 10000, InitialDelay = 500, ReshowDelay = 100 };
+            tip.SetToolTip(label, tooltip);
             tip.SetToolTip(checkbox, tooltip);
             _settingRow++;
         }
