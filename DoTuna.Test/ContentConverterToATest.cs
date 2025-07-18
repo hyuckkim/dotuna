@@ -76,7 +76,6 @@ namespace DoTuna.Test
         {
             var converter = GetConverter();
             var thread = new JsonThreadDocument { threadId = 123UL };
-            var res = new Response { threadId = 123UL };
             var output = converter.ConvertContent(input, thread.threadId);
             Assert.Contains(expected, output);
         }
