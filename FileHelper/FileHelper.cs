@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace DoTuna
 {
-    public class FileHelper
+    public class FileHelper: IFileHelper
     {
         public string BasePath { get; }
 

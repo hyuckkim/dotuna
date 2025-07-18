@@ -11,8 +11,8 @@ namespace DoTuna
 {
     public class Exporter
     {
-        private FileHelper _sourceHelper = null!;
-        private FileHelper _resultHelper = null!;
+        private IFileHelper _sourceHelper = null!;
+        private IFileHelper _resultHelper = null!;
 
         private IProgress<string>? _progress;
         private ThreadFileNameMap _fileNameMap = null!;
@@ -20,11 +20,10 @@ namespace DoTuna
         private List<JsonIndexDocument> _threads = null!;
         private ImageProvider _imageProvider = null!;
 
-        // 생성자 대신 초기화 메서드로 변경 (원하면 생성자로 변경 가능)
-        public Exporter(string sourcePath, string resultPath)
+        public Exporter(IFileHelper source, IFileHelper result)
         {
-            _sourceHelper = new FileHelper(sourcePath);
-            _resultHelper = new FileHelper(resultPath);
+            _sourceHelper = source;
+            _resultHelper = result;
         }
 
         public async Task Build(List<JsonIndexDocument> threads, IProgress<string> progress)
@@ -146,8 +145,9 @@ namespace DoTuna
         {
             string threadJsonFile = $"{doc.threadId}.json";
 
-            var threadContent = await JsonThreadDocument.GetThread(
-                Path.Combine(_sourceHelper.BasePath, threadJsonFile));
+            var threadContent = JsonConvert.DeserializeObject<JsonThreadDocument>(
+                    await _sourceHelper.ReadTextAsync(threadJsonFile)
+            ) ?? throw new InvalidOperationException($"Failed to parse thread JSON: {threadJsonFile}");
 
             string threadHtmlFile = _fileNameMap[doc.threadId];
             var threadHtml = await _renderer.RenderThreadPageAsync(threadContent);

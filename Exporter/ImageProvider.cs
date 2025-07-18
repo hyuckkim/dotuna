@@ -7,10 +7,10 @@ namespace DoTuna
 {
     public class ImageProvider
     {
-        private readonly FileHelper _sourceHelper;
-        private readonly FileHelper _resultHelper;
+        private readonly IFileHelper _sourceHelper;
+        private readonly IFileHelper _resultHelper;
 
-        public ImageProvider(FileHelper sourceHelper, FileHelper resultHelper)
+        public ImageProvider(IFileHelper sourceHelper, IFileHelper resultHelper)
         {
             _sourceHelper = sourceHelper;
             _resultHelper = resultHelper;
@@ -45,7 +45,6 @@ namespace DoTuna
 
         private async Task<string> GetDataHref(string fileName)
         {
-            string filePath = Path.Combine(_sourceHelper.BasePath, "data", fileName);
             if (!_sourceHelper.FileExists(Path.Combine("data", fileName)))
                 return Uri.EscapeDataString(fileName);
 

@@ -32,12 +32,5 @@ namespace DoTuna
         public int size { get; set; } = 0;
         public List<Response> responses { get; set; } = new List<Response>();
 #pragma warning restore IDE1006 // Naming Styles
-
-        public static async Task<JsonThreadDocument> GetThread(string path)
-        {
-            var jsonText = await FileHelper.ReadAllTextAsync(path);
-            return JsonConvert.DeserializeObject<JsonThreadDocument>(jsonText)
-                ?? throw new JsonException($"Failed to parse thread JSON file: {path}");
-        }
     }
 }

@@ -111,7 +111,10 @@ namespace DoTuna
                 ExportFileButton.Text = message;
             });
 
-            var exporter = new Exporter(_sourcePath, ResultPathField.Text);
+            var exporter = new Exporter(
+                new FileHelper(_sourcePath),
+                new FileHelper(ResultPathField.Text)
+            );
             try
             {
                 await exporter.Build(
