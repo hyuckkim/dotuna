@@ -7,27 +7,28 @@ namespace DoTuna
 {
     public class ImageProvider
     {
-        private readonly string _sourcePath;
-        private readonly string _resultPath;
+        private readonly FileHelper _sourceHelper;
+        private readonly FileHelper _resultHelper;
 
-        public ImageProvider(string sourcePath, string resultPath)
+        public ImageProvider(FileHelper sourceHelper, FileHelper resultHelper)
         {
-            _sourcePath = sourcePath;
-            _resultPath = resultPath;
+            _sourceHelper = sourceHelper;
+            _resultHelper = resultHelper;
         }
 
         public void CopyRequiredImages(List<string> requireImg, ThreadFileName thread)
         {
             if (requireImg.Count == 0) return;
 
-            string dataDir = Path.Combine(_resultPath, thread.PathName, "data");
-            FileHelper.EnsurePath(dataDir);
+            // data 디렉토리 경로
+            string dataDir = Path.Combine(_resultHelper.BasePath, thread.PathName, "data");
+            _resultHelper.EnsureDirectory(Path.Combine(thread.PathName, "data"));
 
             Parallel.ForEach(requireImg, imgFile =>
             {
-                var src = Path.Combine(_sourcePath, "data", imgFile);
+                var src = Path.Combine(_sourceHelper.BasePath, "data", imgFile);
                 var dst = Path.Combine(dataDir, imgFile);
-                if (FileHelper.Exists(src))
+                if (_sourceHelper.FileExists(Path.Combine("data", imgFile)))
                 {
                     File.Copy(src, dst, true);
                 }
@@ -36,21 +37,24 @@ namespace DoTuna
 
         public async Task<string> Href(string fileName)
         {
-            if (Setting.Instance.SingleHTML) return await GetDataHref(fileName);
-            else return Path.Combine("data", Uri.EscapeDataString(fileName));
+            if (Setting.Instance.SingleHTML)
+                return await GetDataHref(fileName);
+            else
+                return Path.Combine("data", Uri.EscapeDataString(fileName));
         }
 
         private async Task<string> GetDataHref(string fileName)
         {
-            string filePath = Path.Combine(_sourcePath, "data", fileName);
-            if (!FileHelper.Exists(filePath))
+            string filePath = Path.Combine(_sourceHelper.BasePath, "data", fileName);
+            if (!_sourceHelper.FileExists(Path.Combine("data", fileName)))
                 return Uri.EscapeDataString(fileName);
 
-            byte[] imageBytes = await FileHelper.ReadAllByteAsync(filePath);
+            byte[] imageBytes = await _sourceHelper.ReadBytesAsync(Path.Combine("data", fileName));
             string mimeType = GetMimeType(fileName);
             string base64Image = Convert.ToBase64String(imageBytes);
             return $"data:{mimeType};base64,{base64Image}";
         }
+
         private static string GetMimeType(string filePath)
         {
             string ext = Path.GetExtension(filePath).ToLower();

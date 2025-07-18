@@ -8,14 +8,15 @@ namespace DoTuna
     public partial class ExportForm : Form
     {
         private readonly ThreadManager threadManager;
-        private readonly Exporter exporter;
+        private readonly string _sourcePath; 
 
-        public ExportForm(ThreadManager threadManager, Exporter exporter)
+        public ExportForm(IIndexRepository repository, string sourcePath)
         {
             InitializeComponent();
-            this.threadManager = threadManager;
-            this.exporter = exporter;
-            ResultPathField.Text = exporter.ResultPath;
+            threadManager = new ThreadManager(repository);
+            _sourcePath = sourcePath;
+            ResultPathField.Text = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "result");
 
             RefreshGrid();
             SetCheckAllBox();
@@ -110,7 +111,7 @@ namespace DoTuna
                 ExportFileButton.Text = message;
             });
 
-            exporter.ResultPath = ResultPathField.Text;
+            var exporter = new Exporter(_sourcePath, ResultPathField.Text);
             try
             {
                 await exporter.Build(
@@ -157,10 +158,10 @@ namespace DoTuna
                 return false;
             }
 
-            if (FileHelper.Exists(ResultPathField.Text) && Directory.EnumerateFiles(ResultPathField.Text).Any())
+            if (Directory.Exists(ResultPathField.Text) && Directory.EnumerateFiles(ResultPathField.Text).Any())
             {
                 var result = MessageBox.Show("결과 경로에 기존 파일이 있습니다. " + (
-                    FileHelper.Exists(Path.Combine(ResultPathField.Text, "index.html"))
+                    File.Exists(Path.Combine(ResultPathField.Text, "index.html"))
                     ? "합치시겠습니까?"
                     : "덮어쓰시겠습니까?"
                     ), "확인", MessageBoxButtons.YesNo);

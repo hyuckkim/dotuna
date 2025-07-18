@@ -2,16 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace DoTuna
 {
     public class Exporter
     {
-        public string SourcePath { get; set; } = string.Empty;
-        public string ResultPath { get; set; } = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "result");
+        private FileHelper _sourceHelper = null!;
+        private FileHelper _resultHelper = null!;
 
         private IProgress<string>? _progress;
         private ThreadFileNameMap _fileNameMap = null!;
@@ -19,25 +20,37 @@ namespace DoTuna
         private List<JsonIndexDocument> _threads = null!;
         private ImageProvider _imageProvider = null!;
 
+        // 생성자 대신 초기화 메서드로 변경 (원하면 생성자로 변경 가능)
+        public Exporter(string sourcePath, string resultPath)
+        {
+            _sourceHelper = new FileHelper(sourcePath);
+            _resultHelper = new FileHelper(resultPath);
+        }
+
         public async Task Build(List<JsonIndexDocument> threads, IProgress<string> progress)
         {
             _progress = progress;
             _threads = threads;
             _fileNameMap = new ThreadFileNameMap(threads);
-            _imageProvider = new ImageProvider(SourcePath, ResultPath);
+            _imageProvider = new ImageProvider(_sourceHelper, _resultHelper);
             _renderer = new ScribanRenderer(_fileNameMap, _imageProvider);
 
-            FileHelper.EnsurePath(ResultPath);
+            FileHelper.EnsureDirectory(_resultHelper.BasePath, ""); // EnsurePath -> EnsureDirectory로 수정
+
             await GenerateIndex();
             if (Setting.Instance.UseCssFile) await GenerateCss();
             await GenerateAllThreads();
         }
+
         private async Task GenerateIndex()
         {
-            string indexPath = Path.Combine(ResultPath, "index.html");
-            var existData = await IndexParser.ParseIndex(indexPath);
+            string indexFile = "index.html";
+            string indexPath = Path.Combine(_resultHelper.BasePath, indexFile);
+
+            var existData = await ParseIndex(indexPath);
 
             _progress?.Report("(index.html 생성 중)");
+
             var newDocs = _threads.Select(doc => HtmlIndexDocument.FromJson(doc, _fileNameMap)).ToList();
             var existingDocs = existData.ToList();
 
@@ -47,18 +60,55 @@ namespace DoTuna
             var mergedList = newDocs.Concat(filteredExistDocs).ToList();
 
             var indexHtml = await _renderer.RenderIndexPageAsync(mergedList);
-            await FileHelper.WriteAllTextAsync(indexPath, indexHtml);
+            await _resultHelper.WriteTextAsync(indexFile, indexHtml);
+
             _progress?.Report("(index.html 생성됨)");
         }
+        public async Task<List<HtmlIndexDocument>> ParseIndex(string path)
+        {
+            if (string.IsNullOrEmpty(path) || !_sourceHelper.FileExists(path))
+            {
+                return new List<HtmlIndexDocument>();
+            }
+            var html = await _sourceHelper.ReadTextAsync(path);
+            var match = Regex.Match(html, @"const data = \[(.*?)\];", RegexOptions.Singleline);
+            if (!match.Success)
+            {
+                return new List<HtmlIndexDocument>();
+            }
+
+            string dataContent = match.Groups[1].Value;
+
+            // 1. 속성명에 큰따옴표 씌우기 (key: -> "key":)
+            string jsonContent = Regex.Replace(dataContent, @"(\w+):", @"""$1"":");
+
+            // 2. 문자열 값 안전하게 escape 처리
+            // 문자열 값은 "..."로 되어 있다고 가정
+            jsonContent = Regex.Replace(jsonContent, @"""([^""]*?)""", m => {
+                string s = m.Value; // ex: "some "text" here"
+                // 내부 큰따옴표는 \"로, 역슬래시는 \\로, 줄바꿈은 \n으로 변환
+                string inner = s.Substring(1, s.Length - 2);
+                inner = inner.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\r", "").Replace("\n", "\\n");
+                return $"\"{inner}\"";
+            });
+
+            // 3. 마지막 쉼표 제거
+            jsonContent = "[" + jsonContent.Trim().TrimEnd(',') + "]";
+
+            // 4. JSON 파싱
+            return JsonConvert.DeserializeObject<List<HtmlIndexDocument>>(jsonContent) ?? new List<HtmlIndexDocument>();
+        }
+
         private async Task GenerateCss()
         {
-            string CssPath = Path.Combine(ResultPath, "thread.css");
+            string cssFile = "thread.css";
 
             _progress?.Report("(thread.css 생성 중)");
             string cssContent = CssManager.Instance.GetContent();
-            await FileHelper.WriteAllTextAsync(CssPath, cssContent);
+            await _resultHelper.WriteTextAsync(cssFile, cssContent);
             _progress?.Report("(thread.css 생성됨)");
         }
+
         private async Task GenerateAllThreads()
         {
             int completed = 0;
@@ -91,21 +141,27 @@ namespace DoTuna
 
             await Task.WhenAll(tasks);
         }
+
         private async Task GenerateThread(JsonIndexDocument doc)
         {
-            string threadPath = Path.Combine(SourcePath, $"{doc.threadId}.json");
-            JsonThreadDocument content = await JsonThreadDocument.GetThread(threadPath);
+            string threadJsonFile = $"{doc.threadId}.json";
 
-            string jsonPath = Path.Combine(ResultPath, _fileNameMap[doc.threadId]);
-            var threadHtml = await _renderer.RenderThreadPageAsync(content);
-            await FileHelper.WriteAllTextAsync(jsonPath, threadHtml);
+            var threadContent = await JsonThreadDocument.GetThread(
+                Path.Combine(_sourceHelper.BasePath, threadJsonFile));
 
-            if (!Setting.Instance.SingleHTML) _imageProvider.CopyRequiredImages(content.responses
-                .Where(res => !string.IsNullOrEmpty(res.attachment))
-                .Select(res => res.attachment)
-                .ToList(),
-                _fileNameMap.Get(doc.threadId)
-            );
+            string threadHtmlFile = _fileNameMap[doc.threadId];
+            var threadHtml = await _renderer.RenderThreadPageAsync(threadContent);
+            await _resultHelper.WriteTextAsync(threadHtmlFile, threadHtml);
+
+            if (!Setting.Instance.SingleHTML)
+            {
+                var attachments = threadContent.responses
+                    .Where(res => !string.IsNullOrEmpty(res.attachment))
+                    .Select(res => res.attachment)
+                    .ToList();
+
+                _imageProvider.CopyRequiredImages(attachments, _fileNameMap.Get(doc.threadId));
+            }
         }
 
         private void ReportCount(int count)

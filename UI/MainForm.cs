@@ -9,9 +9,6 @@ namespace DoTuna
 {
     public partial class MainForm : Form
     {
-        public ThreadManager threadManager = null!;
-        public Exporter exporter = null!;
-
         public MainForm()
         {
             InitializeComponent();
@@ -48,7 +45,7 @@ namespace DoTuna
                 return;
 
             var droppedFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-            var folderPath = droppedFiles.FirstOrDefault(FileHelper.Exists);
+            var folderPath = droppedFiles.FirstOrDefault(Directory.Exists);
             if (folderPath == null)
                 return;
 
@@ -63,14 +60,8 @@ namespace DoTuna
                 var repository = new IndexFileRepository();
                 await repository.Open(folderPath);
 
-                threadManager = new ThreadManager(repository);
-                exporter = new Exporter
-                {
-                    SourcePath = folderPath
-                };
-
                 // 내보내기 UI용 폼을 생성해 전환 (UI 요소 Visible을 토글하는 대신 분리)
-                var exportForm = new ExportForm(threadManager, exporter);
+                var exportForm = new ExportForm(repository, folderPath);
                 exportForm.Show();
             }
             catch (DirectoryNotFoundException)
