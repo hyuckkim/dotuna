@@ -142,7 +142,7 @@ namespace DoTuna.Test
             Assert.Contains("이미지 첨부", html);
             Assert.Contains("test.png", html);
             Assert.Contains("<img", html, StringComparison.OrdinalIgnoreCase);
-            Assert.Contains("data\\", html, StringComparison.OrdinalIgnoreCase);
+            Assert.Contains("data/", html, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

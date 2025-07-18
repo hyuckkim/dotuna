@@ -40,7 +40,7 @@ namespace DoTuna
             if (Setting.Instance.SingleHTML)
                 return await GetDataHref(fileName);
             else
-                return Path.Combine("data", Uri.EscapeDataString(fileName));
+                return "data/" + Uri.EscapeDataString(fileName);
         }
 
         private async Task<string> GetDataHref(string fileName)

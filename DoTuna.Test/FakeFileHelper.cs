@@ -14,11 +14,15 @@ namespace DoTuna.Tests
 
         public void AddFile(string path, byte[] content)
         {
-            _existingFiles.Add(path);
-            _fileContents[path] = content;
+            string normalized = path.Replace('\\', '/');
+            _existingFiles.Add(normalized);
+            _fileContents[normalized] = content;
         }
-
-        public bool FileExists(string relativePath) => _existingFiles.Contains(relativePath);
+        public bool FileExists(string relativePath)
+        {
+            string normalized = relativePath.Replace('\\', '/');
+            return _existingFiles.Contains(normalized);
+        }
 
         public Task<string> ReadTextAsync(string relativePath)
         {

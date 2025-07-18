@@ -68,7 +68,7 @@ namespace DoTuna.Tests
         [Fact]
         public void GetRelativePathToRoot_Works()
         {
-            var t = new ThreadFileName(1, new[] { "a", "b", "c.html" });
+            var t = new ThreadFileName(1, new[] { "a", "b", "c", "d.html" });
             Assert.Equal("../../..", t.GetRelativePathToRoot());
         }
 
