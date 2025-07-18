@@ -23,7 +23,7 @@ namespace DoTuna
         protected override string MakeAnchorTag(ulong threadId, string resNo, string text, bool isExternal)
         {
             var targetAttr = isExternal ? " target=\"_blank\"" : "";
-            var relativePath = FileHelper.EncodeToHref(_origin.GetRelativePathTo(_fileNameMap.Get(threadId)));
+            var relativePath = HtmlIndexDocument.EncodeToHref(_origin.GetRelativePathTo(_fileNameMap.Get(threadId)));
             var anchor = string.IsNullOrEmpty(resNo) ? relativePath : $"{relativePath}#response_{resNo}";
             return $"<a href=\"{anchor}\"{targetAttr}>{text}</a>";
         }

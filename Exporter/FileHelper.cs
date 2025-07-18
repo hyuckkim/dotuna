@@ -36,31 +36,5 @@ namespace DoTuna
             if (!Exists(path))
                 Directory.CreateDirectory(path);
         }
-        
-        public static string EncodeToHref(string input)
-        {
-            var sb = new StringBuilder();
-            foreach (char c in input)
-            {
-                if (IsTargetChar(c))
-                    sb.Append($"%{(int)c:X2}");
-                else
-                    sb.Append(c);
-            }
-            return sb.ToString();
-        }
-
-        private static bool IsTargetChar(char c)
-        {
-            // 공백
-            if (c == ' ') return true;
-
-            // 제어 문자
-            if (c == '\n' || c == '\r' || c == '\t') return true;
-
-            // 특수 문자
-            char[] specials = { '!', '@', '#', '%', '^', '&', '*', '(', ')' };
-            return Array.IndexOf(specials, c) >= 0;
-        }
     }
 }
