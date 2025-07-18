@@ -9,12 +9,12 @@ namespace DoTuna
     {
         public static async Task<string> ReadAllTextAsync(string path)
         {
-            if (!FileHelper.Exists(path)) return string.Empty;
+            if (!Exists(path)) return string.Empty;
             return await Task.Run(() => File.ReadAllText(path));
         }
         public static async Task<byte[]> ReadAllByteAsync(string path)
         {
-            if (!FileHelper.Exists(path)) return new byte[0];
+            if (!Exists(path)) return new byte[0];
             return await Task.Run(() => File.ReadAllBytes(path));
         }
         public static async Task WriteAllTextAsync(string path, string content)
