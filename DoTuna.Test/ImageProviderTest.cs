@@ -2,10 +2,10 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace DoTuna.Tests
+namespace DoTuna.Test
 {
 
-    public class ImageProviderTests
+    public class ImageProviderTest
     {
         [Fact]
         public async Task Href_ReturnsBase64_WhenSingleHTMLTrue_AndFileExists()

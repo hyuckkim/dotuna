@@ -1,9 +1,9 @@
 using System;
 using Xunit;
 
-namespace DoTuna.Tests
+namespace DoTuna.Test
 {
-    public class ThreadFileNameTests
+    public class ThreadFileNameTest
     {
         private JsonIndexDocument SampleDoc => new JsonIndexDocument
         {

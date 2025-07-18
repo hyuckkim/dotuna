@@ -89,10 +89,11 @@ namespace DoTuna.Test
             Assert.Contains("작성자", html);
             Assert.Contains("댓글 내용", html);
         }
-
         [Fact]
         public async Task RenderThreadPageAsync_WithAttachment_RendersImageTag()
         {
+            Setting.Instance.SingleHTML = false; // 또는 true
+
             var thread = new JsonThreadDocument
             {
                 boardId = "b",
@@ -115,6 +116,7 @@ namespace DoTuna.Test
                     }
                 }
             };
+
             var threads = new List<JsonIndexDocument> {
                 new JsonIndexDocument {
                     threadId = 2UL,
@@ -125,13 +127,19 @@ namespace DoTuna.Test
                     size = 1
                 }
             };
+
             var fileNameMap = new ThreadFileNameMap(threads);
+
+            var fakeSourceHelper = new FakeFileHelper();
+            fakeSourceHelper.BasePath = "/source";
+            fakeSourceHelper.AddFile("data/test.png", new byte[] { 1, 2, 3 });  // 파일 내용 셋업
+
+            var fakeResultHelper = new FakeFileHelper();
+            fakeResultHelper.BasePath = "/result";
+
             var renderer = new ScribanRenderer(
                 fileNameMap,
-                new ImageProvider(
-                    new FileHelper("sourcePath"),
-                    new FileHelper("resultPath")
-                )
+                new ImageProvider(fakeSourceHelper, fakeResultHelper)
             );
 
             var html = await renderer.RenderThreadPageAsync(thread);

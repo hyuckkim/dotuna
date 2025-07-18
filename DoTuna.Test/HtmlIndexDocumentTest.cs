@@ -2,7 +2,7 @@ using System;
 using DoTuna;
 using Xunit;
 
-public class HtmlIndexDocumentTests
+public class HtmlIndexDocumentTest
 {
     [Fact]
     public void FromJson_MapsPropertiesCorrectly()
