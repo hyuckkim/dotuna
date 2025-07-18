@@ -48,7 +48,7 @@ namespace DoTuna
                 return;
 
             var droppedFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-            var folderPath = droppedFiles.FirstOrDefault(Directory.Exists);
+            var folderPath = droppedFiles.FirstOrDefault(FileHelper.Exists);
             if (folderPath == null)
                 return;
 
@@ -59,11 +59,18 @@ namespace DoTuna
         {
             try
             {
+                // 인덱스 파일 로드 및 ThreadManager, Exporter 생성
                 var repository = new IndexFileRepository();
                 await repository.Open(folderPath);
 
                 threadManager = new ThreadManager(repository);
-                var exportForm = new ExportForm(threadManager, folderPath);
+                exporter = new Exporter
+                {
+                    SourcePath = folderPath
+                };
+
+                // 내보내기 UI용 폼을 생성해 전환 (UI 요소 Visible을 토글하는 대신 분리)
+                var exportForm = new ExportForm(threadManager, exporter);
                 exportForm.Show();
             }
             catch (DirectoryNotFoundException)

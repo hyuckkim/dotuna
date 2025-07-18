@@ -21,6 +21,7 @@ namespace DoTuna
             if (requireImg.Count == 0) return;
 
             string dataDir = Path.Combine(_resultPath, thread.PathName, "data");
+            FileHelper.EnsurePath(dataDir);
 
             Parallel.ForEach(requireImg, imgFile =>
             {
