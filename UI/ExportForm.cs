@@ -8,14 +8,15 @@ namespace DoTuna
     public partial class ExportForm : Form
     {
         private readonly ThreadManager threadManager;
-        private readonly Exporter exporter;
+        private string SourcePath;
 
-        public ExportForm(ThreadManager threadManager, Exporter exporter)
+        public ExportForm(ThreadManager threadManager, string path)
         {
             InitializeComponent();
             this.threadManager = threadManager;
-            this.exporter = exporter;
-            ResultPathField.Text = exporter.ResultPath;
+            SourcePath = path;
+            ResultPathField.Text = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "result");
 
             RefreshGrid();
             SetCheckAllBox();
@@ -110,7 +111,7 @@ namespace DoTuna
                 ExportFileButton.Text = message;
             });
 
-            exporter.ResultPath = ResultPathField.Text;
+            var exporter = new Exporter(SourcePath, ResultPathField.Text);
             try
             {
                 await exporter.Build(
