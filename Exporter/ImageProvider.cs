@@ -27,7 +27,7 @@ namespace DoTuna
             {
                 var src = Path.Combine(_sourcePath, "data", imgFile);
                 var dst = Path.Combine(dataDir, imgFile);
-                if (File.Exists(src))
+                if (FileHelper.Exists(src))
                 {
                     File.Copy(src, dst, true);
                 }
@@ -43,7 +43,7 @@ namespace DoTuna
         private async Task<string> GetDataHref(string fileName)
         {
             string filePath = Path.Combine(_sourcePath, "data", fileName);
-            if (!File.Exists(filePath))
+            if (!FileHelper.Exists(filePath))
                 return Uri.EscapeDataString(fileName);
 
             byte[] imageBytes = await FileHelper.ReadAllByteAsync(filePath);

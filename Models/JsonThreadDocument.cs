@@ -33,17 +33,7 @@ namespace DoTuna
         public List<Response> responses { get; set; } = new List<Response>();
 #pragma warning restore IDE1006 // Naming Styles
 
-        public static JsonThreadDocument GetThread(string path)
-        {
-            if (!File.Exists(path))
-                throw new FileNotFoundException($"Thread file not found: {path}");
-
-            var jsonText = File.ReadAllText(path);
-            return JsonConvert.DeserializeObject<JsonThreadDocument>(jsonText)
-                ?? throw new JsonException($"Failed to parse thread JSON file: {path}");
-        }
-
-        public static async Task<JsonThreadDocument> GetThreadAsync(string path)
+        public static async Task<JsonThreadDocument> GetThread(string path)
         {
             var jsonText = await FileHelper.ReadAllTextAsync(path);
             return JsonConvert.DeserializeObject<JsonThreadDocument>(jsonText)

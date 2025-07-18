@@ -10,7 +10,7 @@ namespace DoTuna
     {
         public static async Task<List<HtmlIndexDocument>> ParseIndex(string path)
         {
-            if (string.IsNullOrEmpty(path) || !File.Exists(path))
+            if (string.IsNullOrEmpty(path) || !FileHelper.Exists(path))
             {
                 return new List<HtmlIndexDocument>();
             }

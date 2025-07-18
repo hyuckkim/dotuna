@@ -11,28 +11,10 @@ namespace DoTuna
         private List<JsonIndexDocument> _documents = new List<JsonIndexDocument>();
         public List<JsonIndexDocument> Get() => _documents;
 
-        public void Open(string path)
+
+        public async Task Open(string path)
         {
-            if (!Directory.Exists(path))
-                throw new DirectoryNotFoundException($"Directory not found: {path}");
-
-            try
-            {
-                var jsonText = File.ReadAllText(Path.Combine(path, "index.json"));
-                var deSerialized = JsonConvert.DeserializeObject<List<JsonIndexDocument>>(jsonText);
-
-                _documents = deSerialized?.OrderBy(x => x.threadId).ToList()
-                    ?? new List<JsonIndexDocument>();
-            }
-            catch (JsonException e)
-            {
-                throw new JsonException($"Failed to parse JSON file: {e.Message}", e);
-            }
-        }
-
-        public async Task OpenAsync(string path)
-        {
-            if (!Directory.Exists(path))
+            if (!FileHelper.Exists(path))
                 throw new DirectoryNotFoundException($"Directory not found: {path}");
 
             var jsonText = await FileHelper.ReadAllTextAsync(Path.Combine(path, "index.json"));

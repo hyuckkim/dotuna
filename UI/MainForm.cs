@@ -48,7 +48,7 @@ namespace DoTuna
                 return;
 
             var droppedFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-            var folderPath = droppedFiles.FirstOrDefault(Directory.Exists);
+            var folderPath = droppedFiles.FirstOrDefault(FileHelper.Exists);
             if (folderPath == null)
                 return;
 
@@ -61,7 +61,7 @@ namespace DoTuna
             {
                 // 인덱스 파일 로드 및 ThreadManager, Exporter 생성
                 var repository = new IndexFileRepository();
-                await repository.OpenAsync(folderPath);
+                await repository.Open(folderPath);
 
                 threadManager = new ThreadManager(repository);
                 exporter = new Exporter

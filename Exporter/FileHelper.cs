@@ -9,12 +9,12 @@ namespace DoTuna
     {
         public static async Task<string> ReadAllTextAsync(string path)
         {
-            if (!File.Exists(path)) return string.Empty;
+            if (!FileHelper.Exists(path)) return string.Empty;
             return await Task.Run(() => File.ReadAllText(path));
         }
         public static async Task<byte[]> ReadAllByteAsync(string path)
         {
-            if (!File.Exists(path)) return new byte[0];
+            if (!FileHelper.Exists(path)) return new byte[0];
             return await Task.Run(() => File.ReadAllBytes(path));
         }
         public static async Task WriteAllTextAsync(string path, string content)
@@ -27,9 +27,13 @@ namespace DoTuna
             }
             await Task.Run(() => File.WriteAllText(path, content));
         }
+        public static bool Exists(string path)
+        {
+            return File.Exists(path) || Directory.Exists(path);
+        }
         public static void EnsurePath(string path)
         {
-            if (!Directory.Exists(path))
+            if (!Exists(path))
                 Directory.CreateDirectory(path);
         }
         

@@ -94,7 +94,7 @@ namespace DoTuna
         private async Task GenerateThread(JsonIndexDocument doc)
         {
             string threadPath = Path.Combine(SourcePath, $"{doc.threadId}.json");
-            JsonThreadDocument content = await JsonThreadDocument.GetThreadAsync(threadPath);
+            JsonThreadDocument content = await JsonThreadDocument.GetThread(threadPath);
 
             string jsonPath = Path.Combine(ResultPath, _fileNameMap[doc.threadId]);
             var threadHtml = await _renderer.RenderThreadPageAsync(content);
