@@ -10,103 +10,34 @@ namespace DoTuna.Features.Export
 {
     public partial class ExportForm : Form
     {
-        private readonly ThreadSelectionHelper threadManager;
-        private readonly string _sourcePath; 
+        private readonly string _sourcePath;
+        private ThreadListHelper _listHelper;
+        private ThreadSelectionHelper _threadManager;
 
         public ExportForm(IIndexRepository repository, string sourcePath)
         {
             InitializeComponent();
-            threadManager = new ThreadSelectionHelper(repository);
+
             _sourcePath = sourcePath;
+            _threadManager = new ThreadSelectionHelper(repository);
+
+            _listHelper = new ThreadListHelper(
+                _threadManager,
+                ThreadListGrid,
+                SelectAllCheckBox,
+                FilterTitleInputField,
+                FilterAuthorInputField);
+
             ResultPathField.Text = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "result");
-
-            RefreshGrid();
-            SetCheckAllBox();
-        }
-
-        private void OnCheckBoxClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex < 0 || e.RowIndex >= threadManager.Filtered.Count())
-                return;
-
-            threadManager.Toggle(threadManager.Filtered.ElementAt(e.RowIndex));
-            SetCheckAllBox();
-        }
-
-        private void ThreadListGrid_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
-        {
-            if (e.RowIndex < 0 || e.RowIndex >= threadManager.Filtered.Count())
-                return;
-
-            var doc = threadManager.Filtered.ElementAt(e.RowIndex);
-            if (doc == null)
-                return;
-
-            switch (ThreadListGrid.Columns[e.ColumnIndex].Name)
-            {
-                case "IsCheck":
-                    e.Value = threadManager.IsChecked(doc);
-                    break;
-                case "ThreadName":
-                    e.Value = doc.title;
-                    break;
-                case "UserName":
-                    e.Value = doc.username;
-                    break;
-            }
-        }
-
-        private void SetCheckAllBox()
-        {
-            SelectAllCheckBox.CheckedChanged -= SelectAllCheckBoxChanged;
-            SelectAllCheckBox.Checked = threadManager.Filtered.All(doc => threadManager.IsChecked(doc));
-            SelectAllCheckBox.CheckedChanged += SelectAllCheckBoxChanged;
-        }
-
-        private void OnTitleFilterChanged(object sender, EventArgs e)
-        {
-            threadManager.TitleFilter = FilterTitleInputField.Text;
-            RefreshGrid();
-            SetCheckAllBox();
-        }
-
-        private void OnAuthorFilterChanged(object sender, EventArgs e)
-        {
-            threadManager.AuthorFilter = FilterAuthorInputField.Text;
-            RefreshGrid();
-            SetCheckAllBox();
-        }
-
-        private void SelectAllCheckBoxChanged(object sender, EventArgs e)
-        {
-            if (SelectAllCheckBox.Checked)
-            {
-                foreach (JsonIndexDocument doc in threadManager.Filtered)
-                {
-                    threadManager.Check(doc);
-                }
-            }
-            else
-            {
-                foreach (JsonIndexDocument doc in threadManager.All)
-                {
-                    threadManager.Uncheck(doc);
-                }
-            }
-            ThreadListGrid.Invalidate();
-        }
-
-        private void RefreshGrid()
-        {
-            ThreadListGrid.RowCount = threadManager.Filtered.Count();
-            ThreadListGrid.Invalidate();
+                Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                "result");
         }
 
         private async void ExportButtonClick(object sender, EventArgs e)
         {
             if (!ValidateBeforeExport())
                 return;
+
             ExportFileButton.Enabled = false;
 
             var progress = new Progress<string>(message =>
@@ -118,26 +49,26 @@ namespace DoTuna.Features.Export
                 new FileHelper(_sourcePath),
                 new FileHelper(ResultPathField.Text)
             );
+
             try
             {
-                await exporter.Build(
-                    threadManager.Checked.ToList(),
-                    progress
-                );
+                await exporter.Build(_threadManager.Checked.ToList(), progress);
             }
             finally
             {
                 ExportFileButton.Enabled = true;
             }
         }
+
         private void OpenConverterButtonClick(object sender, EventArgs e)
         {
-            var converterForm = new ConverterForm(threadManager.Checked);
+            var converterForm = new ConverterForm(_threadManager.Checked);
             converterForm.ShowDialog();
         }
+
         private bool ValidateBeforeExport()
         {
-            if (!threadManager.Checked.Any())
+            if (!_threadManager.Checked.Any())
             {
                 var result = MessageBox.Show("선택된 항목이 없습니다. 계속하시겠습니까?", "경고", MessageBoxButtons.YesNo);
                 if (result != DialogResult.Yes)
@@ -155,10 +86,11 @@ namespace DoTuna.Features.Export
                 var result = MessageBox.Show("제목 템플릿이 비어 있습니다. 기본값으로 계속하시겠습니까?", "알림", MessageBoxButtons.YesNo);
                 if (result != DialogResult.Yes)
                     return false;
+
                 AppSetting.Instance.Pattern = "{id}";
             }
-            
-            if (!new ThreadFileMap(threadManager.Checked, AppSetting.Instance.Pattern).IsUnique)
+
+            if (!new ThreadFileMap(_threadManager.Checked, AppSetting.Instance.Pattern).IsUnique)
             {
                 MessageBox.Show("제목 템플릿이 잘못되어 생성할 파일 이름이 중복됩니다.", "경고", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
@@ -171,6 +103,7 @@ namespace DoTuna.Features.Export
                     ? "합치시겠습니까?"
                     : "덮어쓰시겠습니까?"
                     ), "확인", MessageBoxButtons.YesNo);
+
                 if (result != DialogResult.Yes)
                     return false;
             }
