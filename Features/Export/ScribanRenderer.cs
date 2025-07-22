@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Scriban;
 using System.Net;
+using DoTuna.Core;
 
 namespace DoTuna.Features.Export
 {
@@ -53,14 +54,14 @@ namespace DoTuna.Features.Export
 
         private async Task<List<object>> BuildResponses(JsonThreadDocument data)
         {
-            var converter = new ContentConverterToA(_fileNameMap, _fileNameMap.Get(data.threadId));
+            var converter = new ConverterToA(_fileNameMap, _fileNameMap.Get(data.threadId));
             Task<object>[] tasks = data.responses.Select(res => BuildRes(res, data.threadId)).ToArray();
             var results = await Task.WhenAll(tasks);
             return results.ToList();
         }
         private async Task<object> BuildRes(Response res, ulong threadId)
         {
-            var converter = new ContentConverterToA(_fileNameMap, _fileNameMap.Get(threadId));
+            var converter = new ConverterToA(_fileNameMap, _fileNameMap.Get(threadId));
             return new {
                 sequence = res.sequence.ToString(),
                 username = WebUtility.HtmlEncode(res.username),

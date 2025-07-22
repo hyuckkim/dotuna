@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace DoTuna
+namespace DoTuna.Core
 {
     public interface IFileHelper
     {

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Xunit;
 using DoTuna;
 using DoTuna.Features.Export;
+using DoTuna.Core;
 
 namespace DoTuna.Test
 {

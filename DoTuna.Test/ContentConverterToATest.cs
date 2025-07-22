@@ -1,18 +1,19 @@
 using System;
 using System.Collections.Generic;
+using DoTuna.Core;
 using Xunit;
 
 namespace DoTuna.Test
 {
     public class ContentConverterToATest
     {
-        private ContentConverter GetConverter()
+        private Converter GetConverter()
         {
             var threads = new List<JsonIndexDocument> {
                 new JsonIndexDocument { threadId = 123UL, title = "t", username = "u", createdAt = DateTime.Now, updatedAt = DateTime.Now, size = 1 }
             };
             var fileNameMap = new ThreadFileNameMap(threads);
-            return new ContentConverterToA(fileNameMap, fileNameMap.Get(123UL));
+            return new ConverterToA(fileNameMap, fileNameMap.Get(123UL));
         }
 
         [Theory]

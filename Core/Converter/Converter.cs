@@ -1,12 +1,12 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace DoTuna
+namespace DoTuna.Core
 {
-    public abstract class ContentConverter
+    public abstract class Converter
     {
         protected readonly ThreadFileNameMap _fileNameMap;
-        public ContentConverter(ThreadFileNameMap fileNameMap)
+        public Converter(ThreadFileNameMap fileNameMap)
         {
             _fileNameMap = fileNameMap;
         }

@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace DoTuna
+namespace DoTuna.Core
 {
     public class FileHelper: IFileHelper
     {

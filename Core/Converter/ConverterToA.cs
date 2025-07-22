@@ -1,9 +1,9 @@
-namespace DoTuna
+namespace DoTuna.Core
 {
-    public class ContentConverterToA : ContentConverter
+    public class ConverterToA : Converter
     {
         private readonly ThreadFileName _origin;
-        public ContentConverterToA(ThreadFileNameMap fileNameMap, ThreadFileName origin) : base(fileNameMap)
+        public ConverterToA(ThreadFileNameMap fileNameMap, ThreadFileName origin) : base(fileNameMap)
         {
             _origin = origin;
         }

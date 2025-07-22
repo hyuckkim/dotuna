@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using DoTuna.Core;
 using Newtonsoft.Json;
 
 namespace DoTuna.Features.Export
