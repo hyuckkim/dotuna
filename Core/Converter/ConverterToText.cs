@@ -5,7 +5,7 @@ namespace DoTuna.Core
     public class ConverterToText : Converter
     {
         public string Url { get; set; } = string.Empty;
-        public ConverterToText(ThreadFileNameMap fileNameMap, string url) : base(fileNameMap)
+        public ConverterToText(ThreadFileMap fileNameMap, string url) : base(fileNameMap)
         {
             Url = url;
             if (Url.EndsWith("/"))

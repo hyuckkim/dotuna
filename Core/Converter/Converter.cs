@@ -5,8 +5,8 @@ namespace DoTuna.Core
 {
     public abstract class Converter
     {
-        protected readonly ThreadFileNameMap _fileNameMap;
-        public Converter(ThreadFileNameMap fileNameMap)
+        protected readonly ThreadFileMap _fileNameMap;
+        public Converter(ThreadFileMap fileNameMap)
         {
             _fileNameMap = fileNameMap;
         }

@@ -17,7 +17,7 @@ namespace DoTuna.Features.Export
             _resultHelper = resultHelper;
         }
 
-        public void CopyRequiredImages(List<string> requireImg, ThreadFileName thread)
+        public void CopyRequiredImages(List<string> requireImg, ThreadFile thread)
         {
             if (requireImg.Count == 0) return;
 

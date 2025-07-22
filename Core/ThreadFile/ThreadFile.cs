@@ -1,46 +1,30 @@
 using System.Linq;
 using System;
 using System.Collections.Generic;
+using DoTuna.Util;
 
-namespace DoTuna
+namespace DoTuna.Core
 {
-    public static class EnumerableExtensions
-    {
-        public static IEnumerable<T> SkipLastOne<T>(this IEnumerable<T> source)
-        {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            using (var e = source.GetEnumerator())
-            {
-                if (!e.MoveNext()) yield break;
-                var prev = e.Current;
-                while (e.MoveNext())
-                {
-                    yield return prev;
-                    prev = e.Current;
-                }
-            }
-        }
-    }
-    public class ThreadFileName : IEquatable<ThreadFileName>
+    public class ThreadFile : IEquatable<ThreadFile>
     {
         public ulong ThreadId { get; }
         public string[] FileNameSegments { get; }
         public string FileName => string.Join("/", FileNameSegments);
         public string PathName => string.Join("/", FileNameSegments.SkipLastOne());
 
-        public ThreadFileName(JsonIndexDocument doc, string pattern)
+        public ThreadFile(JsonIndexDocument doc, string pattern)
         {
             ThreadId = doc.threadId;
             FileNameSegments = (GetTemplateName(doc, pattern) + ".html").Split('/');
         }
 
-        public ThreadFileName(ulong threadId, string[] fileNameSegments)
+        public ThreadFile(ulong threadId, string[] fileNameSegments)
         {
             ThreadId = threadId;
             FileNameSegments = fileNameSegments ?? throw new ArgumentNullException(nameof(fileNameSegments));
         }
 
-        public string GetRelativePathTo(ThreadFileName target)
+        public string GetRelativePathTo(ThreadFile target)
         {
             var from = this.FileNameSegments;
             var to = target.FileNameSegments;
@@ -87,14 +71,14 @@ namespace DoTuna
 
         public override bool Equals(object obj)
         {
-            if (obj is ThreadFileName o)
+            if (obj is ThreadFile o)
             {
                 return Equals(o);
             }
             else return false;
         }
 
-        public bool Equals(ThreadFileName other)
+        public bool Equals(ThreadFile other)
         {
             if (ReferenceEquals(this, other)) return true;
             if (ThreadId != other.ThreadId) return false;
@@ -120,14 +104,14 @@ namespace DoTuna
             }
         }
 
-        public static bool operator ==(ThreadFileName left, ThreadFileName right)
+        public static bool operator ==(ThreadFile left, ThreadFile right)
         {
             if (ReferenceEquals(left, right)) return true;
             if (left is null || right is null) return false;
             return left.Equals(right);
         }
 
-        public static bool operator !=(ThreadFileName left, ThreadFileName right)
+        public static bool operator !=(ThreadFile left, ThreadFile right)
         {
             return !(left == right);
         }

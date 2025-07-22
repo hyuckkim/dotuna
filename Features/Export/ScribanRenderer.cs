@@ -12,9 +12,9 @@ namespace DoTuna.Features.Export
 {
     public class ScribanRenderer
     {
-        private readonly ThreadFileNameMap _fileNameMap;
+        private readonly ThreadFileMap _fileNameMap;
         private readonly ImageProvider _imageProvider;
-        public ScribanRenderer(ThreadFileNameMap fileNameMap, ImageProvider imageProvider)
+        public ScribanRenderer(ThreadFileMap fileNameMap, ImageProvider imageProvider)
         {
             _imageProvider = imageProvider;
             _fileNameMap = fileNameMap;

@@ -1,5 +1,6 @@
 using System.IO;
 using System.Text;
+using DoTuna.Core;
 
 namespace DoTuna.Features.Export
 {
@@ -20,7 +21,7 @@ namespace DoTuna.Features.Export
             return reader.ReadToEnd();
         }
 
-        public string GetLink(ThreadFileName thread)
+        public string GetLink(ThreadFile thread)
         {
             if (Setting.Instance.UseCssFile)
             {

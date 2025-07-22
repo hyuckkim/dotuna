@@ -14,7 +14,7 @@ public class HtmlIndexDocumentTest
             username = "User\nName"
         };
 
-        var fileNameMap = new ThreadFileNameMap(new[] { doc }, "{id}/{title}");
+        var fileNameMap = new ThreadFileMap(new[] { doc }, "{id}/{title}");
 
         // Act
         var htmlDoc = HtmlIndexDocument.FromJson(doc, fileNameMap);

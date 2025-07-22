@@ -16,7 +16,7 @@ namespace DoTuna.Features.Export
         private IFileHelper _resultHelper = null!;
 
         private IProgress<string>? _progress;
-        private ThreadFileNameMap _fileNameMap = null!;
+        private ThreadFileMap _fileNameMap = null!;
         private ScribanRenderer _renderer = null!;
         private List<JsonIndexDocument> _threads = null!;
         private ImageProvider _imageProvider = null!;
@@ -31,7 +31,7 @@ namespace DoTuna.Features.Export
         {
             _progress = progress;
             _threads = threads;
-            _fileNameMap = new ThreadFileNameMap(threads, Setting.Instance.Pattern);
+            _fileNameMap = new ThreadFileMap(threads, Setting.Instance.Pattern);
             _imageProvider = new ImageProvider(_sourceHelper, _resultHelper);
             _renderer = new ScribanRenderer(_fileNameMap, _imageProvider);
 

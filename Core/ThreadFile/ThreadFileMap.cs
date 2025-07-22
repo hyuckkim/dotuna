@@ -2,19 +2,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 
-namespace DoTuna
+namespace DoTuna.Core
 {
 
-    public class ThreadFileNameMap
+    public class ThreadFileMap
     {
-        private readonly Dictionary<ulong, ThreadFileName> _map;
+        private readonly Dictionary<ulong, ThreadFile> _map;
         public bool IsUnique { get => _map.Values.Select(x => x.FileName).Distinct().Count() == _map.Count; }
 
-        public ThreadFileNameMap(IEnumerable<JsonIndexDocument> threads, string pattern)
+        public ThreadFileMap(IEnumerable<JsonIndexDocument> threads, string pattern)
         {
             _map = threads.ToDictionary(
                 doc => doc.threadId,
-                doc => new ThreadFileName(doc, pattern)
+                doc => new ThreadFile(doc, pattern)
             );
         }
 
@@ -23,9 +23,9 @@ namespace DoTuna
             return _map.TryGetValue(threadId, out var f) ? f.FileName : threadId + ".html";
         }
 
-        public ThreadFileName Get(ulong threadId)
+        public ThreadFile Get(ulong threadId)
         {
-            return _map.TryGetValue(threadId, out var f) ? f : new ThreadFileName(
+            return _map.TryGetValue(threadId, out var f) ? f : new ThreadFile(
                 new JsonIndexDocument { threadId = threadId }, Setting.Instance.Pattern);
         }
 

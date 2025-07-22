@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Text;
+using DoTuna.Core;
 
 namespace DoTuna
 {
@@ -13,7 +14,7 @@ namespace DoTuna
         public string file_name { get; set; } = "";
 #pragma warning restore IDE1006 // JS 속성
 
-        public static HtmlIndexDocument FromJson(JsonIndexDocument doc, ThreadFileNameMap fileNameMap)
+        public static HtmlIndexDocument FromJson(JsonIndexDocument doc, ThreadFileMap fileNameMap)
         {
             return new HtmlIndexDocument
             {

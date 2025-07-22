@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace DoTuna
+namespace DoTuna.Core
 {
     public static class TemplateFormatter
     {
