@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Text;
 
 namespace DoTuna
@@ -17,8 +18,8 @@ namespace DoTuna
             return new HtmlIndexDocument
             {
                 thread_id = doc.threadId.ToString(),
-                thread_title = ScribanRenderer.Escape(doc.title),
-                thread_username = ScribanRenderer.Escape(doc.username),
+                thread_title = WebUtility.HtmlEncode(doc.title),
+                thread_username = WebUtility.HtmlEncode(doc.username),
                 file_name = EncodeToHref(fileNameMap.GetFileName(doc.threadId))
             };
         }

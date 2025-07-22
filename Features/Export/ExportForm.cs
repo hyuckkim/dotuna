@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace DoTuna
+namespace DoTuna.Features.Export
 {
     public partial class ExportForm : Form
     {

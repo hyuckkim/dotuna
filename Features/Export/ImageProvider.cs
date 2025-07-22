@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace DoTuna
+namespace DoTuna.Features.Export
 {
     public class ImageProvider
     {

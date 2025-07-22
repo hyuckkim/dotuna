@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using DoTuna.Features.Export;
 using Xunit;
 
 namespace DoTuna.Test

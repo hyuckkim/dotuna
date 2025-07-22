@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 using DoTuna;
+using DoTuna.Features.Export;
 
 namespace DoTuna.Test
 {

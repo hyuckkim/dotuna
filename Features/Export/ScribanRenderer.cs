@@ -5,8 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Scriban;
+using System.Net;
 
-namespace DoTuna
+namespace DoTuna.Features.Export
 {
     public class ScribanRenderer
     {
@@ -37,10 +38,10 @@ namespace DoTuna
             var responses = await BuildResponses(thread);
             var model = new
             {
-                board_id = Escape(thread.boardId),
+                board_id = WebUtility.HtmlEncode(thread.boardId),
                 thread_id = thread.threadId.ToString(),
-                title = Escape(thread.title),
-                username = Escape(thread.username),
+                title = WebUtility.HtmlEncode(thread.title),
+                username = WebUtility.HtmlEncode(thread.username),
                 created_at = Tuna(thread.createdAt),
                 updated_at = Tuna(thread.updatedAt),
                 size = thread.size.ToString(),
@@ -62,8 +63,8 @@ namespace DoTuna
             var converter = new ContentConverterToA(_fileNameMap, _fileNameMap.Get(threadId));
             return new {
                 sequence = res.sequence.ToString(),
-                username = Escape(res.username),
-                user_id = Escape(res.userId),
+                username = WebUtility.HtmlEncode(res.username),
+                user_id = WebUtility.HtmlEncode(res.userId),
                 created_at = Tuna(res.createdAt),
                 content = converter.ConvertContent(res.content, threadId),
                 thread_id = res.threadId.ToString(),
@@ -89,11 +90,6 @@ namespace DoTuna
                 .Replace("Fri", "금")
                 .Replace("Sat", "토")
                 .Replace("Sun", "일");
-        }
-
-        public static string Escape(string? s)
-        {
-            return System.Net.WebUtility.HtmlEncode(s ?? "");
         }
     }
 }

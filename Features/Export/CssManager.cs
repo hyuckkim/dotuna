@@ -1,7 +1,7 @@
 using System.IO;
 using System.Text;
 
-namespace DoTuna
+namespace DoTuna.Features.Export
 {
     public class CssManager
     {

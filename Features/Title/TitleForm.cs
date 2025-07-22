@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DoTuna.Features.Export;
 using Newtonsoft.Json;
 
 namespace DoTuna.Features.Title
