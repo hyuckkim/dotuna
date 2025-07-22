@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
-using DoTuna;
 using DoTuna.Features.Export;
 using DoTuna.Core;
 
@@ -94,7 +93,7 @@ namespace DoTuna.Test
         [Fact]
         public async Task RenderThreadPageAsync_WithAttachment_RendersImageTag()
         {
-            Setting.Instance.SingleHTML = false; // 또는 true
+            AppSetting.Instance.SingleHTML = false; // 또는 true
 
             var thread = new JsonThreadDocument
             {

@@ -38,7 +38,7 @@ namespace DoTuna.Features.Export
 
         public async Task<string> Href(string fileName)
         {
-            if (Setting.Instance.SingleHTML)
+            if (AppSetting.Instance.SingleHTML)
                 return await GetDataHref(fileName);
             else
                 return "data/" + Uri.EscapeDataString(fileName);

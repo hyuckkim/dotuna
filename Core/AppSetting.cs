@@ -1,12 +1,12 @@
 using System;
 
-namespace DoTuna
+namespace DoTuna.Core
 {
-    public class Setting
+    public class AppSetting
     {
-        private static readonly Setting _instance = new Setting();
+        private static readonly AppSetting _instance = new AppSetting();
 
-        public static Setting Instance => _instance;
+        public static AppSetting Instance => _instance;
 
         public string Pattern { get; set; } = "{id}";
         public bool SingleHTML { get; set; } = false;
@@ -14,7 +14,7 @@ namespace DoTuna
         public bool PreloadIndex { get; set; } = false;
         public int ThreadCount { get; set; } = Environment.ProcessorCount * 2;
 
-        private Setting()
+        private AppSetting()
         {
 
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DoTuna.Core;
 using DoTuna.Features.Converter;
+using DoTuna.Features.Setting;
 
 namespace DoTuna.Features.Export
 {
@@ -149,15 +150,15 @@ namespace DoTuna.Features.Export
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(Setting.Instance.Pattern))
+            if (string.IsNullOrWhiteSpace(AppSetting.Instance.Pattern))
             {
                 var result = MessageBox.Show("제목 템플릿이 비어 있습니다. 기본값으로 계속하시겠습니까?", "알림", MessageBoxButtons.YesNo);
                 if (result != DialogResult.Yes)
                     return false;
-                Setting.Instance.Pattern = "{id}";
+                AppSetting.Instance.Pattern = "{id}";
             }
             
-            if (!new ThreadFileMap(threadManager.Checked, Setting.Instance.Pattern).IsUnique)
+            if (!new ThreadFileMap(threadManager.Checked, AppSetting.Instance.Pattern).IsUnique)
             {
                 MessageBox.Show("제목 템플릿이 잘못되어 생성할 파일 이름이 중복됩니다.", "경고", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;

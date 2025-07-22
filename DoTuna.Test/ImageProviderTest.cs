@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using DoTuna.Core;
 using DoTuna.Features.Export;
 using Xunit;
 
@@ -13,7 +14,7 @@ namespace DoTuna.Test
         {
             // Arrange
             var fileName = "image.jpg";
-            Setting.Instance.SingleHTML = true;
+            AppSetting.Instance.SingleHTML = true;
 
             var fakeHelper = new FakeFileHelper();
             fakeHelper.BasePath = "/source";
@@ -33,7 +34,7 @@ namespace DoTuna.Test
         {
             // Arrange
             var fileName = "pic.png";
-            Setting.Instance.SingleHTML = false;
+            AppSetting.Instance.SingleHTML = false;
 
             var fakeHelper = new FakeFileHelper();
             var provider = new ImageProvider(fakeHelper, fakeHelper);
@@ -50,7 +51,7 @@ namespace DoTuna.Test
         {
             // Arrange
             var fileName = "nofile.gif";
-            Setting.Instance.SingleHTML = true;
+            AppSetting.Instance.SingleHTML = true;
 
             var fakeHelper = new FakeFileHelper(); // 파일 없음
             var provider = new ImageProvider(fakeHelper, fakeHelper);

@@ -31,14 +31,14 @@ namespace DoTuna.Features.Export
         {
             _progress = progress;
             _threads = threads;
-            _fileNameMap = new ThreadFileMap(threads, Setting.Instance.Pattern);
+            _fileNameMap = new ThreadFileMap(threads, AppSetting.Instance.Pattern);
             _imageProvider = new ImageProvider(_sourceHelper, _resultHelper);
             _renderer = new ScribanRenderer(_fileNameMap, _imageProvider);
 
             FileHelper.EnsureDirectory(_resultHelper.BasePath, ""); // EnsurePath -> EnsureDirectory로 수정
 
             await GenerateIndex();
-            if (Setting.Instance.UseCssFile) await GenerateCss();
+            if (AppSetting.Instance.UseCssFile) await GenerateCss();
             await GenerateAllThreads();
         }
 
@@ -114,7 +114,7 @@ namespace DoTuna.Features.Export
             int completed = 0;
             ReportCount(0);
 
-            var semaphore = new SemaphoreSlim(Setting.Instance.ThreadCount);
+            var semaphore = new SemaphoreSlim(AppSetting.Instance.ThreadCount);
 
             var tasks = new List<Task>();
 
@@ -154,7 +154,7 @@ namespace DoTuna.Features.Export
             var threadHtml = await _renderer.RenderThreadPageAsync(threadContent);
             await _resultHelper.WriteTextAsync(threadHtmlFile, threadHtml);
 
-            if (!Setting.Instance.SingleHTML)
+            if (!AppSetting.Instance.SingleHTML)
             {
                 var attachments = threadContent.responses
                     .Where(res => !string.IsNullOrEmpty(res.attachment))

@@ -10,7 +10,7 @@ namespace DoTuna.Features.Converter
         readonly LinkConverterToText converter;
         public ConverterForm(IEnumerable<JsonIndexDocument> files)
         {
-            var fileNameMap = new ThreadFileMap(files, Setting.Instance.Pattern);
+            var fileNameMap = new ThreadFileMap(files, AppSetting.Instance.Pattern);
             converter = new LinkConverterToText(fileNameMap, "https://example.com");
             InitializeComponent();
         }

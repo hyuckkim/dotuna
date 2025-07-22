@@ -23,7 +23,7 @@ namespace DoTuna.Features.Export
 
         public string GetLink(ThreadFile thread)
         {
-            if (Setting.Instance.UseCssFile)
+            if (AppSetting.Instance.UseCssFile)
             {
                 return $"<link rel=\"stylesheet\" href=\"{Path.Combine(thread.GetRelativePathToRoot(), "thread.css")}\">";
             }

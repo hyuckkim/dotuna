@@ -1,6 +1,7 @@
 using System.Windows.Forms;
+using DoTuna.Core;
 
-namespace DoTuna
+namespace DoTuna.Features.Setting
 {
     public partial class SettingForm : Form
     {
@@ -8,7 +9,7 @@ namespace DoTuna
         {
             InitializeComponent();
             AddTooltip(
-                AddSettingControl("패턴", Setting.Instance.Pattern, v => Setting.Instance.Pattern = v),
+                AddSettingControl("패턴", AppSetting.Instance.Pattern, v => AppSetting.Instance.Pattern = v),
                 "각 문서의 제목입니다.\n" +
                 "{id}, {title}, {name}, {created}, {updated}, {size}가\n" +
                 "실제 값으로 대체됩니다.\n\n" +
@@ -19,26 +20,26 @@ namespace DoTuna
                 "예: \"{title} - {name} ({created})\""
             );
             AddTooltip(
-                AddSettingControl("이미지 임베딩", Setting.Instance.SingleHTML, v => Setting.Instance.SingleHTML = v),
+                AddSettingControl("이미지 임베딩", AppSetting.Instance.SingleHTML, v => AppSetting.Instance.SingleHTML = v),
                 "이미지를 html 문서 안에 포함합니다.\n" +
                 "이미지 파일이 따로 생성되지 않아, html 파일만 보관할 수 있습니다.\n" +
                 "이미지가 base64로 인코딩되어 이미지의 용량이 33%정도 커집니다."
             );
             AddTooltip(
-                AddSettingControl("css 파일 사용", Setting.Instance.UseCssFile, v => Setting.Instance.UseCssFile = v),
+                AddSettingControl("css 파일 사용", AppSetting.Instance.UseCssFile, v => AppSetting.Instance.UseCssFile = v),
                 "css 파일을 사용합니다.\n" +
                 "css 파일이 따로 생성되어 모든 스레드 파일들이 css 파일을 공유합니다.\n" +
                 "이로 인해 용량이 아주 조금 줄어듭니다.\n" +
                 "css 파일을 사용하지 않으면, html 문서 안에 css가 포함됩니다."
             );
             AddTooltip(
-                AddSettingControl("인덱스 페이지 미리 생성", Setting.Instance.PreloadIndex, v => Setting.Instance.PreloadIndex = v),
+                AddSettingControl("인덱스 페이지 미리 생성", AppSetting.Instance.PreloadIndex, v => AppSetting.Instance.PreloadIndex = v),
                 "인덱스 html 페이지를 미리 생성합니다.\n" +
                 "생성하지 않으면 인덱스 페이지를 열 때마다 로컬 함수가 동작해 페이지를 생성합니다.\n" +
                 "생성하면 인덱스 페이지의 용량이 아주 조금 커집니다."
             );
             AddTooltip(
-                AddSettingControl("생성 스레드 수", Setting.Instance.ThreadCount, v => Setting.Instance.ThreadCount = v, new NumericProp { min = 1, max = 64 }),
+                AddSettingControl("생성 스레드 수", AppSetting.Instance.ThreadCount, v => AppSetting.Instance.ThreadCount = v, new NumericProp { min = 1, max = 64 }),
                 "스레드를 생성할 때 사용할 스레드의 개수입니다.\n" +
                 "기본값은 CPU 코어 수의 2배입니다.\n" +
                 "스레드가 많을수록 빠르게 생성되지만, CPU 사용량이 증가합니다.\n" +

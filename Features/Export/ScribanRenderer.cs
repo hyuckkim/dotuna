@@ -28,7 +28,7 @@ namespace DoTuna.Features.Export
             {
                 threads = threads,
                 page_count = pageCount,
-                preload = Setting.Instance.PreloadIndex
+                preload = AppSetting.Instance.PreloadIndex
             };
 
             return await RenderTemplateFromResourceAsync("DoTuna.Templates.index.html", model);

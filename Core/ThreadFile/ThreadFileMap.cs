@@ -26,7 +26,7 @@ namespace DoTuna.Core
         public ThreadFile Get(ulong threadId)
         {
             return _map.TryGetValue(threadId, out var f) ? f : new ThreadFile(
-                new JsonIndexDocument { threadId = threadId }, Setting.Instance.Pattern);
+                new JsonIndexDocument { threadId = threadId }, AppSetting.Instance.Pattern);
         }
 
         public string this[ulong threadId] => GetFileName(threadId);
