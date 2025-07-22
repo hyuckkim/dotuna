@@ -1,19 +1,20 @@
 using System;
 using System.Collections.Generic;
 using DoTuna.Core;
+using DoTuna.Features.Converter;
 using Xunit;
 
 namespace DoTuna.Test
 {
     public class ContentConverterToTextTest
     {
-        private Converter GetConverter()
+        private LinkConverter GetConverter()
         {
             var threads = new List<JsonIndexDocument> {
                 new JsonIndexDocument { threadId = 123UL, title = "t", username = "u", createdAt = DateTime.Now, updatedAt = DateTime.Now, size = 1 }
             };
             var fileNameMap = new ThreadFileMap(threads, "{id}");
-            return new ConverterToText(fileNameMap, "https://testurl.com");
+            return new LinkConverterToText(fileNameMap, "https://testurl.com");
         }
 
         [Theory]

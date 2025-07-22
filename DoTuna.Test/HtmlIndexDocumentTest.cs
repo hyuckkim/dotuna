@@ -1,4 +1,5 @@
 using DoTuna;
+using DoTuna.Core;
 using Xunit;
 
 public class HtmlIndexDocumentTest

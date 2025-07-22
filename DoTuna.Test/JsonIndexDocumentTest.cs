@@ -1,4 +1,5 @@
 using System;
+using DoTuna.Core;
 using Xunit;
 
 namespace DoTuna.Test
