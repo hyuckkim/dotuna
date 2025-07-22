@@ -25,8 +25,9 @@ namespace DoTuna.Core
 
         public ThreadFile Get(ulong threadId)
         {
-            return _map.TryGetValue(threadId, out var f) ? f : new ThreadFile(
-                new JsonIndexDocument { threadId = threadId }, AppSetting.Instance.Pattern);
+            if (_map.TryGetValue(threadId, out var f))
+                return f;
+            else throw new KeyNotFoundException("Thread ID not found: " + threadId);
         }
 
         public string this[ulong threadId] => GetFileName(threadId);
