@@ -7,13 +7,13 @@ namespace DoTuna.Test
 {
     public class ContentConverterToATest
     {
-        private Converter GetConverter()
+        private LinkConverter GetConverter()
         {
             var threads = new List<JsonIndexDocument> {
                 new JsonIndexDocument { threadId = 123UL, title = "t", username = "u", createdAt = DateTime.Now, updatedAt = DateTime.Now, size = 1 }
             };
             var fileNameMap = new ThreadFileMap(threads, "{id}");
-            return new ConverterToA(fileNameMap, fileNameMap.Get(123UL));
+            return new LinkConverterToA(fileNameMap, fileNameMap.Get(123UL));
         }
 
         [Theory]

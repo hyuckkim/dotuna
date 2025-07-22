@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using DoTuna.Core;
+using DoTuna.Features.Converter;
 
 namespace DoTuna.Features.Export
 {

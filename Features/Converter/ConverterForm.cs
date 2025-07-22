@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using DoTuna.Core;
 
-namespace DoTuna
+namespace DoTuna.Features.Converter
 {
     public partial class ConverterForm : Form
     {
-        readonly ConverterToText converter;
+        readonly LinkConverterToText converter;
         public ConverterForm(IEnumerable<JsonIndexDocument> files)
         {
             var fileNameMap = new ThreadFileMap(files, Setting.Instance.Pattern);
-            converter = new ConverterToText(fileNameMap, "https://example.com");
+            converter = new LinkConverterToText(fileNameMap, "https://example.com");
             InitializeComponent();
         }
 

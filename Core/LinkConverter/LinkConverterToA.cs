@@ -1,9 +1,9 @@
 namespace DoTuna.Core
 {
-    public class ConverterToA : Converter
+    public class LinkConverterToA : LinkConverter
     {
         private readonly ThreadFile _origin;
-        public ConverterToA(ThreadFileMap fileNameMap, ThreadFile origin) : base(fileNameMap)
+        public LinkConverterToA(ThreadFileMap fileNameMap, ThreadFile origin) : base(fileNameMap)
         {
             _origin = origin;
         }

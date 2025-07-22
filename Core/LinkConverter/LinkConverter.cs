@@ -3,10 +3,10 @@ using System.Text.RegularExpressions;
 
 namespace DoTuna.Core
 {
-    public abstract class Converter
+    public abstract class LinkConverter
     {
         protected readonly ThreadFileMap _fileNameMap;
-        public Converter(ThreadFileMap fileNameMap)
+        public LinkConverter(ThreadFileMap fileNameMap)
         {
             _fileNameMap = fileNameMap;
         }

@@ -1,6 +1,6 @@
 using System.Windows.Forms;
 
-namespace DoTuna
+namespace DoTuna.Features.Converter
 {
     partial class ConverterForm : Form
     {

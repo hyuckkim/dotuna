@@ -54,14 +54,14 @@ namespace DoTuna.Features.Export
 
         private async Task<List<object>> BuildResponses(JsonThreadDocument data)
         {
-            var converter = new ConverterToA(_fileNameMap, _fileNameMap.Get(data.threadId));
+            var converter = new LinkConverterToA(_fileNameMap, _fileNameMap.Get(data.threadId));
             Task<object>[] tasks = data.responses.Select(res => BuildRes(res, data.threadId)).ToArray();
             var results = await Task.WhenAll(tasks);
             return results.ToList();
         }
         private async Task<object> BuildRes(Response res, ulong threadId)
         {
-            var converter = new ConverterToA(_fileNameMap, _fileNameMap.Get(threadId));
+            var converter = new LinkConverterToA(_fileNameMap, _fileNameMap.Get(threadId));
             return new {
                 sequence = res.sequence.ToString(),
                 username = WebUtility.HtmlEncode(res.username),

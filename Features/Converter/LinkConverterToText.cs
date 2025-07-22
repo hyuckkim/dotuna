@@ -1,11 +1,12 @@
 using System.Text.RegularExpressions;
+using DoTuna.Core;
 
-namespace DoTuna.Core
+namespace DoTuna.Features.Converter
 {
-    public class ConverterToText : Converter
+    public class LinkConverterToText : LinkConverter
     {
         public string Url { get; set; } = string.Empty;
-        public ConverterToText(ThreadFileMap fileNameMap, string url) : base(fileNameMap)
+        public LinkConverterToText(ThreadFileMap fileNameMap, string url) : base(fileNameMap)
         {
             Url = url;
             if (Url.EndsWith("/"))
