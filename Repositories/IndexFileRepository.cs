@@ -16,7 +16,14 @@ namespace DoTuna
             if (!FileHelper.FileExists(path, "index.json"))
                 throw new DirectoryNotFoundException($"Directory or file not found: {path}\\index.json");
 
+            if (!Directory.Exists(path))
+                throw new DirectoryNotFoundException($"Directory not found: {path}");
+
             var jsonText = await FileHelper.ReadTextAsync(path, "index.json");
+            
+            if (string.IsNullOrWhiteSpace(jsonText))
+                throw new JsonException("index.json is empty or invalid");
+
             var deSerialized = JsonConvert.DeserializeObject<List<JsonIndexDocument>>(jsonText);
 
             _documents = deSerialized?.OrderBy(x => x.threadId).ToList()

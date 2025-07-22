@@ -2,9 +2,9 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace DoTuna
+namespace DoTuna.Features.Title
 {
-    public partial class MainForm : Form
+    public partial class TitleForm : Form
     {
         private Button GetFolderButton;
         private Button GetThreadSourceFileButton;

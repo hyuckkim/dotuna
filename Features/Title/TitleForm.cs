@@ -1,22 +1,18 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 
-namespace DoTuna
+namespace DoTuna.Features.Title
 {
-    public partial class MainForm : Form
+    public partial class TitleForm : Form
     {
-        public MainForm()
+        public TitleForm()
         {
             InitializeComponent();
 
-            // 폴더 선택을 위한 드래그앤드롭 이벤트 등록
-            AllowDrop = true;
-            DragEnter += MainForm_DragEnter;
-            DragDrop += MainForm_DragDrop;
+            DragDropHelper.RegisterDragDropEvents(this, HandleFolderPath);
         }
 
         private void OnGetFolderClick(object sender, EventArgs e)
@@ -33,34 +29,13 @@ namespace DoTuna
             }
         }
 
-        private void MainForm_DragEnter(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-                e.Effect = DragDropEffects.Copy;
-        }
-
-        private void MainForm_DragDrop(object sender, DragEventArgs e)
-        {
-            if (!e.Data.GetDataPresent(DataFormats.FileDrop))
-                return;
-
-            var droppedFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-            var folderPath = droppedFiles.FirstOrDefault(Directory.Exists);
-            if (folderPath == null)
-                return;
-
-            _ = HandleFolderPath(folderPath);
-        }
-
         private async Task HandleFolderPath(string folderPath)
         {
             try
             {
-                // 인덱스 파일 로드 및 ThreadManager, Exporter 생성
                 var repository = new IndexFileRepository();
                 await repository.Open(folderPath);
 
-                // 내보내기 UI용 폼을 생성해 전환 (UI 요소 Visible을 토글하는 대신 분리)
                 var exportForm = new ExportForm(repository, folderPath);
                 exportForm.Show();
             }
