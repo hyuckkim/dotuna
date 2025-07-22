@@ -24,7 +24,7 @@ namespace DoTuna.Test
             var docs = new List<JsonIndexDocument> {
                 Doc("foo", "bar", 1), Doc("foo", "baz", 2), Doc("qux", "bar", 3)
             };
-            var mgr = new ThreadManager(new DummyRepo(docs));
+            var mgr = new ThreadSelectionHelper(new DummyRepo(docs));
             mgr.TitleFilter = "foo";
             mgr.AuthorFilter = "bar";
             var filtered = mgr.Filtered.ToList();
@@ -36,7 +36,7 @@ namespace DoTuna.Test
         public void Check_Uncheck_Toggle_Works()
         {
             var doc = Doc("t", "u", 1);
-            var mgr = new ThreadManager(new DummyRepo(new List<JsonIndexDocument> { doc }));
+            var mgr = new ThreadSelectionHelper(new DummyRepo(new List<JsonIndexDocument> { doc }));
             Assert.False(mgr.IsChecked(doc));
             mgr.Check(doc);
             Assert.True(mgr.IsChecked(doc));
@@ -53,7 +53,7 @@ namespace DoTuna.Test
         {
             var d1 = Doc("a", "b", 2);
             var d2 = Doc("c", "d", 1);
-            var mgr = new ThreadManager(new DummyRepo(new List<JsonIndexDocument> { d1, d2 }));
+            var mgr = new ThreadSelectionHelper(new DummyRepo(new List<JsonIndexDocument> { d1, d2 }));
             mgr.Check(d1);
             mgr.Check(d2);
             var checkedList = mgr.Checked.ToList();

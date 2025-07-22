@@ -10,13 +10,13 @@ namespace DoTuna.Features.Export
 {
     public partial class ExportForm : Form
     {
-        private readonly ThreadManager threadManager;
+        private readonly ThreadSelectionHelper threadManager;
         private readonly string _sourcePath; 
 
         public ExportForm(IIndexRepository repository, string sourcePath)
         {
             InitializeComponent();
-            threadManager = new ThreadManager(repository);
+            threadManager = new ThreadSelectionHelper(repository);
             _sourcePath = sourcePath;
             ResultPathField.Text = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "result");

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DoTuna
+namespace DoTuna.Features.Export
 {
-    public class ThreadManager
+    public class ThreadSelectionHelper
     {
         private IIndexRepository _indexRepository;
         private HashSet<JsonIndexDocument> _checked = new HashSet<JsonIndexDocument>();
@@ -43,7 +43,7 @@ namespace DoTuna
             }
         }
 
-        public ThreadManager(IIndexRepository indexRepository)
+        public ThreadSelectionHelper(IIndexRepository indexRepository)
         {
             _indexRepository = indexRepository;
         }
