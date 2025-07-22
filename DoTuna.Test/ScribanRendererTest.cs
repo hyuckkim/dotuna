@@ -24,7 +24,7 @@ namespace DoTuna.Test
                     size = 10
                 }
             };
-            var fileNameMap = new ThreadFileNameMap(threads);
+            var fileNameMap = new ThreadFileNameMap(threads, "{id}");
             var renderer = new ScribanRenderer(
                 fileNameMap,
                 new ImageProvider(
@@ -75,7 +75,7 @@ namespace DoTuna.Test
                     size = 5
                 }
             };
-            var fileNameMap = new ThreadFileNameMap(threads);
+            var fileNameMap = new ThreadFileNameMap(threads, "{id}");
             var renderer = new ScribanRenderer(
                 fileNameMap,
                 new ImageProvider(
@@ -130,7 +130,7 @@ namespace DoTuna.Test
                 }
             };
 
-            var fileNameMap = new ThreadFileNameMap(threads);
+            var fileNameMap = new ThreadFileNameMap(threads, "{id}");
 
             var fakeSourceHelper = new FakeFileHelper();
             fakeSourceHelper.BasePath = "/source";

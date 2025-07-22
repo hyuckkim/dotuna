@@ -10,11 +10,11 @@ namespace DoTuna
         private readonly Dictionary<ulong, ThreadFileName> _map;
         public bool IsUnique { get => _map.Values.Select(x => x.FileName).Distinct().Count() == _map.Count; }
 
-        public ThreadFileNameMap(IEnumerable<JsonIndexDocument> threads)
+        public ThreadFileNameMap(IEnumerable<JsonIndexDocument> threads, string pattern)
         {
             _map = threads.ToDictionary(
                 doc => doc.threadId,
-                doc => new ThreadFileName(doc, Setting.Instance.Pattern)
+                doc => new ThreadFileName(doc, pattern)
             );
         }
 

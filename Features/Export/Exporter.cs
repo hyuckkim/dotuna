@@ -31,7 +31,7 @@ namespace DoTuna.Features.Export
         {
             _progress = progress;
             _threads = threads;
-            _fileNameMap = new ThreadFileNameMap(threads);
+            _fileNameMap = new ThreadFileNameMap(threads, Setting.Instance.Pattern);
             _imageProvider = new ImageProvider(_sourceHelper, _resultHelper);
             _renderer = new ScribanRenderer(_fileNameMap, _imageProvider);
 

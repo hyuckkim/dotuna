@@ -12,8 +12,7 @@ namespace DoTuna.Test
             var threads = new List<JsonIndexDocument> {
                 new JsonIndexDocument { threadId = 123UL, title = "t", username = "u", createdAt = DateTime.Now, updatedAt = DateTime.Now, size = 1 }
             };
-            Setting.Instance.Pattern = "{id}";
-            var fileNameMap = new ThreadFileNameMap(threads);
+            var fileNameMap = new ThreadFileNameMap(threads, "{id}");
             return new ConverterToText(fileNameMap, "https://testurl.com");
         }
 

@@ -10,7 +10,7 @@ namespace DoTuna
         readonly ConverterToText converter;
         public ConverterForm(IEnumerable<JsonIndexDocument> files)
         {
-            var fileNameMap = new ThreadFileNameMap(files);
+            var fileNameMap = new ThreadFileNameMap(files, Setting.Instance.Pattern);
             converter = new ConverterToText(fileNameMap, "https://example.com");
             InitializeComponent();
         }
