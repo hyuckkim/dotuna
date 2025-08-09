@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DoTuna.Features.Export;
 using Xunit;
 
 namespace DoTuna.Test
