@@ -17,7 +17,17 @@ namespace DoTuna
 
         public override string ToString()
         {
-            return string.Format("{0} /  Username: {1} {2}", title, username, threadId);
+            return $"{title} / Username: {username} {threadId}";
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is JsonIndexDocument other && threadId == other.threadId;
+        }
+
+        public override int GetHashCode()
+        {
+            return threadId.GetHashCode();
         }
     }
 }
