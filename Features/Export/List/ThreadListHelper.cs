@@ -37,12 +37,14 @@ namespace DoTuna.Features.Export
 
         public void ApplyTitleFilter(string filter)
         {
+            _grid.RowCount = 0;
             _threadManager.TitleFilter = filter;
             RefreshGrid();
         }
 
         public void ApplyAuthorFilter(string filter)
         {
+            _grid.RowCount = 0;
             _threadManager.AuthorFilter = filter;
             RefreshGrid();
         }
