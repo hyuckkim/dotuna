@@ -28,7 +28,6 @@ namespace DoTuna.Features.Export
                 AutoGenerateColumns = false,
                 VirtualMode = true,
             };
-            this.ThreadListGrid.CellValueNeeded += new DataGridViewCellValueEventHandler(ThreadListGrid_CellValueNeeded);
 
             // 데이터 그리드 컬럼 추가
             var colThreadName = new DataGridViewTextBoxColumn
@@ -61,7 +60,6 @@ namespace DoTuna.Features.Export
                 colUserName,
                 colCheck
             });
-            this.ThreadListGrid.CellContentClick += new DataGridViewCellEventHandler(this.OnCheckBoxClick);
 
             // 내보내기 버튼과 관련 입력 필드들을 담은 FlowLayoutPanel 설정
             var flowLayout = new FlowLayoutPanel
@@ -95,13 +93,10 @@ namespace DoTuna.Features.Export
             
             // 필터 텍스트 박스
             this.FilterTitleInputField = new TextBox { Width = 200 };
-            this.FilterTitleInputField.TextChanged += new EventHandler(this.OnTitleFilterChanged);
             this.FilterAuthorInputField = new TextBox { Width = 200 };
-            this.FilterAuthorInputField.TextChanged += new EventHandler(this.OnAuthorFilterChanged);
             
             // 체크박스
             this.SelectAllCheckBox = new CheckBox { Text = "전체 선택" };
-            this.SelectAllCheckBox.CheckedChanged += new EventHandler(this.SelectAllCheckBoxChanged);
 
             this.SettingButton = new Button
             {
