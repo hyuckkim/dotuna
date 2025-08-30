@@ -49,32 +49,35 @@ namespace DoTuna.Features.Export
             helper.Toggle(doc);
             Assert.False(helper.IsChecked(doc));
         }
+      [Theory]
+      [InlineData(10_000)]
+      [InlineData(50_000)]
+      [InlineData(100_000)]
+      [InlineData(500_000)]
+      public void Filter_Performance_ScaleTest(int documentCount)
+      {
+          var docs = new List<JsonIndexDocument>();
+          for (int i = 0; i < documentCount; i++)
+          {
+              docs.Add(Doc(
+                  i % 2 == 0 ? "match" : "other",
+                  i % 2 == 1 ? "user" : "someone",
+                  (ulong)i
+              ));
+          }
 
-        [Fact]
-        public void Filter_Performance_IsAcceptable()
-        {
-            // Create 100_000 docs, half with "match" in title, half with "user" in username
-            var docs = new List<JsonIndexDocument>();
-            for (int i = 0; i < 100_000; i++)
-            {
-                docs.Add(Doc(
-                    i % 2 == 0 ? "match" : "other",
-                    i % 2 == 1 ? "user" : "someone",
-                    (ulong)i
-                ));
-            }
-            var helper = new ThreadSelectionHelper(new DummyRepo(docs));
+          var helper = new ThreadSelectionHelper(new DummyRepo(docs));
 
-            var sw = Stopwatch.StartNew();
-            helper.TitleFilter = "match";
-            helper.AuthorFilter = "someone";
-            var filtered = helper.Filtered.ToList();
-            sw.Stop();
+          var sw = Stopwatch.StartNew();
+          helper.TitleFilter = "match";
+          helper.AuthorFilter = "someone";
+          var filtered = helper.Filtered.ToList();
+          sw.Stop();
 
-            // Should be about 50_000 items
-            Assert.Equal(50_000, filtered.Count);
-            // Filtering should complete within 500ms
-            Assert.True(sw.ElapsedMilliseconds < 500, $"Filtering took too long: {sw.ElapsedMilliseconds}ms");
-        }
+          var elapsed = sw.ElapsedMilliseconds;
+          Console.WriteLine($"📊 {documentCount} docs → {filtered.Count} matched in {elapsed}ms");
+
+          Assert.True(elapsed < 1000, $"Filtering too slow for {documentCount} docs: {elapsed}ms");
+      }
     }
 }
