@@ -17,7 +17,7 @@ namespace DoTuna.Features.Export
         public IEnumerable<JsonIndexDocument> All => _allCache ??= _indexRepository.Get().ToList();
         private List<JsonIndexDocument>? _allCache = null;
 
-        public IEnumerable<JsonIndexDocument> Checked => _checked.OrderBy(x => x.threadId);
+        public IEnumerable<JsonIndexDocument> Checked => _checked;
         public bool IsChecked(JsonIndexDocument doc) => _checked.Contains(doc);
 
         public IEnumerable<JsonIndexDocument> Filtered => _filteredCache;
