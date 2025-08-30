@@ -12,8 +12,8 @@ namespace DoTuna.Features.Export
 {
     public class Exporter
     {
-        private IFileHelper _sourceHelper = null!;
-        private IFileHelper _resultHelper = null!;
+        private readonly IFileHelper _sourceHelper;
+        private readonly IFileHelper _resultHelper;
 
         private IProgress<string>? _progress;
         private ThreadFileMap _fileNameMap = null!;
