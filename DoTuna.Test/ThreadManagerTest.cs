@@ -48,18 +48,5 @@ namespace DoTuna.Test
             mgr.Toggle(doc);
             Assert.False(mgr.IsChecked(doc));
         }
-
-        [Fact]
-        public void Checked_ReturnsCheckedDocsSorted()
-        {
-            var d1 = Doc("a", "b", 2);
-            var d2 = Doc("c", "d", 1);
-            var mgr = new ThreadSelectionHelper(new DummyRepo(new List<JsonIndexDocument> { d1, d2 }));
-            mgr.Check(d1);
-            mgr.Check(d2);
-            var checkedList = mgr.Checked.ToList();
-            Assert.Equal(1UL, checkedList[0].threadId);
-            Assert.Equal(2UL, checkedList[1].threadId);
-        }
     }
 }

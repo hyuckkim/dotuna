@@ -52,7 +52,7 @@ namespace DoTuna.Features.Export
             _progress?.Report("(index.html 생성 중)");
 
             var newDocs = _threads.Select(doc => HtmlIndexDocument.FromJson(doc, _fileNameMap)).ToList();
-            var existingDocs = existData.ToList();
+            var existingDocs = existData.OrderBy(v => v.thread_id).ToList();
 
             var fileNameSet = new HashSet<string>(newDocs.Select(d => d.file_name));
             var filteredExistDocs = existingDocs.Where(d => !fileNameSet.Contains(d.file_name));
