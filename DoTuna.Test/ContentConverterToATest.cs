@@ -10,7 +10,9 @@ namespace DoTuna.Test
         private LinkConverter GetConverter()
         {
             var threads = new List<JsonIndexDocument> {
-                new JsonIndexDocument { threadId = 123UL, title = "t", username = "u", createdAt = DateTime.Now, updatedAt = DateTime.Now, size = 1 }
+                new JsonIndexDocument { threadId = 123UL, title = "t", username = "u", createdAt = DateTime.Now, updatedAt = DateTime.Now, size = 1 },
+                new JsonIndexDocument { threadId = 456UL, title = "t", username = "u", createdAt = DateTime.Now, updatedAt = DateTime.Now, size = 1 },
+                new JsonIndexDocument { threadId = 789UL, title = "t", username = "u", createdAt = DateTime.Now, updatedAt = DateTime.Now, size = 1 }
             };
             var fileNameMap = new ThreadFileMap(threads, "{id}");
             return new LinkConverterToA(fileNameMap, fileNameMap.Get(123UL));
