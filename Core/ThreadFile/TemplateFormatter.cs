@@ -6,32 +6,35 @@ namespace DoTuna.Core
 {
     public static class TemplateFormatter
     {
-        public static string Format(string template, Dictionary<string, string> values)
-        {
-            if (string.IsNullOrEmpty(template))
-                return string.Empty;
+public static string Format(string template, Dictionary<string, string> values)
+{
+    if (string.IsNullOrEmpty(template))
+        return string.Empty;
 
-            var regex = new Regex(@"\{(\w+)(?: ([^:}]+))?(?::([^}]+))?\}");
+    var regex = new Regex(@"\{(\w+)(?: ([^:}]+))?(?::([^}]+))?\}");
 
-            return regex.Replace(template, match =>
-            {
-                var key = match.Groups[1].Value;
-                var option = match.Groups[2].Success ? match.Groups[2].Value : "";
-                var fallback = match.Groups[3].Success ? match.Groups[3].Value : "";
+    string replaced = regex.Replace(template, match =>
+    {
+        var key = match.Groups[1].Value;
+        var option = match.Groups[2].Success ? match.Groups[2].Value : "";
+        var fallback = match.Groups[3].Success ? match.Groups[3].Value : "";
 
-                if (!values.TryGetValue(key, out var value) || string.IsNullOrEmpty(value))
-                    value = fallback;
+        if (!values.TryGetValue(key, out var value) || string.IsNullOrEmpty(value))
+            value = fallback;
 
-                if (string.IsNullOrEmpty(value))
-                    return "";
+        if (string.IsNullOrEmpty(value))
+            return "";
 
-                string safeValue = value.ReplaceInvalidFileNameChars().Trim();
+        string safeValue = value.ReplaceInvalidFileNameChars().Trim();
 
-                return string.IsNullOrEmpty(option)
-                    ? safeValue
-                    : ApplyTruncateWithOmit(safeValue, option);
-            });
-        }
+        return string.IsNullOrEmpty(option)
+            ? safeValue
+            : ApplyTruncateWithOmit(safeValue, option);
+    });
+    
+    return replaced.ReplaceInvalidFileNameChars().Trim();
+}
+
 
         private static string ApplyTruncateWithOmit(string input, string option)
         {
