@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using DoTuna.Util;
 
 namespace DoTuna.Core
 {
@@ -24,7 +25,8 @@ namespace DoTuna.Core
                 if (string.IsNullOrEmpty(value))
                     return "";
 
-                string safeValue = string.Concat(value.Split(System.IO.Path.GetInvalidFileNameChars())).Trim();
+                string safeValue = value.ReplaceInvalidFileNameChars().Trim();
+
                 return string.IsNullOrEmpty(option)
                     ? safeValue
                     : ApplyTruncateWithOmit(safeValue, option);
