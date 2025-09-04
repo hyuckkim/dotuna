@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="DoTuna.Test/*.cs" />
+    <Compile Remove="DoTuna.Test/**/*.cs" />
   </ItemGroup>
 
   <Target Name="ILRepack" AfterTargets="Build">
