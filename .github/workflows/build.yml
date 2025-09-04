@@ -59,11 +59,19 @@ jobs:
       with:
         testAssembly: '**/DoTuna.Test.dll'
 
-    - name: Test Summary
-      uses: test-summary/action@v2
+    - name: Upload test results (TRX)
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: TestResults/*.trx
+
+    - name: Publish test results to GitHub Actions
+      uses: dorny/test-reporter@main
       if: always()
       with:
-        paths: TestResults/*.trx
+        name: .NET Test Results
+        path: TestResults/*.trx
+        reporter: dotnet-trx
 
   virus-scan:
     runs-on: ubuntu-latest
