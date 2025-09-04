@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DoTuna.Util
 {
@@ -18,6 +20,31 @@ namespace DoTuna.Util
                     prev = e.Current;
                 }
             }
+        }
+    }
+    public static class PathExtensions
+    {
+        public static string ReplaceInvalidFileNameChars(this string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return string.Empty;
+
+            var invalidChars = Path.GetInvalidFileNameChars()
+                .Where(c => c != '/' && c != '\\') // Allow slashes for relative paths
+                .ToArray();
+            foreach (var c in invalidChars)
+            {
+                input = input.Replace(c.ToString(), "");
+            }
+            return input;
+        }
+
+        public static string Truncate(this string input, int maxLength)
+        {
+            if (string.IsNullOrEmpty(input) || input.Length <= maxLength)
+                return input;
+
+            return input.Substring(0, maxLength);
         }
     }
 }
